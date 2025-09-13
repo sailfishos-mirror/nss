@@ -192,7 +192,8 @@ static const char *const usageInfo[] = {
     " -D                    skip dsa test",
     " -h                    skip dh test",
     " -e                    skip ec test",
-    " -K                    skip mk-kem test",
+    " -K                    skip ml-kem test",
+    " -m                    skip ml-dsa test",
 };
 static int nUsageInfo = sizeof(usageInfo) / sizeof(char *);
 
@@ -218,6 +219,7 @@ enum {
     opt_NoDH,
     opt_NoEC,
     opt_NoMLKEM,
+    opt_NoMLDSA,
 };
 
 static secuCommandFlag options[] = {
@@ -232,6 +234,7 @@ static secuCommandFlag options[] = {
     { /* opt_NoDH             */ 'h', PR_FALSE, 0, PR_FALSE },
     { /* opt_NoEC             */ 'e', PR_FALSE, 0, PR_FALSE },
     { /* opt_NoMLKEM          */ 'K', PR_FALSE, 0, PR_FALSE },
+    { /* opt_NoMLDSA          */ 'm', PR_FALSE, 0, PR_FALSE },
 };
 
 int
@@ -248,6 +251,7 @@ main(int argc, char **argv)
     PRBool doDH = PR_FALSE; /* NSS currently can't export wrapped DH keys */
     PRBool doEC = PR_TRUE;
     PRBool doMLKEM = PR_TRUE;
+    PRBool doMLDSA = PR_TRUE;
     PRBool noPub = PR_FALSE;
     PQGParams *pqgParams = NULL;
     int keySize;
@@ -307,6 +311,9 @@ main(int argc, char **argv)
     }
     if (args.options[opt_NoMLKEM].activated) {
         doMLKEM = PR_FALSE;
+    }
+    if (args.options[opt_NoMLDSA].activated) {
+        doMLDSA = PR_FALSE;
     }
 
     slot = PK11_GetInternalKeySlot();
@@ -408,6 +415,17 @@ main(int argc, char **argv)
                                               noPub, &paramSet, &pwArgs);
         if (rv != SECSuccess) {
             fprintf(stderr, "MLKEM Import Failed!\n");
+            failed = PR_TRUE;
+        }
+    }
+
+    if (doMLDSA) {
+        CK_ML_DSA_PARAMETER_SET_TYPE paramSet = CKP_ML_DSA_44;
+        rv = handleEncryptedPrivateImportTest(progName, slot, "ML-DSA",
+                                              CKM_ML_DSA_KEY_PAIR_GEN,
+                                              noPub, &paramSet, &pwArgs);
+        if (rv != SECSuccess) {
+            fprintf(stderr, "ML-DSA Import Failed!\n");
             failed = PR_TRUE;
         }
     }
