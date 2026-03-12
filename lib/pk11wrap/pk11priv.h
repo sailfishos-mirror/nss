@@ -144,6 +144,9 @@ PK11Context *PK11_CreateContextByRawKey(PK11SlotInfo *slot,
 SECStatus _PK11_ContextSetAEADSimulation(PK11Context *context);
 PRBool _PK11_ContextGetAEADSimulation(PK11Context *context);
 
+/* private for testing only */
+SECKEYPrivateKeyInfo *_PK11_DERPrivateKeyToPrivateKeyInfo(SECItem *derPKI);
+
 /**********************************************************************
  * Functions which are  deprecated....
  **********************************************************************/
