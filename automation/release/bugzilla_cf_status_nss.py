@@ -90,13 +90,13 @@ def fetch_field_values(bug_ids, api_key, chunk_size=20):
 
 def bulk_update(bug_ids, value, label, api_key):
     errors = []
-    try:
-        bz_request("PUT", "/bug", api_key, {"ids": bug_ids, FIELD: value})
-        for bid in bug_ids:
+    for bid in bug_ids:
+        try:
+            bz_request("PUT", f"/bug/{bid}", api_key, {FIELD: value})
             print(f"  {label} Bug {bid}")
-    except Exception as e:
-        print(f"  ERROR {label}: {e}", file=sys.stderr)
-        errors.extend(bug_ids)
+        except Exception as e:
+            print(f"  ERROR {label} Bug {bid}: {e}", file=sys.stderr)
+            errors.append(bid)
     return errors
 
 
