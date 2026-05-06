@@ -12,6 +12,7 @@
       'type': 'executable',
       'sources': [
         'util_aligned_malloc_unittest.cc',
+        'util_arena_asan_unittest.cc',
         'util_b64_unittest.cc',
         'util_gtests.cc',
         'util_memcmpzero_unittest.cc',
