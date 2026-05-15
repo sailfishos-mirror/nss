@@ -8699,10 +8699,10 @@ NSC_DeriveKey(CK_SESSION_HANDLE hSession,
     }
 
     sourceKey = sftk_ObjectFromHandle(hBaseKey, session);
-    sftk_FreeSession(session);
     /* is this eventually succeeds, lastOpWasFIPS will be set the resulting key's
      * FIPS state below. */
     session->lastOpWasFIPS = PR_FALSE;
+    sftk_FreeSession(session);
     if (sourceKey == NULL) {
         sftk_FreeObject(key);
         return CKR_KEY_HANDLE_INVALID;
