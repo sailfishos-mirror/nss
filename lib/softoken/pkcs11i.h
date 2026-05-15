@@ -315,6 +315,7 @@ struct SFTKSessionStr {
     SFTKSession *next;
     SFTKSession *prev;
     CK_SESSION_HANDLE handle;
+    int refCount; /* protected by SFTK_SESSION_LOCK(slot, handle) */
     PRLock *objectLock;
     int objectIDCount;
     CK_SESSION_INFO info;
@@ -820,7 +821,6 @@ extern CK_SLOT_ID sftk_SlotIDFromSessionHandle(CK_SESSION_HANDLE handle);
 extern SFTKSession *sftk_SessionFromHandle(CK_SESSION_HANDLE handle);
 extern void sftk_FreeSession(SFTKSession *session);
 extern void sftk_ClearSession(SFTKSession *session);
-extern void sftk_DestroySession(SFTKSession *session);
 extern CK_RV sftk_InitSession(SFTKSession *session, SFTKSlot *slot,
                               CK_SLOT_ID slotID, CK_NOTIFY notify,
                               CK_VOID_PTR pApplication, CK_FLAGS flags);

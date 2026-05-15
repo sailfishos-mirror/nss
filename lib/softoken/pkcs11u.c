@@ -2020,6 +2020,7 @@ sftk_InitSession(SFTKSession *session, SFTKSlot *slot, CK_SLOT_ID slotID,
                  CK_NOTIFY notify, CK_VOID_PTR pApplication, CK_FLAGS flags)
 {
     session->next = session->prev = NULL;
+    session->refCount = 1;
     session->enc_context = NULL;
     session->hash_context = NULL;
     session->sign_context = NULL;
@@ -2099,10 +2100,12 @@ sftk_ClearSession(SFTKSession *session)
     }
 }
 
-/* free the data associated with the session, and the session */
-void
+/* free the data associated with the session, and the session.
+ * Caller must have driven refCount to 0; reachable only via sftk_FreeSession. */
+static void
 sftk_DestroySession(SFTKSession *session)
 {
+    PORT_Assert(session->refCount == 0);
     sftk_ClearSession(session);
     PORT_Free(session);
 }
@@ -2124,20 +2127,37 @@ sftk_SessionFromHandle(CK_SESSION_HANDLE handle)
 
     PR_Lock(lock);
     sftkqueue_find(session, handle, slot->head, slot->sessHashSize);
+    if (session)
+        session->refCount++;
     PR_Unlock(lock);
 
     return (session);
 }
 
 /*
- * release a reference to a session handle. This method of using SFTKSessions
- * is deprecated, but the pattern should be retained until a future effort
- * to refactor all SFTKSession users at once is completed.
+ * release a reference to a session. The slot's session bucket holds the
+ * initial reference (created by sftk_InitSession); sftk_SessionFromHandle
+ * adds another for the duration of the caller's use. NSC_CloseSession and
+ * sftk_CloseAllSessions drop the bucket's reference once the session has
+ * been removed from the queue. The thread that drives refCount to 0
+ * destroys the session.
  */
 void
 sftk_FreeSession(SFTKSession *session)
 {
-    return;
+    PRBool destroy = PR_FALSE;
+    SFTKSlot *slot = sftk_SlotFromSession(session);
+    PRLock *lock = SFTK_SESSION_LOCK(slot, session->handle);
+
+    PR_Lock(lock);
+    PORT_Assert(session->refCount > 0);
+    if (session->refCount == 1)
+        destroy = PR_TRUE;
+    session->refCount--;
+    PR_Unlock(lock);
+
+    if (destroy)
+        sftk_DestroySession(session);
 }
 
 void

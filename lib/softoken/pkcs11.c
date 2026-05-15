@@ -3504,7 +3504,7 @@ sftk_CloseAllSessions(SFTKSlot *slot, PRBool logout)
                 SKIP_AFTER_FORK(PR_Unlock(lock));
             }
             if (session) {
-                sftk_DestroySession(session);
+                sftk_FreeSession(session);
             }
         } while (session != NULL);
     }
@@ -4871,6 +4871,10 @@ NSC_CloseSession(CK_SESSION_HANDLE hSession)
     if (sftkqueue_is_queued(session, hSession, slot->head, slot->sessHashSize)) {
         sessionFound = PR_TRUE;
         sftkqueue_delete(session, hSession, slot->head, slot->sessHashSize);
+        /* Drop the bucket's reference. We still hold the reference taken
+         * by sftk_SessionFromHandle, so refCount cannot reach 0 here. */
+        PORT_Assert(session->refCount > 1);
+        session->refCount--;
     }
     PR_Unlock(lock);
 
@@ -4891,10 +4895,11 @@ NSC_CloseSession(CK_SESSION_HANDLE hSession)
         if (handle) {
             sftk_freeDB(handle);
         }
-        sftk_DestroySession(session);
-        session = NULL;
     }
 
+    /* Drop the lookup reference. Whichever caller drives refCount to 0
+     * destroys the session. */
+    sftk_FreeSession(session);
     return CKR_OK;
 }
 
