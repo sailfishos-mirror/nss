@@ -184,6 +184,7 @@ sftk_CryptMessage(CK_SESSION_HANDLE hSession, CK_VOID_PTR pParameter,
                   CK_ULONG ulIntextLen, CK_BYTE_PTR pOuttext,
                   CK_ULONG_PTR pulOuttextLen, SFTKContextType contextType)
 {
+    SFTKSession *session;
     SFTKSessionContext *context;
     unsigned int outlen;
     unsigned int maxout = *pulOuttextLen;
@@ -192,8 +193,10 @@ sftk_CryptMessage(CK_SESSION_HANDLE hSession, CK_VOID_PTR pParameter,
 
     CHECK_FORK();
 
-    /* make sure we're legal */
-    crv = sftk_GetContext(hSession, &context, contextType, PR_TRUE, NULL);
+    /* Hold a session reference across the aeadUpdate call so a racing
+     * C_CloseSession / C_CloseAllSessions cannot drive the session
+     * refcount to zero and free context->cipherInfo under us. */
+    crv = sftk_GetContext(hSession, &context, contextType, PR_TRUE, &session);
     if (crv != CKR_OK)
         return crv;
 
@@ -231,12 +234,14 @@ sftk_CryptMessage(CK_SESSION_HANDLE hSession, CK_VOID_PTR pParameter,
 
     if (!pOuttext) {
         *pulOuttextLen = ulIntextLen;
+        sftk_FreeSession(session);
         return CKR_OK;
     }
     rv = (*context->aeadUpdate)(context->cipherInfo, pOuttext, &outlen,
                                 maxout, pIntext, ulIntextLen,
                                 pParameter, ulParameterLen,
                                 pAssociatedData, ulAssociatedDataLen);
+    sftk_FreeSession(session);
 
     if (rv != SECSuccess) {
         if (contextType == SFTK_MESSAGE_ENCRYPT) {

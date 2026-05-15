@@ -498,10 +498,12 @@ sftk_UninstallContext(SFTKSession *session, SFTKContextType type)
 
 /*
  * code to grab the context. Needed by every C_XXXUpdate, C_XXXFinal,
- * and C_XXX function. The function takes a session handle, the context type,
- * and wether or not the session needs to be multipart. It returns the context,
- * and optionally returns the session pointer (if sessionPtr != NULL) if session
- * pointer is returned, the caller is responsible for freeing it.
+ * and C_XXX function. The function takes a session handle, the context
+ * type, and whether or not the session needs to be multipart. It
+ * returns the context and the session pointer; the caller is
+ * responsible for freeing the session. If the caller doesn't need
+ * a context lookup (e.g. it already holds a session reference), it
+ * should call sftk_ReturnContextByType directly.
  */
 CK_RV
 sftk_GetContext(CK_SESSION_HANDLE handle, SFTKSessionContext **contextPtr,
@@ -510,6 +512,7 @@ sftk_GetContext(CK_SESSION_HANDLE handle, SFTKSessionContext **contextPtr,
     SFTKSession *session;
     SFTKSessionContext *context;
 
+    PORT_Assert(sessionPtr != NULL);
     session = sftk_SessionFromHandle(handle);
     if (session == NULL)
         return CKR_SESSION_HANDLE_INVALID;
@@ -520,11 +523,7 @@ sftk_GetContext(CK_SESSION_HANDLE handle, SFTKSessionContext **contextPtr,
         return CKR_OPERATION_NOT_INITIALIZED;
     }
     *contextPtr = context;
-    if (sessionPtr != NULL) {
-        *sessionPtr = session;
-    } else {
-        sftk_FreeSession(session);
-    }
+    *sessionPtr = session;
     return CKR_OK;
 }
 
@@ -7254,10 +7253,14 @@ NSC_WrapKey(CK_SESSION_HANDLE hSession,
             pText.data = (unsigned char *)attribute->attrib.pValue;
             pText.len = attribute->attrib.ulValueLen;
 
-            /* Find out if this is a block cipher. */
-            crv = sftk_GetContext(hSession, &context, SFTK_ENCRYPT, PR_FALSE, NULL);
-            if (crv != CKR_OK || !context) {
+            /* Find out if this is a block cipher. The context was just
+             * installed by sftk_CryptInit above, so we already hold a
+             * session reference and the context's type is SFTK_ENCRYPT
+             * by construction. */
+            context = sftk_ReturnContextByType(session, SFTK_ENCRYPT);
+            if (!context) {
                 sftk_FreeAttribute(attribute);
+                crv = CKR_OPERATION_NOT_INITIALIZED;
                 break;
             }
             if (context->blockSize > 1) {
@@ -10308,10 +10311,14 @@ NSC_SetOperationState(CK_SESSION_HANDLE hSession,
                 crv = NSC_DigestInit(hSession, &mech);
                 if (crv != CKR_OK)
                     break;
-                crv = sftk_GetContext(hSession, &context, SFTK_HASH, PR_TRUE,
-                                      NULL);
-                if (crv != CKR_OK)
+                /* NSC_DigestInit just installed a SFTK_HASH context on
+                 * this session; the outer session reference keeps it
+                 * alive across the load below. */
+                context = sftk_ReturnContextByType(session, SFTK_HASH);
+                if (context == NULL || context->type != SFTK_HASH) {
+                    crv = CKR_OPERATION_NOT_INITIALIZED;
                     break;
+                }
                 if (context->cipherInfoLen == 0) {
                     crv = CKR_SAVED_STATE_INVALID;
                     break;
