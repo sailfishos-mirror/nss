@@ -3480,7 +3480,7 @@ sftk_CloseAllSessions(SFTKSlot *slot, PRBool logout)
      * NSC_CloseAllSessions... but any session running when this code starts
      * will guarrenteed be close, and no session will be partially closed */
     for (i = 0; i < slot->sessHashSize; i++) {
-        PRLock *lock = SFTK_SESSION_LOCK(slot, i);
+        PRLock *lock = SFTK_HEAD_BUCKET_LOCK(slot, i);
         do {
             SKIP_AFTER_FORK(PR_Lock(lock));
             session = slot->head[i];

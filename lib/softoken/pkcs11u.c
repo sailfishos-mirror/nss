@@ -1979,7 +1979,7 @@ sftk_update_all_states(SFTKSlot *slot)
     SFTKSession *session;
 
     for (i = 0; i < slot->sessHashSize; i++) {
-        PRLock *lock = SFTK_SESSION_LOCK(slot, i);
+        PRLock *lock = SFTK_HEAD_BUCKET_LOCK(slot, i);
         PR_Lock(lock);
         for (session = slot->head[i]; session; session = session->next) {
             sftk_update_state(slot, session);
