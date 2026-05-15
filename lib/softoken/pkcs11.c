@@ -5833,6 +5833,45 @@ sftk_searchTokenList(SFTKSlot *slot, SFTKSearchResults *search,
     return crv;
 }
 
+/* Atomically install a search, returning whatever was previously installed
+ * (which the caller must free). Without the lock, two concurrent
+ * FindObjectsInit calls each read NULL, then one's later assignment
+ * overwrites the other's, leaking the loser. The lock also protects the
+ * "take" side, so a concurrent FindObjects/FindObjectsFinal can't observe
+ * a torn replacement. */
+static SFTKSearchResults *
+sftk_SwapSearch(SFTKSession *session, SFTKSearchResults *new_search)
+{
+    SFTKSlot *slot = sftk_SlotFromSession(session);
+    PRLock *lock = SFTK_SESSION_LOCK(slot, session->handle);
+    SFTKSearchResults *prev;
+    PR_Lock(lock);
+    prev = session->search;
+    session->search = new_search;
+    PR_Unlock(lock);
+    return prev;
+}
+
+/* Try to reinstall a search after a partial consume. If a concurrent
+ * FindObjectsInit replaced the search while we worked, our search is
+ * stale; signal the caller to free it. */
+static PRBool
+sftk_RestoreSearch(SFTKSession *session, SFTKSearchResults *search)
+{
+    SFTKSlot *slot = sftk_SlotFromSession(session);
+    PRLock *lock = SFTK_SESSION_LOCK(slot, session->handle);
+    PRBool restored;
+    PR_Lock(lock);
+    if (session->search == NULL) {
+        session->search = search;
+        restored = PR_TRUE;
+    } else {
+        restored = PR_FALSE;
+    }
+    PR_Unlock(lock);
+    return restored;
+}
+
 /* NSC_FindObjectsInit initializes a search for token and session objects
  * that match a template. */
 CK_RV
@@ -5911,11 +5950,10 @@ NSC_FindObjectsInit(CK_SESSION_HANDLE hSession,
         }
     }
 
-    if ((freeSearch = session->search) != NULL) {
-        session->search = NULL;
+    freeSearch = sftk_SwapSearch(session, search);
+    if (freeSearch != NULL) {
         sftk_FreeSearch(freeSearch);
     }
-    session->search = search;
     sftk_FreeSession(session);
     return CKR_OK;
 
@@ -5947,12 +5985,16 @@ NSC_FindObjects(CK_SESSION_HANDLE hSession,
     session = sftk_SessionFromHandle(hSession);
     if (session == NULL)
         return CKR_SESSION_HANDLE_INVALID;
-    if (session->search == NULL) {
+    /* Take ownership of the search for the duration of the iteration so
+     * a concurrent FindObjectsInit/FindObjectsFinal can't free it under
+     * us. If another thread takes it first, we behave as if the search
+     * had been exhausted: zero results, no error. */
+    search = sftk_SwapSearch(session, NULL);
+    if (search == NULL) {
         sftk_FreeSession(session);
         return CKR_OK;
     }
-    search = session->search;
-    left = session->search->size - session->search->index;
+    left = search->size - search->index;
     transfer = ((int)ulMaxObjectCount > left) ? left : ulMaxObjectCount;
     if (transfer > 0) {
         PORT_Memcpy(phObject, &search->handles[search->index],
@@ -5963,7 +6005,11 @@ NSC_FindObjects(CK_SESSION_HANDLE hSession,
 
     search->index += transfer;
     if (search->index == search->size) {
-        session->search = NULL;
+        /* fully consumed */
+        sftk_FreeSearch(search);
+    } else if (!sftk_RestoreSearch(session, search)) {
+        /* A concurrent FindObjectsInit installed a newer search while
+         * we were iterating; ours is now stale, drop it. */
         sftk_FreeSearch(search);
     }
     *pulObjectCount = transfer;
@@ -5983,8 +6029,7 @@ NSC_FindObjectsFinal(CK_SESSION_HANDLE hSession)
     session = sftk_SessionFromHandle(hSession);
     if (session == NULL)
         return CKR_SESSION_HANDLE_INVALID;
-    search = session->search;
-    session->search = NULL;
+    search = sftk_SwapSearch(session, NULL);
     sftk_FreeSession(session);
     if (search != NULL) {
         sftk_FreeSearch(search);
