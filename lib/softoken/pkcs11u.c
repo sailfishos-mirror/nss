@@ -1411,15 +1411,36 @@ sftk_DeleteObject(SFTKSession *session, SFTKObject *object)
 
     /* Handle Token case */
     if (so && so->session) {
-        session = so->session;
-        PR_Lock(session->objectLock);
-        sftkqueue_delete(&so->sessionList, 0, session->objects, 0);
-        PR_Unlock(session->objectLock);
+        /* Atomically claim the right to remove this object. Two threads
+         * can race here via NSC_DestroyObject after both succeed in
+         * sftk_ObjectFromHandle; without the claim each would unlink
+         * the queue entry and drop the queue's reference, leading to a
+         * double sftk_FreeObject (and on the second pass, a use-after-
+         * free when sftk_FreeObject reads object->refLock). */
+        PRBool ownsRemove = PR_FALSE;
         PR_Lock(slot->objectLock);
-        sftkqueue_delete2(object, object->handle, index, slot->sessObjHashTable);
+        if (object->next || object->prev ||
+            slot->sessObjHashTable[index] == object) {
+            sftkqueue_delete2(object, object->handle, index,
+                              slot->sessObjHashTable);
+            /* sftkqueue_delete2 patches the neighbour pointers but
+             * leaves object->next/prev pointing at their old neighbours.
+             * Clear them inside the slot lock so a racing thread that
+             * acquires the lock next sees an empty-looking object and
+             * doesn't re-claim ownership, which would lead to a double
+             * sftk_FreeObject of the queue's reference. */
+            sftkqueue_clear_deleted_element(object);
+            ownsRemove = PR_TRUE;
+        }
         PR_Unlock(slot->objectLock);
-        sftkqueue_clear_deleted_element(object);
-        sftk_FreeObject(object); /* free the reference owned by the queue */
+
+        if (ownsRemove) {
+            session = so->session;
+            PR_Lock(session->objectLock);
+            sftkqueue_delete(&so->sessionList, 0, session->objects, 0);
+            PR_Unlock(session->objectLock);
+            sftk_FreeObject(object); /* drop the queue's reference */
+        }
     } else {
         SFTKDBHandle *handle = sftk_getDBForTokenObject(slot, object->handle);
 #ifdef DEBUG
