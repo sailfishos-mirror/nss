@@ -2023,7 +2023,6 @@ sftk_InitSession(SFTKSession *session, SFTKSlot *slot, CK_SLOT_ID slotID,
     session->refCount = 1;
     session->enc_context = NULL;
     session->hash_context = NULL;
-    session->sign_context = NULL;
     session->search = NULL;
     session->objectIDCount = 1;
     session->objectLock = PR_NewLock();
@@ -2091,9 +2090,6 @@ sftk_ClearSession(SFTKSession *session)
     }
     if (session->hash_context) {
         sftk_FreeContext(session->hash_context);
-    }
-    if (session->sign_context) {
-        sftk_FreeContext(session->sign_context);
     }
     if (session->search) {
         sftk_FreeSearch(session->search);

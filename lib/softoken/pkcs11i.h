@@ -327,7 +327,6 @@ struct SFTKSessionStr {
     SFTKSearchResults *search;
     SFTKSessionContext *enc_context;
     SFTKSessionContext *hash_context;
-    SFTKSessionContext *sign_context;
     PRBool lastOpWasFIPS;
     SFTKObjectList *objects[1];
 };
@@ -848,12 +847,14 @@ extern CK_RV sftk_InitGeneric(SFTKSession *session,
                               CK_ATTRIBUTE_TYPE operation);
 void sftk_SetContextByType(SFTKSession *session, SFTKContextType type,
                            SFTKSessionContext *context);
+extern CK_RV sftk_InstallContext(SFTKSession *session, SFTKContextType type,
+                                 SFTKSessionContext *context);
+extern void sftk_UninstallContext(SFTKSession *session, SFTKContextType type);
 extern CK_RV sftk_GetContext(CK_SESSION_HANDLE handle,
                              SFTKSessionContext **contextPtr,
                              SFTKContextType type, PRBool needMulti,
                              SFTKSession **sessionPtr);
-extern void sftk_TerminateOp(SFTKSession *session, SFTKContextType ctype,
-                             SFTKSessionContext *context);
+extern void sftk_TerminateOp(SFTKSession *session, SFTKContextType ctype);
 extern void sftk_FreeContext(SFTKSessionContext *context);
 
 extern NSSLOWKEYPublicKey *sftk_GetPubKey(SFTKObject *object,
