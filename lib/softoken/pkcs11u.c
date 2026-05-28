@@ -127,28 +127,11 @@ sftk_MapVerifyError(int error)
  * to hold value.
  */
 static SFTKAttribute *
-sftk_NewAttribute(SFTKObject *object,
-                  CK_ATTRIBUTE_TYPE type, const void *value, CK_ULONG len)
+sftk_InitAttribute(SFTKSessionObject *so, int index,
+                   CK_ATTRIBUTE_TYPE type, const void *value, CK_ULONG len)
 {
     SFTKAttribute *attribute;
 
-    SFTKSessionObject *so = sftk_narrowToSessionObject(object);
-    int index;
-
-    if (so == NULL) {
-        /* allocate new attribute in a buffer */
-        PORT_Assert(0);
-        return NULL;
-    }
-    /*
-     * We attempt to keep down contention on Malloc and Arena locks by
-     * limiting the number of these calls on high traversed paths. This
-     * is done for attributes by 'allocating' them from a pool already
-     * allocated by the parent object.
-     */
-    PR_Lock(so->attributeLock);
-    index = so->nextAttr++;
-    PR_Unlock(so->attributeLock);
     PORT_Assert(index < MAX_OBJS_ATTRS);
     if (index >= MAX_OBJS_ATTRS)
         return NULL;
@@ -177,6 +160,30 @@ sftk_NewAttribute(SFTKObject *object,
     attribute->handle = type;
     attribute->next = attribute->prev = NULL;
     return attribute;
+}
+
+static SFTKAttribute *
+sftk_NewAttribute(SFTKObject *object,
+                  CK_ATTRIBUTE_TYPE type, const void *value, CK_ULONG len)
+{
+    SFTKSessionObject *so = sftk_narrowToSessionObject(object);
+    int index;
+
+    if (so == NULL) {
+        /* allocate new attribute in a buffer */
+        PORT_Assert(0);
+        return NULL;
+    }
+    /*
+     * We attempt to keep down contention on Malloc and Arena locks by
+     * limiting the number of these calls on high traversed paths. This
+     * is done for attributes by 'allocating' them from a pool already
+     * allocated by the parent object.
+     */
+    PR_Lock(so->attributeLock);
+    index = so->nextAttr++;
+    PR_Unlock(so->attributeLock);
+    return sftk_InitAttribute(so, index, type, value, len);
 }
 
 /*
@@ -1823,6 +1830,7 @@ sftk_CopyObject(SFTKObject *destObject, SFTKObject *srcObject)
 {
     SFTKAttribute *attribute;
     SFTKSessionObject *src_so = sftk_narrowToSessionObject(srcObject);
+    SFTKSessionObject *dest_so = sftk_narrowToSessionObject(destObject);
     unsigned int i;
 
     destObject->validation_value = srcObject->validation_value;
@@ -1830,22 +1838,31 @@ sftk_CopyObject(SFTKObject *destObject, SFTKObject *srcObject)
     if (src_so == NULL) {
         return sftk_CopyTokenObject(destObject, srcObject);
     }
+    PORT_Assert(dest_so != NULL);
+    if (dest_so == NULL) {
+        return CKR_ARGUMENTS_BAD;
+    }
 
     PR_Lock(src_so->attributeLock);
     for (i = 0; i < src_so->hashSize; i++) {
         attribute = src_so->head[i];
         do {
             if (attribute) {
-                if (!sftk_hasAttribute(destObject, attribute->handle)) {
+                SFTKAttribute *existing;
+                sftkqueue_find(existing, attribute->handle,
+                               dest_so->head, dest_so->hashSize);
+                if (!existing) {
                     /* we need to copy the attribute since each attribute
                      * only has one set of link list pointers */
-                    SFTKAttribute *newAttribute = sftk_NewAttribute(
-                        destObject, sftk_attr_expand(&attribute->attrib));
+                    SFTKAttribute *newAttribute = sftk_InitAttribute(
+                        dest_so, dest_so->nextAttr++,
+                        sftk_attr_expand(&attribute->attrib));
                     if (newAttribute == NULL) {
                         PR_Unlock(src_so->attributeLock);
                         return CKR_HOST_MEMORY;
                     }
-                    sftk_AddAttribute(destObject, newAttribute);
+                    sftkqueue_add(newAttribute, newAttribute->handle,
+                                  dest_so->head, dest_so->hashSize);
                 }
                 attribute = attribute->next;
             }
