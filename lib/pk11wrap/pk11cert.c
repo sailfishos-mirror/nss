@@ -650,8 +650,10 @@ transfer_uri_certs_to_collection(nssList *certList, PK11URI *uri,
          * CKA_ID from the URI
          */
         if (id && (id->len != certs[i]->id.size ||
-                   memcmp(id->data, certs[i]->id.data, certs[i]->id.size)))
+                   memcmp(id->data, certs[i]->id.data, certs[i]->id.size))) {
+            CERT_DestroyCertificate(STAN_GetCERTCertificateOrRelease(certs[i]));
             continue;
+        }
         tokens = nssPKIObject_GetTokens(&certs[i]->object, NULL);
         if (tokens) {
             for (tp = tokens; *tp; tp++) {
@@ -797,10 +799,12 @@ find_certs_from_uri(const char *uriString, void *wincx)
         (void)nssToken_Destroy(*tok);
     }
     nss_ZFreeIf(tokens);
-    nssList_Destroy(certList);
     certs = nssPKIObjectCollection_GetCertificates(collection, NULL, 0, NULL);
 
 loser:
+    if (certList) {
+        nssList_Destroy(certList);
+    }
     if (collection) {
         nssPKIObjectCollection_Destroy(collection);
     }

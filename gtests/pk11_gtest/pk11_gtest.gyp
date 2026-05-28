@@ -39,6 +39,7 @@
         'pk11_key_unittest.cc',
         'pk11_keygen.cc',
         'pk11_module_unittest.cc',
+        'pk11_uri_unittest.cc',
         'pk11_pbe_unittest.cc',
         'pk11_pbkdf2_unittest.cc',
         'pk11_prf_unittest.cc',

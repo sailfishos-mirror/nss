@@ -445,6 +445,21 @@ CK_RV Test_C_GetAttributeValue(CK_SESSION_HANDLE hSession,
         BYTEARRAY_CASE(CKA_SERIAL_NUMBER, certSerial)
         BYTEARRAY_CASE(CKA_ISSUER, certIssuer)
 
+        case CKA_ID: {
+          const unsigned char *idData = certs[hObject - 3].id;
+          CK_ULONG idLen = certs[hObject - 3].idLen;
+          if (pTemplate[count].pValue) {
+            if (pTemplate[count].ulValueLen >= idLen) {
+              memcpy(pTemplate[count].pValue, idData, idLen);
+            } else {
+              pTemplate[count].ulValueLen = CK_UNAVAILABLE_INFORMATION;
+            }
+          } else {
+            pTemplate[count].ulValueLen = idLen;
+          }
+          break;
+        }
+
         default:
           pTemplate[count].ulValueLen = CK_UNAVAILABLE_INFORMATION;
           break;
