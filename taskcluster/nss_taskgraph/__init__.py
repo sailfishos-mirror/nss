@@ -6,11 +6,10 @@ import argparse
 import os
 import re
 import shlex
-from typing import Literal, Optional
+
 from taskgraph.decision import PER_PROJECT_PARAMETERS
 from taskgraph.parameters import extend_parameters_schema
 from taskgraph.util.vcs import get_repository
-from taskgraph.util.schema import Schema
 from voluptuous import Any, Optional, Required
 
 
@@ -73,20 +72,17 @@ def default_parameters(repo_root):
 
 
 def register(graph_config):
-
-    class TryOptions(Schema, kw_only=True, rename=None):
-        nspr_patch: Optional[bool] = None
-        builds: Optional[list[Literal["d", "o"]]] = None
-        platforms: Optional[list[str]] = None
-        unittests: Optional[list[str]] = None
-        tools: Optional[list[str]] = None
-        extra: Optional[bool] = None
-
-
-    class NssParametersSchema(Schema, kw_only=True, rename=None):
-        try_options: Optional[TryOptions] = None
-
-    extend_parameters_schema(NssParametersSchema, default_parameters)
+    schema = {
+        Optional("try_options"): {
+            Optional("nspr_patch"): bool,
+            Optional("builds"): [Any("d", "o")],
+            Optional("platforms"): [str],
+            Optional("unittests"): [str],
+            Optional("tools"): [str],
+            Optional("extra"): bool,
+        },
+    }
+    extend_parameters_schema(schema, default_parameters)
 
     from . import target_tasks
 
