@@ -113,9 +113,13 @@ JAR_parse_manifest(JAR *jar, char *raw_manifest, long length,
     /* Determine what kind of file this is from the META-INF
        directory. It could be MF, SF, or a binary RSA/DSA file */
 
-    if (!PORT_Strncasecmp(raw_manifest, "Manifest-Version:", 17)) {
+    /* length must cover the literal prefix before calling PORT_Strncasecmp,
+     * otherwise it may read past the end of raw_manifest. */
+    if (length >= 17 &&
+        !PORT_Strncasecmp(raw_manifest, "Manifest-Version:", 17)) {
         return jar_parse_mf(jar, raw_manifest, length, path, url);
-    } else if (!PORT_Strncasecmp(raw_manifest, "Signature-Version:", 18)) {
+    } else if (length >= 18 &&
+               !PORT_Strncasecmp(raw_manifest, "Signature-Version:", 18)) {
         return jar_parse_sf(jar, raw_manifest, length, path, url);
     } else {
         /* This is probably a binary signature */
