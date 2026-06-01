@@ -43,6 +43,7 @@ is_string_attribute(
     switch (aType) {
         case CKA_LABEL:
         case CKA_NSS_EMAIL:
+        case CKA_NSS_URL:
             isString = PR_TRUE;
             break;
         default:
