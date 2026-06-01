@@ -470,6 +470,16 @@ sftk_ike_prf(CK_SESSION_HANDLE hSession, const SFTKAttribute *inKey,
     CK_RV crv = CKR_OK;
     prfContext context;
 
+    /* Bound the caller-supplied nonce lengths so that ulNiLen + ulNrLen can
+     * never overflow or be truncated when stored in the unsigned-int
+     * newInKeySize used to size the Ni||Nr concatenation buffer below.
+     * IKE nonces are at most 256 octets (RFC 7296 section 2.10) and IKE
+     * payload length fields are 16-bit, so 0xffff is far above any
+     * legitimate value. */
+    if (params->ulNiLen > 0xffff || params->ulNrLen > 0xffff) {
+        return CKR_MECHANISM_PARAM_INVALID;
+    }
+
     crv = prf_setup(&context, params->prfMechanism);
     if (crv != CKR_OK) {
         return crv;
