@@ -779,6 +779,12 @@ sftk_ike1_appendix_b_prf(CK_SESSION_HANDLE hSession, const SFTKAttribute *inKey,
     }
 
     outKeySize = PR_ROUNDUP(keySize, macSize);
+    /* Reject if PR_ROUNDUP overflowed 32-bit unsigned arithmetic, which
+     * would yield an undersized allocation for the loop below. */
+    if (outKeySize < keySize) {
+        crv = CKR_KEY_SIZE_RANGE;
+        goto fail;
+    }
     outKeyData = PORT_Alloc(outKeySize);
     if (outKeyData == NULL) {
         crv = CKR_HOST_MEMORY;
@@ -921,6 +927,12 @@ sftk_ike_prf_plus_raw(CK_SESSION_HANDLE hSession,
         goto fail;
     }
     macSize = prf_length(&context);
+    /* RFC 7296 limits prf+ to 255 blocks; enforcing this up front also
+     * prevents 32-bit overflow in PR_ROUNDUP below. */
+    if (keySize > 255 * macSize) {
+        crv = CKR_KEY_SIZE_RANGE;
+        goto fail;
+    }
     outKeySize = PR_ROUNDUP(keySize, macSize);
     outKeyData = PORT_Alloc(outKeySize);
     if (outKeyData == NULL) {
