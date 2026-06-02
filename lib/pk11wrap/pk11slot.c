@@ -164,6 +164,7 @@ pk11_FreeSlotListStatic(PK11SlotList *list)
     }
     list->lock = NULL;
     list->head = NULL;
+    list->tail = NULL;
 }
 
 /*
@@ -850,6 +851,7 @@ pk11_InitSlotListStatic(PK11SlotList *list)
 {
     list->lock = PR_NewLock();
     list->head = NULL;
+    list->tail = NULL;
 }
 
 /* initialize the system slotlists */
