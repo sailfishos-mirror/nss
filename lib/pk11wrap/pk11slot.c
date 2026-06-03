@@ -1387,7 +1387,9 @@ PK11_InitToken(PK11SlotInfo *slot, PRBool loadCerts)
         ((slot->tokenInfo.flags & CKF_PROTECTED_AUTHENTICATION_PATH)
              ? PR_TRUE
              : PR_FALSE);
+    PK11_EnterSlotMonitor(slot);
     slot->lastLoginCheck = 0;
+    PK11_ExitSlotMonitor(slot);
     slot->lastState = 0;
     /* on some platforms Active Card incorrectly sets the
      * CKF_PROTECTED_AUTHENTICATION_PATH bit when it doesn't mean to. */

@@ -352,6 +352,7 @@ PK11_CheckSSOPassword(PK11SlotInfo *slot, char *ssopw)
     CK_SESSION_HANDLE rwsession;
     CK_RV crv;
     SECStatus rv = SECFailure;
+    PRBool haveMonitor;
     int len = 0;
 
     /* get a rwsession */
@@ -360,6 +361,7 @@ PK11_CheckSSOPassword(PK11SlotInfo *slot, char *ssopw)
         PORT_SetError(SEC_ERROR_BAD_DATA);
         return rv;
     }
+    haveMonitor = PK11_RWSessionHasLock(slot, rwsession);
 
     if (slot->protectedAuthPath) {
         len = 0;
@@ -374,7 +376,11 @@ PK11_CheckSSOPassword(PK11SlotInfo *slot, char *ssopw)
     /* check the password */
     crv = PK11_GETTAB(slot)->C_Login(rwsession, CKU_SO,
                                      (unsigned char *)ssopw, len);
+    if (!haveMonitor)
+        PK11_EnterSlotMonitor(slot);
     slot->lastLoginCheck = 0;
+    if (!haveMonitor)
+        PK11_ExitSlotMonitor(slot);
     switch (crv) {
         /* if we're already logged in, we're good to go */
         case CKR_OK:
@@ -389,7 +395,11 @@ PK11_CheckSSOPassword(PK11SlotInfo *slot, char *ssopw)
             rv = SECFailure; /* some failure we can't fix by retrying */
     }
     PK11_GETTAB(slot)->C_Logout(rwsession);
+    if (!haveMonitor)
+        PK11_EnterSlotMonitor(slot);
     slot->lastLoginCheck = 0;
+    if (!haveMonitor)
+        PK11_ExitSlotMonitor(slot);
 
     /* release rwsession */
     PK11_RestoreROSession(slot, rwsession);
@@ -420,6 +430,7 @@ PK11_InitPin(PK11SlotInfo *slot, const char *ssopw, const char *userpw)
     CK_SESSION_HANDLE rwsession = CK_INVALID_HANDLE;
     CK_RV crv;
     SECStatus rv = SECFailure;
+    PRBool haveMonitor;
     int len;
     int ssolen;
 
@@ -435,9 +446,12 @@ PK11_InitPin(PK11SlotInfo *slot, const char *ssopw, const char *userpw)
     rwsession = PK11_GetRWSession(slot);
     if (rwsession == CK_INVALID_HANDLE) {
         PORT_SetError(SEC_ERROR_BAD_DATA);
+        PK11_EnterSlotMonitor(slot);
         slot->lastLoginCheck = 0;
+        PK11_ExitSlotMonitor(slot);
         return rv;
     }
+    haveMonitor = PK11_RWSessionHasLock(slot, rwsession);
 
     if (slot->protectedAuthPath) {
         len = 0;
@@ -449,7 +463,11 @@ PK11_InitPin(PK11SlotInfo *slot, const char *ssopw, const char *userpw)
     /* check the password */
     crv = PK11_GETTAB(slot)->C_Login(rwsession, CKU_SO,
                                      (unsigned char *)ssopw, ssolen);
+    if (!haveMonitor)
+        PK11_EnterSlotMonitor(slot);
     slot->lastLoginCheck = 0;
+    if (!haveMonitor)
+        PK11_ExitSlotMonitor(slot);
     if (crv != CKR_OK) {
         PORT_SetError(PK11_MapError(crv));
         goto done;
@@ -464,7 +482,11 @@ PK11_InitPin(PK11SlotInfo *slot, const char *ssopw, const char *userpw)
 
 done:
     PK11_GETTAB(slot)->C_Logout(rwsession);
+    if (!haveMonitor)
+        PK11_EnterSlotMonitor(slot);
     slot->lastLoginCheck = 0;
+    if (!haveMonitor)
+        PK11_ExitSlotMonitor(slot);
     PK11_RestoreROSession(slot, rwsession);
     if (rv == SECSuccess) {
         /* update our view of the world */
