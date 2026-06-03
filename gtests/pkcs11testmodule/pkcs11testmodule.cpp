@@ -51,6 +51,10 @@
 // test (including when this module is loaded as thread-safe), this state would
 // need a lock.
 static const size_t kMaxAuthPinLen = 32;
+// Object handle of a CKA_ALWAYS_AUTHENTICATE private key on the auth slot, used
+// by pk11_auth_unittest to drive the sign/decrypt re-login paths. Must match
+// kAlwaysAuthPrivKeyHandle in pk11_auth_unittest.cc.
+static const CK_OBJECT_HANDLE kAlwaysAuthPrivKeyHandle = 6;
 static char authSoPin[kMaxAuthPinLen + 1];
 static size_t authSoPinLen;
 static char authUserPin[kMaxAuthPinLen + 1];
@@ -472,10 +476,17 @@ CK_RV Test_C_Login(CK_SESSION_HANDLE hSession, CK_USER_TYPE userType,
   if (hSession != 5) {
     return CKR_FUNCTION_NOT_SUPPORTED;
   }
-  if (authSessionState != CKS_RW_PUBLIC_SESSION) {
-    return CKR_USER_ALREADY_LOGGED_IN;
-  }
-  if (userType == CKU_USER) {
+  // CKU_USER logs the session in; CKU_CONTEXT_SPECIFIC re-authenticates an
+  // already-logged-in session for a CKA_ALWAYS_AUTHENTICATE operation. Both
+  // verify the user PIN; they differ only in the required starting state.
+  if (userType == CKU_USER || userType == CKU_CONTEXT_SPECIFIC) {
+    if (userType == CKU_CONTEXT_SPECIFIC) {
+      if (authSessionState != CKS_RW_USER_FUNCTIONS) {
+        return CKR_USER_NOT_LOGGED_IN;
+      }
+    } else if (authSessionState != CKS_RW_PUBLIC_SESSION) {
+      return CKR_USER_ALREADY_LOGGED_IN;
+    }
     if (!authUserPinInitialized) {
       return CKR_USER_PIN_NOT_INITIALIZED;
     }
@@ -487,6 +498,9 @@ CK_RV Test_C_Login(CK_SESSION_HANDLE hSession, CK_USER_TYPE userType,
     return CKR_OK;
   }
   if (userType == CKU_SO) {
+    if (authSessionState != CKS_RW_PUBLIC_SESSION) {
+      return CKR_USER_ALREADY_LOGGED_IN;
+    }
     if (ulPinLen != authSoPinLen || memcmp(pPin, authSoPin, ulPinLen) != 0) {
       return CKR_PIN_INCORRECT;
     }
@@ -615,6 +629,35 @@ CK_RV Test_C_GetAttributeValue(CK_SESSION_HANDLE hSession,
     default:
       break;
     }
+  }
+  // Auth slot: a private key that always requires per-operation
+  // re-authentication (CKA_ALWAYS_AUTHENTICATE). CKA_PRIVATE is reported false
+  // to keep the test focused on the CKU_CONTEXT_SPECIFIC re-login path.
+  if (hSession == 5 && hObject == kAlwaysAuthPrivKeyHandle) {
+    for (CK_ULONG count = 0; count < ulCount; count++) {
+      CK_BBOOL value;
+      switch (pTemplate[count].type) {
+        case CKA_ALWAYS_AUTHENTICATE:
+          value = CK_TRUE;
+          break;
+        case CKA_PRIVATE:
+          value = CK_FALSE;
+          break;
+        default:
+          pTemplate[count].ulValueLen = CK_UNAVAILABLE_INFORMATION;
+          continue;
+      }
+      if (pTemplate[count].pValue) {
+        if (pTemplate[count].ulValueLen >= sizeof(value)) {
+          memcpy(pTemplate[count].pValue, &value, sizeof(value));
+        } else {
+          pTemplate[count].ulValueLen = CK_UNAVAILABLE_INFORMATION;
+        }
+      } else {
+        pTemplate[count].ulValueLen = sizeof(value);
+      }
+    }
+    return CKR_OK;
   }
   return CKR_FUNCTION_NOT_SUPPORTED;
 }
@@ -747,14 +790,29 @@ CK_RV Test_C_EncryptFinal(CK_SESSION_HANDLE, CK_BYTE_PTR, CK_ULONG_PTR) {
   return CKR_FUNCTION_NOT_SUPPORTED;
 }
 
-CK_RV Test_C_DecryptInit(CK_SESSION_HANDLE, CK_MECHANISM_PTR,
+CK_RV Test_C_DecryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR,
                          CK_OBJECT_HANDLE) {
+  if (hSession == 5) {
+    return CKR_OK;
+  }
   return CKR_FUNCTION_NOT_SUPPORTED;
 }
 
-CK_RV Test_C_Decrypt(CK_SESSION_HANDLE, CK_BYTE_PTR, CK_ULONG, CK_BYTE_PTR,
-                     CK_ULONG_PTR) {
-  return CKR_FUNCTION_NOT_SUPPORTED;
+CK_RV Test_C_Decrypt(CK_SESSION_HANDLE hSession, CK_BYTE_PTR, CK_ULONG,
+                     CK_BYTE_PTR pData, CK_ULONG_PTR pulDataLen) {
+  if (hSession != 5) {
+    return CKR_FUNCTION_NOT_SUPPORTED;
+  }
+  // No real crypto: return a fixed dummy plaintext.
+  static const CK_BYTE kPlaintext[8] = {7, 6, 5, 4, 3, 2, 1, 0};
+  if (pData) {
+    if (*pulDataLen < sizeof(kPlaintext)) {
+      return CKR_BUFFER_TOO_SMALL;
+    }
+    memcpy(pData, kPlaintext, sizeof(kPlaintext));
+  }
+  *pulDataLen = sizeof(kPlaintext);
+  return CKR_OK;
 }
 
 CK_RV Test_C_DecryptUpdate(CK_SESSION_HANDLE, CK_BYTE_PTR, CK_ULONG,
@@ -787,13 +845,29 @@ CK_RV Test_C_DigestFinal(CK_SESSION_HANDLE, CK_BYTE_PTR, CK_ULONG_PTR) {
   return CKR_FUNCTION_NOT_SUPPORTED;
 }
 
-CK_RV Test_C_SignInit(CK_SESSION_HANDLE, CK_MECHANISM_PTR, CK_OBJECT_HANDLE) {
+CK_RV Test_C_SignInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR,
+                      CK_OBJECT_HANDLE) {
+  if (hSession == 5) {
+    return CKR_OK;
+  }
   return CKR_FUNCTION_NOT_SUPPORTED;
 }
 
-CK_RV Test_C_Sign(CK_SESSION_HANDLE, CK_BYTE_PTR, CK_ULONG, CK_BYTE_PTR,
-                  CK_ULONG_PTR) {
-  return CKR_FUNCTION_NOT_SUPPORTED;
+CK_RV Test_C_Sign(CK_SESSION_HANDLE hSession, CK_BYTE_PTR, CK_ULONG,
+                  CK_BYTE_PTR pSignature, CK_ULONG_PTR pulSignatureLen) {
+  if (hSession != 5) {
+    return CKR_FUNCTION_NOT_SUPPORTED;
+  }
+  // No real crypto: return a fixed dummy signature.
+  static const CK_BYTE kSignature[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+  if (pSignature) {
+    if (*pulSignatureLen < sizeof(kSignature)) {
+      return CKR_BUFFER_TOO_SMALL;
+    }
+    memcpy(pSignature, kSignature, sizeof(kSignature));
+  }
+  *pulSignatureLen = sizeof(kSignature);
+  return CKR_OK;
 }
 
 CK_RV Test_C_SignUpdate(CK_SESSION_HANDLE, CK_BYTE_PTR, CK_ULONG) {

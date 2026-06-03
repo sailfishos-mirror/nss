@@ -787,6 +787,7 @@ find_certs_from_uri(const char *uriString, void *wincx)
 
             rv = pk11_AuthenticateUnfriendly(slotinfo, PR_TRUE, wincx);
             if (rv != SECSuccess) {
+                (void)nssToken_Destroy(*tok);
                 continue;
             }
             instances = nssToken_FindObjectsByTemplate(*tok, NULL,

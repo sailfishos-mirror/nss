@@ -5,8 +5,12 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include <stdlib.h>
+#include <cstdint>
+#include <cstring>
+#include <vector>
 
 #include "nss.h"
+#include "keyhi.h"
 #include "pk11pub.h"
 #include "prenv.h"
 #include "prerror.h"
@@ -42,9 +46,9 @@ class Pkcs11AuthTest : public ::testing::TestWithParam<bool> {
     // exist on Windows). Clear it again afterward (empty == unset) so unrelated
     // modules loaded later aren't forced to lock.
     PR_SetEnv(ForceLock() ? kForceLockOn : kForceLockOff);
-    ASSERT_EQ(SECSuccess, SECMOD_AddNewModule(
-                              kModuleName,
-                              DLL_PREFIX "pkcs11testmodule." DLL_SUFFIX, 0, 0))
+    ASSERT_EQ(SECSuccess,
+              SECMOD_AddNewModule(
+                  kModuleName, DLL_PREFIX "pkcs11testmodule." DLL_SUFFIX, 0, 0))
         << PORT_ErrorToName(PORT_GetError());
     PR_SetEnv(kForceLockOff);
     slot_.reset(PK11_FindSlotByName(kAuthTokenName));
@@ -152,10 +156,123 @@ TEST_P(Pkcs11AuthTest, DoPasswordViaCallback) {
   EXPECT_TRUE(PK11_IsLoggedIn(slot_.get(), nullptr));
 }
 
-INSTANTIATE_TEST_SUITE_P(
-    ThreadSafetyVariants, Pkcs11AuthTest, ::testing::Values(false, true),
-    [](const ::testing::TestParamInfo<bool>& param_info) {
-      return param_info.param ? "NonThreadSafe" : "ThreadSafe";
-    });
+// Exercises the askpw==1 ("log out after N minutes") timeout path in
+// PK11_IsLoggedIn: a not-yet-expired timeout keeps us logged in (refreshes
+// authTime), while an already-expired timeout forces a C_Logout.
+TEST_P(Pkcs11AuthTest, LoginTimeoutLogsOutWhenExpired) {
+  ASSERT_EQ(SECSuccess, PK11_InitPin(slot_.get(), kInitialSoPin, "1234"));
+  ASSERT_EQ(SECSuccess, PK11_Logout(slot_.get()));
+  // Log in via PK11_CheckUserPassword, which stamps slot->authTime with the
+  // current time (PK11_InitPin does not), so the timeout below is measured
+  // from "now".
+  ASSERT_EQ(SECSuccess, PK11_CheckUserPassword(slot_.get(), "1234"));
+  ASSERT_TRUE(PK11_IsLoggedIn(slot_.get(), nullptr));
+
+  int savedAskpw, savedTimeout;
+  PK11_GetSlotPWValues(slot_.get(), &savedAskpw, &savedTimeout);
+
+  // askpw == 1 enables the timeout check. A large timeout has not elapsed, so
+  // we stay logged in (the "else" branch refreshes authTime).
+  PK11_SetSlotPWValues(slot_.get(), 1, 1000);
+  EXPECT_TRUE(PK11_IsLoggedIn(slot_.get(), nullptr));
+
+  // A negative timeout puts the deadline (authTime + timeout) in the
+  // past, so the session counts as expired even if the clock hasn't advanced
+  // since authTime was last refreshed (PR_Now's resolution is coarse on some
+  // platforms). PK11_IsLoggedIn takes the expiry branch and logs the token out.
+  PK11_SetSlotPWValues(slot_.get(), 1, -1);
+  EXPECT_FALSE(PK11_IsLoggedIn(slot_.get(), nullptr));
+
+  PK11_SetSlotPWValues(slot_.get(), savedAskpw, savedTimeout);
+}
+
+// Handle of the CKA_ALWAYS_AUTHENTICATE private key the test module exposes on
+// the auth slot. Must match kAlwaysAuthPrivKeyHandle in pkcs11testmodule.cpp.
+static const CK_OBJECT_HANDLE kAlwaysAuthPrivKeyHandle = 6;
+
+// We don't have a way to mint a real key on the mock token, but the crypto-op
+// entry points only need a key that references the slot and an object whose
+// token reports CKA_ALWAYS_AUTHENTICATE, so build a minimal SECKEYPrivateKey by
+// hand (SECKEYPrivateKey is a public struct).
+static SECKEYPrivateKey MakeAlwaysAuthKey(PK11SlotInfo* slot) {
+  SECKEYPrivateKey key;
+  memset(&key, 0, sizeof(key));
+  key.keyType = rsaKey;
+  key.pkcs11Slot = slot;
+  key.pkcs11ID = kAlwaysAuthPrivKeyHandle;
+  key.wincx = nullptr;
+  return key;
+}
+
+// Regression tests for bug 1885900.
+//
+// A crypto operation with a CKA_ALWAYS_AUTHENTICATE key takes the slot monitor
+// and then calls PK11_DoPassword with alreadyLocked = PR_TRUE to perform a
+// CKU_CONTEXT_SPECIFIC re-login between C_*Init and the operation. The bug was
+// a PK11_IsLoggedIn() call inside PK11_DoPassword that ignored alreadyLocked
+// and re-took the monitor, self-deadlocking. The NonThreadSafe variant is the
+// one that actually deadlocked pre-fix (the monitor is the shared module lock
+// and is always taken); either way the operation must complete rather than
+// hang.
+//
+// PK11_SignWithMechanism (pk11obj.c) is one such caller.
+TEST_P(Pkcs11AuthTest, AlwaysAuthenticateSignDoesNotDeadlock) {
+  ASSERT_EQ(SECSuccess, PK11_InitPin(slot_.get(), kInitialSoPin, "1234"));
+  ASSERT_EQ(SECSuccess, PK11_Logout(slot_.get()));
+  ASSERT_EQ(SECSuccess, PK11_CheckUserPassword(slot_.get(), "1234"));
+  ASSERT_TRUE(PK11_IsLoggedIn(slot_.get(), nullptr));
+
+  doPasswordCallbackCount = 0;
+  PK11_SetPasswordFunc(doPasswordCallback);  // supplies "1234"
+
+  SECKEYPrivateKey key = MakeAlwaysAuthKey(slot_.get());
+  std::vector<uint8_t> hashBuf(32, 0xab);
+  SECItem hash = {siBuffer, hashBuf.data(),
+                  static_cast<unsigned int>(hashBuf.size())};
+  std::vector<uint8_t> sigBuf(64);
+  SECItem sig = {siBuffer, sigBuf.data(),
+                 static_cast<unsigned int>(sigBuf.size())};
+
+  SECStatus rv =
+      PK11_SignWithMechanism(&key, CKM_RSA_PKCS, nullptr, &sig, &hash);
+  PK11_SetPasswordFunc(nullptr);
+
+  EXPECT_EQ(SECSuccess, rv) << PORT_ErrorToName(PORT_GetError());
+  // The CKA_ALWAYS_AUTHENTICATE re-login must have prompted for the PIN.
+  EXPECT_GE(doPasswordCallbackCount, 1);
+}
+
+// PK11_PrivDecrypt (pk11obj.c) is the other caller with the same shape.
+TEST_P(Pkcs11AuthTest, AlwaysAuthenticateDecryptDoesNotDeadlock) {
+  ASSERT_EQ(SECSuccess, PK11_InitPin(slot_.get(), kInitialSoPin, "1234"));
+  ASSERT_EQ(SECSuccess, PK11_Logout(slot_.get()));
+  ASSERT_EQ(SECSuccess, PK11_CheckUserPassword(slot_.get(), "1234"));
+  ASSERT_TRUE(PK11_IsLoggedIn(slot_.get(), nullptr));
+
+  doPasswordCallbackCount = 0;
+  PK11_SetPasswordFunc(doPasswordCallback);  // supplies "1234"
+
+  SECKEYPrivateKey key = MakeAlwaysAuthKey(slot_.get());
+  std::vector<uint8_t> ciphertext(64, 0xcd);
+  std::vector<uint8_t> out(64);
+  unsigned int outLen = 0;
+
+  SECStatus rv =
+      PK11_PrivDecrypt(&key, CKM_RSA_PKCS, nullptr, out.data(), &outLen,
+                       static_cast<unsigned int>(out.size()), ciphertext.data(),
+                       static_cast<unsigned int>(ciphertext.size()));
+  PK11_SetPasswordFunc(nullptr);
+
+  EXPECT_EQ(SECSuccess, rv) << PORT_ErrorToName(PORT_GetError());
+  // The CKA_ALWAYS_AUTHENTICATE re-login must have prompted for the PIN.
+  EXPECT_GE(doPasswordCallbackCount, 1);
+}
+
+INSTANTIATE_TEST_SUITE_P(ThreadSafetyVariants, Pkcs11AuthTest,
+                         ::testing::Values(false, true),
+                         [](const ::testing::TestParamInfo<bool>& param_info) {
+                           return param_info.param ? "NonThreadSafe"
+                                                   : "ThreadSafe";
+                         });
 
 }  // namespace nss_test
