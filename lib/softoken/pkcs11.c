@@ -1750,9 +1750,16 @@ validateSecretKey(SFTKSession *session, SFTKObject *object,
                 sftk_FreeAttribute(attribute);
                 return CKR_KEY_SIZE_RANGE;
             }
+            /* sftk_FindAttribute returns a private copy, so set the parity
+             * bits on it and then write the value back to the object. */
             sftk_FormatDESKey((unsigned char *)attribute->attrib.pValue,
                               attribute->attrib.ulValueLen);
+            crv = sftk_forceAttribute(object, CKA_VALUE,
+                                      attribute->attrib.pValue,
+                                      attribute->attrib.ulValueLen);
             sftk_FreeAttribute(attribute);
+            if (crv != CKR_OK)
+                return crv;
             break;
         case CKK_AES:
             attribute = sftk_FindAttribute(object, CKA_VALUE);
