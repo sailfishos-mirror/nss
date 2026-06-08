@@ -69,7 +69,6 @@
       'dependencies': [
         '<(DEPTH)/exports.gyp:nss_exports',
         '<(DEPTH)/fuzz/targets/lib/asn1/asn1.gyp:asn1',
-        '<(DEPTH)/fuzz/targets/lib/base/base.gyp:base',
         'nssfuzz_base',
       ],
     },
@@ -95,7 +94,6 @@
       'dependencies': [
         '<(DEPTH)/cpputil/cpputil.gyp:cpputil',
         '<(DEPTH)/exports.gyp:nss_exports',
-        '<(DEPTH)/fuzz/targets/lib/base/base.gyp:base',
         '<(DEPTH)/fuzz/targets/lib/tls/tls.gyp:tls_client',
         'nssfuzz_base',
       ],
@@ -110,7 +108,6 @@
       'dependencies': [
         '<(DEPTH)/cpputil/cpputil.gyp:cpputil',
         '<(DEPTH)/exports.gyp:nss_exports',
-        '<(DEPTH)/fuzz/targets/lib/base/base.gyp:base',
         '<(DEPTH)/fuzz/targets/lib/tls/tls.gyp:tls_server',
         'nssfuzz_base',
       ],
@@ -138,7 +135,6 @@
         '<(DEPTH)/cpputil/cpputil.gyp:cpputil',
         '<(DEPTH)/exports.gyp:nss_exports',
         '<(DEPTH)/fuzz/targets/lib/asn1/asn1.gyp:asn1',
-        '<(DEPTH)/fuzz/targets/lib/base/base.gyp:base',
         'nssfuzz_base',
       ],
     },
@@ -152,7 +148,6 @@
         '<(DEPTH)/cpputil/cpputil.gyp:cpputil',
         '<(DEPTH)/exports.gyp:nss_exports',
         '<(DEPTH)/fuzz/targets/lib/asn1/asn1.gyp:asn1',
-        '<(DEPTH)/fuzz/targets/lib/base/base.gyp:base',
         'nssfuzz_base',
       ],
     },
@@ -166,7 +161,6 @@
         '<(DEPTH)/cpputil/cpputil.gyp:cpputil',
         '<(DEPTH)/exports.gyp:nss_exports',
         '<(DEPTH)/fuzz/targets/lib/asn1/asn1.gyp:asn1',
-        '<(DEPTH)/fuzz/targets/lib/base/base.gyp:base',
         'nssfuzz_base',
       ],
     },
@@ -179,7 +173,6 @@
       'dependencies': [
         '<(DEPTH)/exports.gyp:nss_exports',
         '<(DEPTH)/fuzz/targets/lib/asn1/asn1.gyp:asn1',
-        '<(DEPTH)/fuzz/targets/lib/base/base.gyp:base',
         'nssfuzz_base',
       ],
     },
@@ -193,7 +186,6 @@
         '<(DEPTH)/cpputil/cpputil.gyp:cpputil',
         '<(DEPTH)/exports.gyp:nss_exports',
         '<(DEPTH)/fuzz/targets/lib/asn1/asn1.gyp:asn1',
-        '<(DEPTH)/fuzz/targets/lib/base/base.gyp:base',
         'nssfuzz_base',
       ],
     },
@@ -206,7 +198,6 @@
       'dependencies': [
         '<(DEPTH)/cpputil/cpputil.gyp:cpputil',
         '<(DEPTH)/exports.gyp:nss_exports',
-        '<(DEPTH)/fuzz/targets/lib/base/base.gyp:base',
         '<(DEPTH)/fuzz/targets/lib/tls/tls.gyp:tls_client',
         'nssfuzz_base',
       ],
@@ -220,7 +211,6 @@
       'dependencies': [
         '<(DEPTH)/cpputil/cpputil.gyp:cpputil',
         '<(DEPTH)/exports.gyp:nss_exports',
-        '<(DEPTH)/fuzz/targets/lib/base/base.gyp:base',
         '<(DEPTH)/fuzz/targets/lib/tls/tls.gyp:tls_server',
         'nssfuzz_base',
       ],

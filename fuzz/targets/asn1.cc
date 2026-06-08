@@ -12,7 +12,6 @@
 #include "secdert.h"
 
 #include "asn1/mutators.h"
-#include "base/mutate.h"
 
 // CRL templates are intentionally excluded: the ASN.1 decoder does not
 // support SEC_ASN1_INLINE | SEC_ASN1_OPTIONAL (Bug 289649). CRL templates
@@ -93,8 +92,14 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
 }
 
 extern "C" size_t LLVMFuzzerCustomMutator(uint8_t* data, size_t size,
-                                          size_t max_size, unsigned int seed) {
-  return CustomMutate(
-      Mutators({ASN1Mutators::FlipConstructed, ASN1Mutators::ChangeType}), data,
-      size, max_size, seed);
+                                          size_t maxSize, unsigned int seed) {
+  return ASN1Mutators::CustomMutator(data, size, maxSize, seed);
+}
+
+extern "C" size_t LLVMFuzzerCustomCrossOver(const uint8_t* data1, size_t size1,
+                                            const uint8_t* data2, size_t size2,
+                                            uint8_t* out, size_t maxOutSize,
+                                            unsigned int seed) {
+  return ASN1Mutators::CustomCrossOver(data1, size1, data2, size2, out,
+                                       maxOutSize, seed);
 }
