@@ -190,6 +190,18 @@
       ],
     },
     {
+      'target_name': 'nssfuzz-ec-derive',
+      'type': 'executable',
+      'sources': [
+        'ec_derive.cc',
+      ],
+      'dependencies': [
+        '<(DEPTH)/cpputil/cpputil.gyp:cpputil',
+        '<(DEPTH)/exports.gyp:nss_exports',
+        'nssfuzz_base',
+      ],
+    },
+    {
       'target_name': 'nssfuzz-smime',
       'type': 'executable',
       'sources': [
@@ -237,6 +249,7 @@
         'nssfuzz-dsau',
         'nssfuzz-dtls-client',
         'nssfuzz-dtls-server',
+        'nssfuzz-ec-derive',
         'nssfuzz-ech',
         'nssfuzz-pkcs7',
         'nssfuzz-pkcs8',

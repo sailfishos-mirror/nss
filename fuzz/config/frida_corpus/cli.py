@@ -122,6 +122,16 @@ def on_NSS_CMSDecoder_Update(payload):
     store_for_target("smime", bytes(payload["data"].values()))
 
 
+# --- ec-derive ---
+
+
+def on_PK11_PubDeriveWithKDF(payload):
+    if not "data" in payload:
+        return
+
+    store_for_target("ec-derive", bytes(payload["data"].values()))
+
+
 # --- TLS ---
 
 
