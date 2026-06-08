@@ -40,7 +40,7 @@ static PRStatus InitModelSocket(void* arg) {
   PRFileDesc* fd = reinterpret_cast<PRFileDesc*>(arg);
 
   TlsCommon::EnableAllCipherSuites(fd);
-  TlsServer::InstallServerCertificates(fd);
+  TlsServerCerts::InstallCertificates(fd);
 
   return PR_SUCCESS;
 }
