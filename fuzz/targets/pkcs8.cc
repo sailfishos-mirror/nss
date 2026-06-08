@@ -16,41 +16,50 @@
 #include "base/database.h"
 #include "base/mutate.h"
 
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
+extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   static NSSDatabase db = NSSDatabase();
 
-  SECItem derPki = {siBuffer, (unsigned char *)data, (unsigned int)size};
+  SECItem derPki = {siBuffer, (unsigned char*)data, (unsigned int)size};
 
   ScopedPK11SlotInfo slot(PK11_GetInternalSlot());
   assert(slot);
 
-  SECKEYPrivateKey *privKey = nullptr;
+  SECKEYPrivateKey* privKey = nullptr;
   if (PK11_ImportDERPrivateKeyInfoAndReturnKey(
           slot.get(), &derPki, nullptr, nullptr, false, false, KU_ALL, &privKey,
           nullptr) != SECSuccess) {
     return 0;
   }
 
-  (void)SECKEY_PrivateKeyStrengthInBits(privKey);
+  // Basic properties.
   (void)SECKEY_GetPrivateKeyType(privKey);
+  (void)SECKEY_PrivateKeyStrengthInBits(privKey);
   (void)PK11_SignatureLen(privKey);
   (void)PK11_GetPrivateModulusLen(privKey);
 
+  ScopedSECItem keyID(PK11_GetLowLevelKeyIDForPrivateKey(privKey));
+
+  SECKEYPQGParams* params = PK11_GetPQGParamsFromPrivateKey(privKey);
+  if (params && params->arena) {
+    PORT_FreeArena(params->arena, PR_FALSE);
+  }
+
+  // Key and nickname.
   ScopedSECKEYPublicKey pubKey(SECKEY_ConvertToPublicKey(privKey));
   ScopedCERTCertificate cert(PK11_GetCertFromPrivateKey(privKey));
 
-  char *nickname = PK11_GetPrivateKeyNickname(privKey);
+  char* nickname = PK11_GetPrivateKeyNickname(privKey);
   PORT_Free(nickname);
 
-  SECKEYPQGParams *params = PK11_GetPQGParamsFromPrivateKey(privKey);
-  PORT_FreeArena(params ? params->arena : nullptr, PR_FALSE);
+  // Export.
+  ScopedSECItem derExport(PK11_ExportDERPrivateKeyInfo(privKey, nullptr));
 
   SECKEY_DestroyPrivateKey(privKey);
 
   return 0;
 }
 
-extern "C" size_t LLVMFuzzerCustomMutator(uint8_t *data, size_t size,
+extern "C" size_t LLVMFuzzerCustomMutator(uint8_t* data, size_t size,
                                           size_t maxSize, unsigned int seed) {
   return CustomMutate(
       Mutators({ASN1Mutators::FlipConstructed, ASN1Mutators::ChangeType}), data,
