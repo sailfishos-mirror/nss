@@ -4,9 +4,9 @@
 
 #include <algorithm>
 #include <cassert>
-#include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <cstdio>
 
 #include "nss_scoped_ptrs.h"
 #include "p12.h"
@@ -22,10 +22,8 @@ static SECItem* nicknameCollision(SECItem* oldNick, PRBool* cancel,
   static unsigned int counter = 0;
 
   // Always return a unique nickname.
-  unsigned int len =
-      (counter == 0) ? 2 : (2 + (unsigned int)(log10(counter) + 1e-9));
-  SECItem* item = SECITEM_AllocItem(nullptr, nullptr, len);
-  snprintf((char*)item->data, item->len, "%d", counter++);
+  SECItem* item = SECITEM_AllocItem(nullptr, nullptr, 12);
+  item->len = snprintf((char*)item->data, 12, "%u", counter++) + 1;
 
   return item;
 }
@@ -43,8 +41,15 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
                              nullptr, nullptr, nullptr));
   assert(dcx);
 
+  // Cap the max element length at 1 MB to avoid OOMs during fuzzing.
   SEC_PKCS12DecoderSetMaxElementLen(dcx.get(),
-                                    std::max(1024 * 1024, (int)size));  // 1 MB
+                                    std::max(1024 * 1024, (int)size));
+
+  // Cycle through target token CA modes.
+  SECPKCS12TargetTokenCAs modes[] = {SECPKCS12TargetTokenNoCAs,
+                                     SECPKCS12TargetTokenIntermediateCAs,
+                                     SECPKCS12TargetTokenAllCAs};
+  SEC_PKCS12DecoderSetTargetTokenCAs(dcx.get(), modes[size % 3]);
 
   SECStatus rv = SEC_PKCS12DecoderUpdate(dcx.get(), (unsigned char*)data, size);
   if (rv != SECSuccess) {
