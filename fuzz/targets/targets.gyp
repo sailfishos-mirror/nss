@@ -85,6 +85,19 @@
       ],
     },
     {
+      'target_name': 'nssfuzz-dsau',
+      'type': 'executable',
+      'sources': [
+        'dsau.cc',
+      ],
+      'dependencies': [
+        '<(DEPTH)/cpputil/cpputil.gyp:cpputil',
+        '<(DEPTH)/exports.gyp:nss_exports',
+        '<(DEPTH)/fuzz/targets/lib/asn1/asn1.gyp:asn1',
+        'nssfuzz_base',
+      ],
+    },
+    {
       'target_name': 'nssfuzz-dtls-client',
       'type': 'executable',
       'sources': [
@@ -221,6 +234,7 @@
       'dependencies': [
         'nssfuzz-asn1',
         'nssfuzz-certDN',
+        'nssfuzz-dsau',
         'nssfuzz-dtls-client',
         'nssfuzz-dtls-server',
         'nssfuzz-ech',

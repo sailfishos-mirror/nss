@@ -21,6 +21,42 @@ if (DebugSymbol.findFunctionsNamed("SEC_ASN1DecodeItem_Util").length) {
   });
 }
 
+// --- dsau ---
+
+if (DebugSymbol.findFunctionsNamed("DSAU_DecodeDerSig").length) {
+  console.log("Attaching `DSAU_DecodeDerSig` interceptor...");
+  Interceptor.attach(DebugSymbol.fromName("DSAU_DecodeDerSig").address, {
+    onEnter: function (args) {
+      const secItem = args[0]; // { type(8), data(8), len(4) }
+
+      const len = secItem.add(8).add(8).readUInt();
+      const buf = secItem.add(8).readByteArray(len);
+
+      send({
+        func: "DSAU_DecodeDerSig",
+        data: new Uint8Array(buf),
+      });
+    },
+  });
+}
+
+if (DebugSymbol.findFunctionsNamed("DSAU_DecodeDerSigToLen").length) {
+  console.log("Attaching `DSAU_DecodeDerSigToLen` interceptor...");
+  Interceptor.attach(DebugSymbol.fromName("DSAU_DecodeDerSigToLen").address, {
+    onEnter: function (args) {
+      const secItem = args[0]; // { type(8), data(8), len(4) }
+
+      const len = secItem.add(8).add(8).readUInt();
+      const buf = secItem.add(8).readByteArray(len);
+
+      send({
+        func: "DSAU_DecodeDerSigToLen",
+        data: new Uint8Array(buf),
+      });
+    },
+  });
+}
+
 // --- certDN ---
 
 if (DebugSymbol.findFunctionsNamed("CERT_AsciiToName").length) {

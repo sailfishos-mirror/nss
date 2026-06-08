@@ -35,6 +35,23 @@ def on_SEC_ASN1DecodeItem_Util(payload):
     store_for_target("asn1", bytes(payload["data"].values()))
 
 
+# --- dsau ---
+
+
+def on_DSAU_DecodeDerSig(payload):
+    if not "data" in payload:
+        return
+
+    store_for_target("dsau", bytes(payload["data"].values()))
+
+
+def on_DSAU_DecodeDerSigToLen(payload):
+    if not "data" in payload:
+        return
+
+    store_for_target("dsau", bytes(payload["data"].values()))
+
+
 # --- certDN ---
 
 

@@ -65,6 +65,18 @@ tasks:
                 target: certDN
                 corpus: certDN
 
+    linux64-dsau:
+        description: Linux x64 DSAU
+        dependencies:
+            build: build-linux64/debug-fuzz
+        treeherder:
+            symbol: DSAU
+            platform: linux64/debug-fuzz
+        task-context:
+            from-object:
+                target: dsau
+                corpus: dsau
+
     linux64-ech:
         description: Linux x64 ECH
         dependencies:
@@ -278,6 +290,18 @@ tasks:
             from-object:
                 target: certDN
                 corpus: certDN
+
+    linux32-dsau:
+        description: Linux 32 DSAU
+        dependencies:
+            build: build-linux32/debug-fuzz
+        treeherder:
+            symbol: DSAU
+            platform: linux32/debug-fuzz
+        task-context:
+            from-object:
+                target: dsau
+                corpus: dsau
 
     linux32-ech:
         description: Linux 32 ECH
