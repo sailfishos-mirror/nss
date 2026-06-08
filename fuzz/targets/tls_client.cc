@@ -13,7 +13,6 @@
 #include "sslimpl.h"
 
 #include "base/database.h"
-#include "base/mutate.h"
 #include "tls/config.h"
 #include "tls/common.h"
 #include "tls/mutators.h"
@@ -65,17 +64,13 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
 
 extern "C" size_t LLVMFuzzerCustomMutator(uint8_t* data, size_t size,
                                           size_t maxSize, unsigned int seed) {
-  Mutators mutators = {TlsMutators::DropRecord, TlsMutators::ShuffleRecords,
-                       TlsMutators::DuplicateRecord,
-                       TlsMutators::TruncateRecord,
-                       TlsMutators::FragmentRecord};
-  return CustomMutate(mutators, data, size, maxSize, seed);
+  return TlsMutators::CustomMutator(data, size, maxSize, seed);
 }
 
 extern "C" size_t LLVMFuzzerCustomCrossOver(const uint8_t* data1, size_t size1,
                                             const uint8_t* data2, size_t size2,
                                             uint8_t* out, size_t maxOutSize,
                                             unsigned int seed) {
-  return TlsMutators::CrossOver(data1, size1, data2, size2, out, maxOutSize,
-                                seed);
+  return TlsMutators::CustomCrossOver(data1, size1, data2, size2, out,
+                                      maxOutSize, seed);
 }

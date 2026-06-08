@@ -65,8 +65,8 @@ Client::Client(const uint8_t* data, size_t len) {
     uint64_t bitmap;
     struct {
       uint32_t config;
-      uint16_t ssl_version_range_min;
-      uint16_t ssl_version_range_max;
+      uint16_t sslVersionRangeMin;
+      uint16_t sslVersionRangeMax;
     };
   };
 
@@ -76,19 +76,17 @@ Client::Client(const uint8_t* data, size_t len) {
   }
 
   // Map SSL version values to a valid range.
-  ssl_version_range_min =
-      SSL_VERSION_RANGE_MIN_VALID +
-      (ssl_version_range_min %
-       (1 + SSL_VERSION_RANGE_MAX_VALID - SSL_VERSION_RANGE_MIN_VALID));
-  ssl_version_range_max =
-      ssl_version_range_min +
-      (ssl_version_range_max %
-       (1 + SSL_VERSION_RANGE_MAX_VALID - ssl_version_range_min));
+  sslVersionRangeMin = SSL_VERSION_RANGE_MIN_VALID +
+                       (sslVersionRangeMin % (1 + SSL_VERSION_RANGE_MAX_VALID -
+                                              SSL_VERSION_RANGE_MIN_VALID));
+  sslVersionRangeMax = sslVersionRangeMin +
+                       (sslVersionRangeMax %
+                        (1 + SSL_VERSION_RANGE_MAX_VALID - sslVersionRangeMin));
 
-  config_ = config;
-  ssl_version_range_ = {
-      .min = ssl_version_range_min,
-      .max = ssl_version_range_max,
+  mConfig = config;
+  mSslVersionRange = {
+      .min = sslVersionRangeMin,
+      .max = sslVersionRangeMax,
   };
 }
 
@@ -149,7 +147,7 @@ void Client::SetSocketOptions(PRFileDesc* fd) {
 #endif  // IS_DTLS_FUZZ
 
   if (this->SetVersionRange()) {
-    rv = SSL_VersionRangeSet(fd, &ssl_version_range_);
+    rv = SSL_VersionRangeSet(fd, &mSslVersionRange);
     assert(rv == SECSuccess);
   }
 
@@ -253,8 +251,8 @@ Server::Server(const uint8_t* data, size_t len) {
     uint64_t bitmap;
     struct {
       uint32_t config;
-      uint16_t ssl_version_range_min;
-      uint16_t ssl_version_range_max;
+      uint16_t sslVersionRangeMin;
+      uint16_t sslVersionRangeMax;
     };
   };
 
@@ -264,19 +262,17 @@ Server::Server(const uint8_t* data, size_t len) {
   }
 
   // Map SSL version values to a valid range.
-  ssl_version_range_min =
-      SSL_VERSION_RANGE_MIN_VALID +
-      (ssl_version_range_min %
-       (1 + SSL_VERSION_RANGE_MAX_VALID - SSL_VERSION_RANGE_MIN_VALID));
-  ssl_version_range_max =
-      ssl_version_range_min +
-      (ssl_version_range_max %
-       (1 + SSL_VERSION_RANGE_MAX_VALID - ssl_version_range_min));
+  sslVersionRangeMin = SSL_VERSION_RANGE_MIN_VALID +
+                       (sslVersionRangeMin % (1 + SSL_VERSION_RANGE_MAX_VALID -
+                                              SSL_VERSION_RANGE_MIN_VALID));
+  sslVersionRangeMax = sslVersionRangeMin +
+                       (sslVersionRangeMax %
+                        (1 + SSL_VERSION_RANGE_MAX_VALID - sslVersionRangeMin));
 
-  config_ = config;
-  ssl_version_range_ = {
-      .min = ssl_version_range_min,
-      .max = ssl_version_range_max,
+  mConfig = config;
+  mSslVersionRange = {
+      .min = sslVersionRangeMin,
+      .max = sslVersionRangeMax,
   };
 }
 
@@ -321,7 +317,7 @@ void Server::SetSocketOptions(PRFileDesc* fd) {
   }
 
   if (this->SetVersionRange()) {
-    rv = SSL_VersionRangeSet(fd, &ssl_version_range_);
+    rv = SSL_VersionRangeSet(fd, &mSslVersionRange);
     assert(rv == SECSuccess);
   }
 

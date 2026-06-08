@@ -61,7 +61,7 @@ constexpr int kTlsClientConfigOptionCount =
     0 TLS_CLIENT_CONFIG_OPTIONS(TLS_CLIENT_OPTIONS_COUNTER);
 #undef TLS_CLIENT_OPTIONS_COUNTER
 static_assert(kTlsClientConfigOptionCount <= 32,
-              "config_ is uint32_t, cannot exceed 32 options");
+              "mConfig is uint32_t, cannot exceed 32 options");
 
 // Single source of truth for all server config bit options: option(bit, name).
 // To add a new option, add it here and handle it in SetSocketOptions.
@@ -101,7 +101,7 @@ constexpr int kTlsServerConfigOptionCount =
     0 TLS_SERVER_CONFIG_OPTIONS(TLS_SERVER_OPTIONS_COUNTER);
 #undef TLS_SERVER_OPTIONS_COUNTER
 static_assert(kTlsServerConfigOptionCount <= 32,
-              "config_ is uint32_t, cannot exceed 32 options");
+              "mConfig is uint32_t, cannot exceed 32 options");
 
 namespace TlsConfig {
 
@@ -118,20 +118,20 @@ class Client {
   void SetSocketOptions(PRFileDesc* fd);
 
   SSLHashType PskHashType() {
-    if (config_ % 2) return ssl_hash_sha256;
+    if (mConfig % 2) return ssl_hash_sha256;
 
     return ssl_hash_sha384;
   };
-  SSLVersionRange SslVersionRange() { return ssl_version_range_; };
+  SSLVersionRange SslVersionRange() { return mSslVersionRange; };
 
 #define TLS_CLIENT_OPTIONS_GETTER(bit, name) \
-  bool name() { return config_ & (1 << bit); };
+  bool name() { return mConfig & (1 << bit); };
   TLS_CLIENT_CONFIG_OPTIONS(TLS_CLIENT_OPTIONS_GETTER)
 #undef TLS_CLIENT_OPTIONS_GETTER
 
  private:
-  uint32_t config_;
-  SSLVersionRange ssl_version_range_;
+  uint32_t mConfig;
+  SSLVersionRange mSslVersionRange;
 };
 
 inline std::ostream& operator<<(std::ostream& out, Client& config) {
@@ -166,20 +166,20 @@ class Server {
   void SetSocketOptions(PRFileDesc* fd);
 
   SSLHashType PskHashType() {
-    if (config_ % 2) return ssl_hash_sha256;
+    if (mConfig % 2) return ssl_hash_sha256;
 
     return ssl_hash_sha384;
   };
-  SSLVersionRange SslVersionRange() { return ssl_version_range_; };
+  SSLVersionRange SslVersionRange() { return mSslVersionRange; };
 
 #define TLS_SERVER_OPTIONS_GETTER(bit, name) \
-  bool name() { return config_ & (1 << bit); };
+  bool name() { return mConfig & (1 << bit); };
   TLS_SERVER_CONFIG_OPTIONS(TLS_SERVER_OPTIONS_GETTER)
 #undef TLS_SERVER_OPTIONS_GETTER
 
  private:
-  uint32_t config_;
-  SSLVersionRange ssl_version_range_;
+  uint32_t mConfig;
+  SSLVersionRange mSslVersionRange;
 };
 
 inline std::ostream& operator<<(std::ostream& out, Server& config) {
