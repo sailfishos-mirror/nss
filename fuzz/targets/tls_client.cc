@@ -14,7 +14,7 @@
 
 #include "base/database.h"
 #include "base/mutate.h"
-#include "tls/client_config.h"
+#include "tls/config.h"
 #include "tls/common.h"
 #include "tls/mutators.h"
 #include "tls/socket.h"
@@ -36,7 +36,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   assert(sslFd == prFd.get());
 
   // Derive client config from input data.
-  TlsClient::Config config = TlsClient::Config(data, size);
+  TlsConfig::Client config = TlsConfig::Client(data, size);
 
   if (ssl_trace >= 90) {
     std::cerr << config << "\n";

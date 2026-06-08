@@ -14,9 +14,9 @@
 #include "base/database.h"
 #include "base/mutate.h"
 #include "tls/common.h"
+#include "tls/config.h"
 #include "tls/mutators.h"
 #include "tls/server_certs.h"
-#include "tls/server_config.h"
 #include "tls/socket.h"
 
 #ifdef IS_DTLS_FUZZ
@@ -65,7 +65,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   assert(sslFd == prFd.get());
 
   // Derive server config from input data.
-  TlsServer::Config config = TlsServer::Config(data, size);
+  TlsConfig::Server config = TlsConfig::Server(data, size);
 
   if (ssl_trace >= 90) {
     std::cerr << config << "\n";
@@ -83,7 +83,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   config.SetCallbacks(sslFd);
   config.SetSocketOptions(sslFd);
 
-  // Perform the acutal handshake.
+  // Perform the actual handshake.
   TlsCommon::DoHandshake(sslFd, true);
 
   // Clear the cache. We never want to resume as we couldn't reproduce that.
