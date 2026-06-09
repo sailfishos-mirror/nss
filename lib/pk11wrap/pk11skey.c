@@ -2671,6 +2671,13 @@ pk11_HandUnwrap(PK11SlotInfo *slot, CK_OBJECT_HANDLE wrappingKey,
     }
 
     outKey.len = (key_size == 0) ? len : key_size;
+    if (outKey.len > len) {
+        PORT_Free(outKey.data);
+        PORT_SetError(SEC_ERROR_OUTPUT_LEN);
+        if (crvp)
+            *crvp = CKR_ENCRYPTED_DATA_LEN_RANGE;
+        return NULL;
+    }
     outKey.type = siBuffer;
 
     if (PK11_DoesMechanism(slot, target)) {
