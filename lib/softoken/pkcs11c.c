@@ -1087,6 +1087,7 @@ sftk_CryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechanism,
             }
 
             if (BAD_PARAM_CAST(pMechanism, sizeof(CK_RC2_CBC_PARAMS))) {
+                sftk_FreeAttribute(att);
                 crv = CKR_MECHANISM_PARAM_INVALID;
                 break;
             }
@@ -1123,6 +1124,7 @@ sftk_CryptInit(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechanism,
             }
 
             if (BAD_PARAM_CAST(pMechanism, sizeof(CK_RC5_CBC_PARAMS))) {
+                sftk_FreeAttribute(att);
                 crv = CKR_MECHANISM_PARAM_INVALID;
                 break;
             }
