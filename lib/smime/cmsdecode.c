@@ -716,7 +716,9 @@ NSS_CMSDecoder_Update(NSSCMSDecoderContext *p7dcx, const char *buf,
     SECStatus rv = SECSuccess;
     if (p7dcx->dcx != NULL && p7dcx->error == 0) {
         /* if error is set already, don't bother */
-        if ((p7dcx->type == SEC_OID_PKCS7_SIGNED_DATA) && (p7dcx->first_decoded == PR_TRUE) && (buf[0] == SEC_ASN1_INTEGER)) {
+        if ((p7dcx->type == SEC_OID_PKCS7_SIGNED_DATA) &&
+            (p7dcx->first_decoded == PR_TRUE) &&
+            (len > 0 && buf[0] == SEC_ASN1_INTEGER)) {
             /* Microsoft Windows 2008 left out the Sequence wrapping in some
              * of their kerberos replies. If we are here, we most likely are
              * dealing with one of those replies. Supply the Sequence wrap
