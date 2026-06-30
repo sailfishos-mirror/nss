@@ -20,7 +20,7 @@ def resolve_platform_differences(config, tasks):
 def add_env_vars(config, tasks):
     for task in tasks:
         env = task["worker"].setdefault("env", {})
-        if task["attributes"]["build_platform"].startswith(("mac", "windows")):
+        if task["attributes"]["build_platform"].startswith(("mac", "win")):
             env.update({"DOMSUF": "localdomain", "HOST": "localhost"})
 
         if task["attributes"]["build_platform"].startswith("mac"):
@@ -38,7 +38,7 @@ def add_env_vars(config, tasks):
 @transforms.add
 def remove_docker_image_for_gw(config, tasks):
     for task in tasks:
-        if task["attributes"]["build_platform"].startswith(("mac", "windows")):
+        if task["attributes"]["build_platform"].startswith(("mac", "win")):
             task["worker"].pop("docker-image", None)
         yield task
 
@@ -51,7 +51,7 @@ def select_arch_docker_image(config, tasks):
 
     * aarch64 tasks rewrite `{in-tree: <image>}` to `{in-tree: <image>-aarch64}`
       so they pick up the natively-built arm64 image.
-    * 32-bit x86 (linux32) tasks rewrite `{in-tree: base}` to
+    * 32-bit x86 (linux-x86) tasks rewrite `{in-tree: base}` to
       `{in-tree: base-i386}`, the i386 layer needed to build and run ia32
       binaries.
 

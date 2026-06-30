@@ -33,10 +33,6 @@ tasks:
                 TC_PARENT_TASK_ID: {task-reference: '<build>'}
             artifacts:
                 by-platform:
-                    aarch64.*:
-                        - type: directory
-                          path: /builds/worker/artifacts
-                          name: public
                     linux.*:
                         - type: directory
                           path: /builds/worker/artifacts
@@ -54,8 +50,10 @@ tasks:
                     default: false
         worker-type:
             by-platform:
-                aarch64.*: b-linux-aarch64
-                linux.*: b-linux
+                linux-aarch64.*: b-linux-aarch64
+                # Matches x86 linux only; the lookahead keeps it from also
+                # matching linux-aarch64 (keyed-by forbids two matching arms).
+                linux(?!-aarch64).*: b-linux
                 win.*: b-win2022
                 mac.*: b-osx
         treeherder:

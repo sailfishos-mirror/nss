@@ -43,8 +43,10 @@ task-defaults:
             default: []
     worker-type:
         by-platform:
-            aarch64.*: t-linux-aarch64
-            linux.*: t-linux
+            linux-aarch64.*: t-linux-aarch64
+            # Matches x86 linux only; the lookahead keeps it from also matching
+            # linux-aarch64 (keyed-by forbids a platform matching two arms).
+            linux(?!-aarch64).*: t-linux
             mac.*: b-osx
             win.*: b-win2022
 
@@ -95,13 +97,13 @@ tasks:
             kinds: [build]
             with-attributes:
                 build_platform:
-                    - linux32
-                    - linux32-make
-                    - linux64
-                    - linux64-make
-                    - linux64-asan
-                    - aarch64
-                    - aarch64-asan
+                    - linux-x86
+                    - linux-x86-make
+                    - linux-x64
+                    - linux-x64-make
+                    - linux-x64-asan
+                    - linux-aarch64
+                    - linux-aarch64-asan
                 nspr: [false]
                 dbm: [false]
                 cc: [false]
@@ -124,13 +126,13 @@ tasks:
                 - build
             with-attributes:
                 build_platform:
-                    - linux32
-                    - linux32-make
-                    - linux64
-                    - linux64-make
-                    - linux64-asan
-                    - aarch64
-                    - aarch64-asan
+                    - linux-x86
+                    - linux-x86-make
+                    - linux-x64
+                    - linux-x64-make
+                    - linux-x64-asan
+                    - linux-aarch64
+                    - linux-aarch64-asan
                 nspr: [false]
                 dbm: [false]
                 cc: [false]
@@ -151,13 +153,13 @@ tasks:
                 - build
             with-attributes:
                 build_platform:
-                    - linux32
-                    - linux32-make
-                    - linux64
-                    - linux64-make
-                    - linux64-asan
-                    - aarch64
-                    - aarch64-asan
+                    - linux-x86
+                    - linux-x86-make
+                    - linux-x64
+                    - linux-x64-make
+                    - linux-x64-asan
+                    - linux-aarch64
+                    - linux-aarch64-asan
                 nspr: [false]
                 dbm: [false]
                 cc: [false]
@@ -179,13 +181,13 @@ tasks:
                 - build
             with-attributes:
                 build_platform:
-                    - linux32
-                    - linux32-make
-                    - linux64
-                    - linux64-make
-                    - linux64-asan
-                    - aarch64
-                    - aarch64-asan
+                    - linux-x86
+                    - linux-x86-make
+                    - linux-x64
+                    - linux-x64-make
+                    - linux-x64-asan
+                    - linux-aarch64
+                    - linux-aarch64-asan
                 nspr: [false]
                 dbm: [false]
                 cc: [false]

@@ -66,7 +66,9 @@ def add_variants(config, jobs):
             fips_build["attributes"]["certs"] = True
             yield fips_build
 
-        if "linux" in attributes["build_platform"]:
+        # The extra compilers, modular, and dbm variants are x86-Linux only.
+        # aarch64 is a Linux platform too, so exclude it explicitly.
+        if "linux" in attributes["build_platform"] and "aarch64" not in attributes["build_platform"]:
             # more compilers
             if not attributes.get("asan") and not attributes.get("fuzz"):
                 for cc in EXTRA_COMPILERS:
@@ -185,7 +187,7 @@ def set_gyp_command(config, jobs):
 def set_docker_image(config, jobs):
     for job in jobs:
         platform = job["attributes"]["build_platform"]
-        if "linux" not in platform and "aarch64" not in platform:
+        if "linux" not in platform:
             yield job
             continue
 
