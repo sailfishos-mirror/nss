@@ -26,16 +26,19 @@ def set_build_attributes(config, jobs):
         yield job
 
 
+# Modern compilers come from the noble-based `builds` image; the legacy
+# compilers (RHEL floor coverage) come from the pinned focal `builds-legacy`
+# image. See LEGACY_COMPILERS and set_docker_image below.
 EXTRA_COMPILERS = {
+    "clang": {"CC": "clang", "CCC": "clang++"},
     "clang-10": {"CC": "clang-10", "CCC": "clang++-10"},
-    "clang-18": {"CC": "clang-18", "CCC": "clang++-18"},
-    # gcc-4.6 introduced nullptr.
-    "gcc-4.4": {"CC": "gcc-4.4", "CCC": "g++-4.4", "NSS_DISABLE_GTESTS": "1"},
-    # gcc-4.8 has incomplete c++11 support
-    "gcc-4.8": {"CC": "gcc-4.8", "CCC": "g++-4.8", "NSS_DISABLE_GTESTS": "1"},
-    "gcc-5": {"CC": "gcc-5", "CCC": "g++-5"},
+    # gcc-8 is the RHEL 8 system compiler (our floor); gcc-11 is RHEL 9.
+    "gcc-8": {"CC": "gcc-8", "CCC": "g++-8"},
     "gcc-11": {"CC": "gcc-11", "CCC": "g++-11"},
 }
+
+#: Compilers served by the pinned focal `builds-legacy` image (not in noble).
+LEGACY_COMPILERS = ("clang-10", "gcc-8", "gcc-11")
 
 
 @transforms.add
@@ -72,14 +75,6 @@ def add_variants(config, jobs):
             # more compilers
             if not attributes.get("asan") and not attributes.get("fuzz"):
                 for cc in EXTRA_COMPILERS:
-                    if cc == "gcc-4.4" and not (attributes.get("make") and job["attributes"]["build_platform"].startswith("linux64")):
-                        # Use the old Makefile-based build system, GYP doesn't have a proper GCC
-                        # version check for __int128 support. It's mainly meant to cover RHEL6.
-                        continue
-                    if cc == "gcc-4.8" and not attributes.get("make"):
-                        # Use -Ddisable-intelhw_sha=1, GYP doesn't have a proper GCC version
-                        # check for Intel SHA support.
-                        continue
                     cc_job = deepcopy(job)
                     cc_job["name"] += f"-{cc}"
                     cc_job["description"] += f" w/ {cc}"
@@ -191,13 +186,15 @@ def set_docker_image(config, jobs):
             yield job
             continue
 
-        if job["attributes"].get("cc") == "gcc-4.4":
-            image = "gcc-4.4"
-        elif job["attributes"].get("cc"):
+        cc = job["attributes"].get("cc")
+        if cc in LEGACY_COMPILERS:
+            image = "builds-legacy"
+        elif cc:
             image = "builds"
         elif job["attributes"].get("fuzz"):
             image = "fuzz"
-        elif job["attributes"].get("asan") and "aarch64" in platform:
+        elif job["attributes"].get("asan"):
+            # ASan needs a modern clang + compiler-rt, which live in builds.
             image = "builds"
         else:
             image = "base"

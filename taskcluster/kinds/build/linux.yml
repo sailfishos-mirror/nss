@@ -97,8 +97,8 @@ linux-aarch64-asan/debug:
             UBSAN_OPTIONS: "print_stacktrace=1"
             NSS_DISABLE_ARENA_FREE_LIST: "1"
             NSS_DISABLE_UNLOAD: "1"
-            CC: "clang-18"
-            CCC: "clang++-18"
+            CC: "clang"
+            CCC: "clang++"
             CFLAGS: "-O2"
         allow-ptrace: true
     attributes:

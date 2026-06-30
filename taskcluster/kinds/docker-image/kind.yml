@@ -20,13 +20,12 @@ tasks:
     builds:
         symbol: I(builds)
         parent: base-i386
+    builds-legacy:
+        symbol: I(builds-legacy)
     acvp:
         symbol: I(acvp)
     clang-format:
         symbol: I(clang-format)
-    gcc-4.4:
-        symbol: I(gcc-4.4)
-        parent: base
     fuzz:
         symbol: I(fuzz)
     docs:

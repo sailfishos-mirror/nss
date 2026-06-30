@@ -1,7 +1,7 @@
 # aarch64 counterpart of docker/tlsinterop, used for the TLS interop tests.
 # This mirrors docker/tlsinterop but drops the i386 multilib packages, which are
 # only meaningful on x86_64 hosts.
-FROM ubuntu:jammy
+FROM ubuntu:noble-20240605
 
 VOLUME /builds/worker/checkouts
 VOLUME /builds/worker/.cache
@@ -28,12 +28,12 @@ RUN apt-get update \
     zlib1g-dev \
     python3 \
     python3-pip \
+    python3-lxml \
     rsync \
     iproute2 \
     libnss3-tools \
     expect \
     gnutls-bin \
-    crypto-policies \
  && rm -rf /var/lib/apt/lists/* \
  && apt-get autoremove -y && apt-get clean -y
 
@@ -49,19 +49,22 @@ ENV DOMSUF localdomain
 RUN locale-gen $LANG \
  && dpkg-reconfigure locales
 
-RUN useradd -d $HOME -s $SHELL -m $USER && \
+# noble ships a default 'ubuntu' user at uid 1000; remove it so 'worker' gets
+# uid 1000, which run-task requires.
+RUN userdel ubuntu && \
+    useradd -d $HOME -s $SHELL -m $USER && \
     mkdir -p /builds/worker/workspace && \
     mkdir -p /builds/worker/artifacts && \
     chown -R $USER /builds/worker && \
-    pip install tmt six && \
+    pip install --break-system-packages tmt six && \
     echo '#!/bin/bash\n\nexit 0' >/usr/bin/fakedora && \
     chmod +x /usr/bin/fakedora && \
     ln -s /usr/bin/fakedora /usr/bin/rpm && \
     ln -s /usr/bin/fakedora /usr/bin/dnf && \
     ln -s /usr/bin/fakedora /usr/local/bin/rhts-report-result && \
     ln -s /usr/bin/fakedora /usr/local/bin/tmt-file-submit && \
+    ln -s /usr/bin/fakedora /usr/local/bin/update-crypto-policies && \
     ln -s /usr/bin/python3 /usr/bin/python && \
-    update-crypto-policies --set DEFAULT && \
     cd $HOME && \
     curl -L -o beakerlib.tgz 'https://github.com/beakerlib/beakerlib/archive/refs/tags/1.31.4.tar.gz' && \
     tar xf beakerlib.tgz && \
