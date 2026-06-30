@@ -43,6 +43,7 @@ task-defaults:
             default: []
     worker-type:
         by-platform:
+            aarch64.*: t-linux-aarch64
             linux.*: t-linux
             mac.*: b-osx
             win.*: b-win2022
@@ -99,6 +100,8 @@ tasks:
                     - linux64
                     - linux64-make
                     - linux64-asan
+                    - aarch64
+                    - aarch64-asan
                 nspr: [false]
                 dbm: [false]
                 cc: [false]
@@ -126,6 +129,8 @@ tasks:
                     - linux64
                     - linux64-make
                     - linux64-asan
+                    - aarch64
+                    - aarch64-asan
                 nspr: [false]
                 dbm: [false]
                 cc: [false]
@@ -151,6 +156,8 @@ tasks:
                     - linux64
                     - linux64-make
                     - linux64-asan
+                    - aarch64
+                    - aarch64-asan
                 nspr: [false]
                 dbm: [false]
                 cc: [false]
@@ -177,6 +184,8 @@ tasks:
                     - linux64
                     - linux64-make
                     - linux64-asan
+                    - aarch64
+                    - aarch64-asan
                 nspr: [false]
                 dbm: [false]
                 cc: [false]

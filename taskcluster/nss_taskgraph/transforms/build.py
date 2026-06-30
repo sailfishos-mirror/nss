@@ -184,7 +184,8 @@ def set_gyp_command(config, jobs):
 @transforms.add
 def set_docker_image(config, jobs):
     for job in jobs:
-        if "linux" not in job["attributes"]["build_platform"]:
+        platform = job["attributes"]["build_platform"]
+        if "linux" not in platform and "aarch64" not in platform:
             yield job
             continue
 
@@ -194,6 +195,8 @@ def set_docker_image(config, jobs):
             image = "builds"
         elif job["attributes"].get("fuzz"):
             image = "fuzz"
+        elif job["attributes"].get("asan") and "aarch64" in platform:
+            image = "builds"
         else:
             image = "base"
         job["worker"]["docker-image"] = {"in-tree": image}

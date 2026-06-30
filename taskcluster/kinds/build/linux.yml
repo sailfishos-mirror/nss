@@ -68,3 +68,37 @@ linux64/debug-fuzz:
         certs: false
     worker:
         allow-ptrace: true
+
+# aarch64 (ARM64) builds. The platform is named "aarch64" (matching the
+# existing aarch64-make try alias): it contains "64" so USE_64/native GYP kick
+# in, and it does not contain "linux" so the x86-only build variants
+# (extra compilers, modular, dbm) are skipped automatically. Builds run on the
+# aarch64 worker pool and use the aarch64 docker images.
+aarch64/opt:
+    description: "Linux AArch64 (opt)"
+    worker-type: b-linux-aarch64
+
+aarch64/debug:
+    description: "Linux AArch64 (debug)"
+    worker-type: b-linux-aarch64
+
+aarch64/debug-make:
+    description: "Linux AArch64 (debug, make)"
+    worker-type: b-linux-aarch64
+    attributes:
+        make: true
+
+aarch64-asan/debug:
+    description: "Linux AArch64 (ASan, debug)"
+    worker-type: b-linux-aarch64
+    worker:
+        env:
+            UBSAN_OPTIONS: "print_stacktrace=1"
+            NSS_DISABLE_ARENA_FREE_LIST: "1"
+            NSS_DISABLE_UNLOAD: "1"
+            CC: "clang-18"
+            CCC: "clang++-18"
+            CFLAGS: "-O2"
+        allow-ptrace: true
+    attributes:
+        asan: true

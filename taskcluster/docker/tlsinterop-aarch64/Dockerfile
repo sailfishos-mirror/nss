@@ -1,4 +1,6 @@
-# Lean image for running the bulk of the NSS CI tests on taskcluster.
+# aarch64 counterpart of docker/tlsinterop, used for the TLS interop tests.
+# This mirrors docker/tlsinterop but drops the i386 multilib packages, which are
+# only meaningful on x86_64 hosts.
 FROM ubuntu:jammy
 
 VOLUME /builds/worker/checkouts
@@ -8,19 +10,15 @@ VOLUME /builds/worker/workspace
 # %include-run-task
 
 ENV DEBIAN_FRONTEND noninteractive
-RUN dpkg --add-architecture i386
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
     build-essential \
     ca-certificates \
     clang \
     curl \
-    g++-multilib \
     git \
     gyp \
     libxml2-utils \
-    lib32z1-dev \
-    linux-libc-dev:i386 \
     llvm-dev \
     locales \
     mercurial \
