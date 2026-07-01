@@ -1599,6 +1599,19 @@ nsspkcs5_CipherData(NSSPKCS5PBEParameter *pbe_param, SECItem *pwitem,
         return NULL;
     }
 
+    /* 2-key 3DES expands K1||K2 to K1||K2||K1; without this, the 16-byte
+     * key buffer is read as 24 bytes by DES_InitContext (OOB read). */
+    if (pbe_param->is2KeyDES && key->len == 16) {
+        SECItem *newKey = SECITEM_AllocItem(NULL, NULL, 24);
+        if (newKey == NULL) {
+            goto loser;
+        }
+        PORT_Memcpy(newKey->data, key->data, 16);
+        PORT_Memcpy(newKey->data + 16, key->data, 8);
+        SECITEM_ZfreeItem(key, PR_TRUE);
+        key = newKey;
+    }
+
     switch (pbe_param->encAlg) {
         /* PKCS 5 v2 only */
         case SEC_OID_AES_128_KEY_WRAP:
