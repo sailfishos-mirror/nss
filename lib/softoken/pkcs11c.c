@@ -9191,10 +9191,23 @@ NSC_DeriveKey(CK_SESSION_HANDLE hSession,
                 break;
             }
 
-            block_needed = 2 * (macSize + effKeySize + IVSize);
-            PORT_Assert(block_needed <= sizeof key_block);
-            if (block_needed > sizeof key_block)
-                block_needed = sizeof key_block;
+            /* Compute the amount of key material consumed using keySize
+             * (from CKA_VALUE_LEN, which is what actually indexes key_block
+             * below), not effKeySize. Bound each term first to prevent
+             * integer overflow in the sum, then reject if the total exceeds
+             * the buffer -- clamping block_needed would not bound the later
+             * indexing and would permit a stack OOB read. */
+            (void)effKeySize;
+            if (macSize > sizeof key_block || IVSize > sizeof key_block ||
+                keySize > sizeof key_block ||
+                2 * (macSize + keySize + IVSize) > sizeof key_block) {
+                MD5_DestroyContext(md5, PR_TRUE);
+                SHA1_DestroyContext(sha, PR_TRUE);
+                PORT_Memset(srcrdata, 0, sizeof srcrdata);
+                crv = CKR_MECHANISM_PARAM_INVALID;
+                break;
+            }
+            block_needed = 2 * (macSize + keySize + IVSize);
 
             /*
              * generate the key material: This looks amazingly similar to the
