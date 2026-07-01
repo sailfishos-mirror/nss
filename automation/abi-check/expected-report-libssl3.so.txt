@@ -7,24 +7,18 @@
         underlying type 'struct SECKEYPublicKeyStr' at keythi.h:205:1 changed:
           type size hasn't changed
           1 data member change:
-           type of 'union {SECKEYRSAPublicKey rsa; SECKEYDSAPublicKey dsa; SECKEYDHPublicKey dh; SECKEYKEAPublicKey kea; SECKEYFortezzaPublicKey fortezza; SECKEYECPublicKey ec; SECKEYKyberPublicKey kyber; SECKEYMLDSAPublicKey mldsa;} SECKEYPublicKeyStr::u' changed:
+            type of 'union {SECKEYRSAPublicKey rsa; SECKEYDSAPublicKey dsa; SECKEYDHPublicKey dh; SECKEYKEAPublicKey kea; SECKEYFortezzaPublicKey fortezza; SECKEYECPublicKey ec; SECKEYKyberPublicKey kyber; SECKEYMLDSAPublicKey mldsa;} u' changed:
              type size hasn't changed
              1 data member change:
               type of 'SECKEYMLDSAPublicKey mldsa' changed:
                 underlying type 'struct SECKEYMLDSAPublicKeyStr' at keythi.h:196:1 changed:
                   type size hasn't changed
                   1 data member change:
-                   type of 'SECOidTag SECKEYMLDSAPublicKeyStr::paramSet' changed:
-                     underlying type 'enum __anonymous_enum__' at secoidt.h:34:1 changed:
+                      type of 'SECOidTag paramSet' changed:
+                        underlying type 'enum SECOidTag' at secoidt.h:34:1 changed:
                        type size hasn't changed
                        1 enumerator insertion:
-                         '__anonymous_enum__::SEC_OID_CMS_AUTH_ENVELOPED_DATA' value '399'
-
+                            'SECOidTag::SEC_OID_CMS_AUTH_ENVELOPED_DATA' value '399'
                        1 enumerator change:
-                         '__anonymous_enum__::SEC_OID_TOTAL' from value '399' to '400' at secoidt.h:34:1
-
-
-
-
-
+                            'SECOidTag::SEC_OID_TOTAL' from value '399' to '400' at secoidt.h:34:1
 
