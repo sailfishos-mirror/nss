@@ -2279,6 +2279,12 @@ SECOID_Init(void)
      * algs when it initializes */
     (void)NSS_SetAlgorithmPolicyAll(0, NSS_USE_ALG_IN_SMIME);
 
+    /* ML-KEM-1024 is off by default in TLS key exchange; applications must
+     * opt in with
+     *   NSS_SetAlgorithmPolicy(SEC_OID_ML_KEM_1024, NSS_USE_ALG_IN_SSL_KX, 0);
+     * before it is offered in the supported_groups extension. */
+    (void)NSS_SetAlgorithmPolicy(SEC_OID_ML_KEM_1024, 0, NSS_USE_ALG_IN_SSL_KX);
+
     return (SECSuccess);
 }
 
