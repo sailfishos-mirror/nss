@@ -2531,6 +2531,10 @@ sftk_InitCBCMac(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechanism,
                 ((CK_RC2_MAC_GENERAL_PARAMS *)pMechanism->pParameter)->ulMacLength;
         /* fall through */
         case CKM_RC2_MAC:
+            if (pMechanism->mechanism == CKM_RC2_MAC &&
+                BAD_PARAM_CAST(pMechanism, sizeof(CK_RC2_CBC_PARAMS))) {
+                return CKR_MECHANISM_PARAM_INVALID;
+            }
             /* this works because ulEffectiveBits is in the same place in both the
              * CK_RC2_MAC_GENERAL_PARAMS and CK_RC2_CBC_PARAMS */
             rc2_params.ulEffectiveBits = ((CK_RC2_MAC_GENERAL_PARAMS *)
@@ -2573,6 +2577,9 @@ sftk_InitCBCMac(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechanism,
 #endif
         /* add cast and idea later */
         case CKM_DES_MAC_GENERAL:
+            if (BAD_PARAM_CAST(pMechanism, sizeof(CK_ULONG))) {
+                return CKR_MECHANISM_PARAM_INVALID;
+            }
             mac_bytes = *(CK_ULONG *)pMechanism->pParameter;
         /* fall through */
         case CKM_DES_MAC:
@@ -2583,6 +2590,9 @@ sftk_InitCBCMac(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechanism,
             cbc_mechanism.ulParameterLen = blockSize;
             break;
         case CKM_DES3_MAC_GENERAL:
+            if (BAD_PARAM_CAST(pMechanism, sizeof(CK_ULONG))) {
+                return CKR_MECHANISM_PARAM_INVALID;
+            }
             mac_bytes = *(CK_ULONG *)pMechanism->pParameter;
         /* fall through */
         case CKM_DES3_MAC:
@@ -2593,6 +2603,9 @@ sftk_InitCBCMac(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechanism,
             cbc_mechanism.ulParameterLen = blockSize;
             break;
         case CKM_CDMF_MAC_GENERAL:
+            if (BAD_PARAM_CAST(pMechanism, sizeof(CK_ULONG))) {
+                return CKR_MECHANISM_PARAM_INVALID;
+            }
             mac_bytes = *(CK_ULONG *)pMechanism->pParameter;
         /* fall through */
         case CKM_CDMF_MAC:
@@ -2604,6 +2617,9 @@ sftk_InitCBCMac(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechanism,
             break;
 #ifndef NSS_DISABLE_DEPRECATED_SEED
         case CKM_SEED_MAC_GENERAL:
+            if (BAD_PARAM_CAST(pMechanism, sizeof(CK_ULONG))) {
+                return CKR_MECHANISM_PARAM_INVALID;
+            }
             mac_bytes = *(CK_ULONG *)pMechanism->pParameter;
         /* fall through */
         case CKM_SEED_MAC:
@@ -2615,6 +2631,9 @@ sftk_InitCBCMac(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechanism,
             break;
 #endif /* NSS_DISABLE_DEPRECATED_SEED */
         case CKM_CAMELLIA_MAC_GENERAL:
+            if (BAD_PARAM_CAST(pMechanism, sizeof(CK_ULONG))) {
+                return CKR_MECHANISM_PARAM_INVALID;
+            }
             mac_bytes = *(CK_ULONG *)pMechanism->pParameter;
         /* fall through */
         case CKM_CAMELLIA_MAC:
@@ -2625,6 +2644,9 @@ sftk_InitCBCMac(CK_SESSION_HANDLE hSession, CK_MECHANISM_PTR pMechanism,
             cbc_mechanism.ulParameterLen = blockSize;
             break;
         case CKM_AES_MAC_GENERAL:
+            if (BAD_PARAM_CAST(pMechanism, sizeof(CK_ULONG))) {
+                return CKR_MECHANISM_PARAM_INVALID;
+            }
             mac_bytes = *(CK_ULONG *)pMechanism->pParameter;
         /* fall through */
         case CKM_AES_MAC:
@@ -3329,7 +3351,7 @@ NSC_SignInit(CK_SESSION_HANDLE hSession,
 #define INIT_HMAC_MECH(mmm)                                        \
     case CKM_##mmm##_HMAC_GENERAL:                                 \
         PORT_Assert(pMechanism->pParameter);                       \
-        if (!pMechanism->pParameter) {                             \
+        if (BAD_PARAM_CAST(pMechanism, sizeof(CK_ULONG))) {       \
             crv = CKR_MECHANISM_PARAM_INVALID;                     \
             break;                                                 \
         }                                                          \
@@ -3366,7 +3388,7 @@ NSC_SignInit(CK_SESSION_HANDLE hSession,
             break;
         case CKM_SSL3_MD5_MAC:
             PORT_Assert(pMechanism->pParameter);
-            if (!pMechanism->pParameter) {
+            if (BAD_PARAM_CAST(pMechanism, sizeof(CK_ULONG))) {
                 crv = CKR_MECHANISM_PARAM_INVALID;
                 break;
             }
@@ -3375,7 +3397,7 @@ NSC_SignInit(CK_SESSION_HANDLE hSession,
             break;
         case CKM_SSL3_SHA1_MAC:
             PORT_Assert(pMechanism->pParameter);
-            if (!pMechanism->pParameter) {
+            if (BAD_PARAM_CAST(pMechanism, sizeof(CK_ULONG))) {
                 crv = CKR_MECHANISM_PARAM_INVALID;
                 break;
             }
@@ -4196,7 +4218,7 @@ NSC_VerifyInit(CK_SESSION_HANDLE hSession,
 
         case CKM_SSL3_MD5_MAC:
             PORT_Assert(pMechanism->pParameter);
-            if (!pMechanism->pParameter) {
+            if (BAD_PARAM_CAST(pMechanism, sizeof(CK_ULONG))) {
                 crv = CKR_MECHANISM_PARAM_INVALID;
                 break;
             }
@@ -4205,7 +4227,7 @@ NSC_VerifyInit(CK_SESSION_HANDLE hSession,
             break;
         case CKM_SSL3_SHA1_MAC:
             PORT_Assert(pMechanism->pParameter);
-            if (!pMechanism->pParameter) {
+            if (BAD_PARAM_CAST(pMechanism, sizeof(CK_ULONG))) {
                 crv = CKR_MECHANISM_PARAM_INVALID;
                 break;
             }
