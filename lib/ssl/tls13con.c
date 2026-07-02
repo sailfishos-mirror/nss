@@ -2861,6 +2861,12 @@ tls13_SendHelloRetryRequest(sslSocket *ss,
         return SECFailure;
     }
 
+    /* The ECH HRR signal has been written to the message and preserved in the
+     * cookie, from which it is restored when reconstructing the transcript on
+     * the second ClientHello. Clear the transient buffer so that reconstruction
+     * starts from an empty state. */
+    sslBuffer_Clear(&ss->ssl3.hs.greaseEchBuf);
+
     /* And send it. */
     ssl_GetXmitBufLock(ss);
     rv = ssl3_AppendHandshakeHeader(ss, ssl_hs_server_hello,
