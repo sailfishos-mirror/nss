@@ -52,29 +52,12 @@ task-defaults:
 
 tasks-from:
     - cipher.yml
+    - gtest.yml
 
 tasks:
     # Schedule tests that do NOT need certificates. This is defined as
     # the test itself not needing certs AND not running under the upgradedb
     # cycle (which itself needs certs). If cycle is not defined, default is all.
-    gtests:
-        description: Gtests
-        from-deps:
-            kinds: [build]
-            with-attributes:
-                nspr: [false]
-                dbm: [false]
-                cc: [false]
-                modular: [false]
-                fuzz: [false]
-        worker:
-            env:
-                NSS_CYCLES: standard
-                NSS_TESTS: ssl_gtests gtests
-                TC_PARENT_TASK_ID: {task-reference: "<build>"}
-        treeherder:
-            symbol: Gtest
-
     gtests-tlsfuzz:
         description: Gtests
         from-deps:

@@ -63,10 +63,14 @@ def filter_try_syntax(options, task):
     if task.kind == "tools":
         return any(t in options["tools"] for t in ["all", symbol])
 
-    # Filter unit tests.
+    # Filter unit tests. A test is selected by its own symbol, or by its group
+    # symbol for the grouped suites (so e.g. `-u cipher` picks up every
+    # Cipher(...) variant). On the FIPS build the group is rewritten to "fips",
+    # but the inner symbol is preserved, so e.g. FIPS(Gtest) still matches
+    # `-u gtest`.
     if task.kind == "test":
         tests = {"all", symbol}
-        if group in ("cipher", "ssl"):
+        if group in ("cipher", "ssl", "gtest"):
             tests.add(group)
         if not any(t in options["unittests"] for t in tests):
             return False
