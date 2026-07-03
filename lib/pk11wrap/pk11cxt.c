@@ -1191,6 +1191,10 @@ pk11_AEADSimulateOp(PK11Context *context, void *params, int paramslen,
                 return SECFailure;
             }
             ccm_message = (CK_CCM_MESSAGE_PARAMS *)params;
+            if (ccm_message->ulMACLen > 16) {
+                PORT_SetError(SEC_ERROR_INVALID_ARGS);
+                return SECFailure;
+            }
             ccm.ulDataLen = ccm_message->ulDataLen;
             ccm.pNonce = ccm_message->pNonce;
             ccm.ulNonceLen = ccm_message->ulNonceLen;
@@ -1218,6 +1222,10 @@ pk11_AEADSimulateOp(PK11Context *context, void *params, int paramslen,
                 return SECFailure;
             }
             gcm_message = (CK_GCM_MESSAGE_PARAMS *)params;
+            if (gcm_message->ulTagBits > 128) {
+                PORT_SetError(SEC_ERROR_INVALID_ARGS);
+                return SECFailure;
+            }
             gcm.pIv = gcm_message->pIv;
             gcm.ulIvLen = gcm_message->ulIvLen;
             gcm.ulIvBits = gcm.ulIvLen * PR_BITS_PER_BYTE;
