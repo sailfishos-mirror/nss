@@ -221,10 +221,12 @@ class cfAction(argparse.Action):
             st = subprocess.Popen(
                 ["git", "status", "--porcelain"], cwd=cwd, stdout=subprocess.PIPE
             )
-            for line in iter(st.stdout.readline, ""):
-                if (
-                    line[1] == "M"
-                    or line[1] != "D"
+            for line in st.stdout:
+                line = line.decode("utf-8").rstrip()
+                if line == "":
+                    pass
+                elif line[1] == "M" or (
+                    line[1] != "D"
                     and (
                         line[0] == "M"
                         or line[0] == "A"
@@ -232,7 +234,7 @@ class cfAction(argparse.Action):
                         or line[0] == "U"
                     )
                 ):
-                    files += [line[3:].rstrip()]
+                    files += [line[3:]]
                 elif line[0] == "R":
                     files += [line[line.index(" -> ", beg=4) + 4 :]]
         else:
