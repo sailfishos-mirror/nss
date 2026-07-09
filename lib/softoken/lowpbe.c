@@ -25,7 +25,7 @@ SEC_ASN1_MKSUB(SECOID_AlgorithmIDTemplate)
 /* Upper bound on PBE iteration counts accepted from parsed algorithm
  * parameters.  This prevents denial-of-service from crafted input
  * (e.g. PKCS#12 files with extreme iteration counts). */
-#ifdef DEBUG
+#ifdef SOFTOKEN_FUZZ
 #define MAX_ITERATION_COUNT 600000
 #else
 #define MAX_ITERATION_COUNT 100000000
