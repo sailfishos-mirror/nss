@@ -151,7 +151,7 @@ DECLSPEC_IMPORT BOOLEAN WINAPI RtlGenRandom(
     PVOID RandomBuffer,
     ULONG RandomBufferLength);
 
-typedef BOOL (WINAPI *pProcessPrng)(PBYTE, SIZE_T);
+typedef BOOL(WINAPI *pProcessPrng)(PBYTE, SIZE_T);
 
 static PRCallOnceType coProcessPrngInit;
 static pProcessPrng sProcessPrng = NULL;
