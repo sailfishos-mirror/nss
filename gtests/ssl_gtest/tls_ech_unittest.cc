@@ -1395,8 +1395,7 @@ TEST_F(TlsConnectStreamTls13, GreaseEchHrrMatches) {
 TEST_F(TlsConnectStreamTls13, EchGreaseHrr) {
   EnsureTlsSetup();
   // Client offers both, but prefers X25519 so it only sends an X25519 share.
-  client_->ConfigNamedGroups(
-      {ssl_grp_ec_curve25519, ssl_grp_ec_secp256r1});
+  client_->ConfigNamedGroups({ssl_grp_ec_curve25519, ssl_grp_ec_secp256r1});
   // Server only supports P-256, so it must send an HRR requesting it.
   server_->ConfigNamedGroups({ssl_grp_ec_secp256r1});
   // GREASE ECH so the server records ECH state and emits an ECH HRR signal.
