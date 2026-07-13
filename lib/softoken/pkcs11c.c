@@ -10286,6 +10286,7 @@ NSC_GetOperationState(CK_SESSION_HANDLE hSession,
 
     /* a zero cipherInfoLen signals that this context cannot be serialized */
     if (context->cipherInfoLen == 0) {
+        sftk_FreeSession(session);
         return CKR_STATE_UNSAVEABLE;
     }
 
@@ -10295,6 +10296,7 @@ NSC_GetOperationState(CK_SESSION_HANDLE hSession,
         return CKR_OK;
     } else {
         if (pOSLen < *pulOperationStateLen) {
+            sftk_FreeSession(session);
             return CKR_BUFFER_TOO_SMALL;
         }
     }
