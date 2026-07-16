@@ -937,6 +937,9 @@ SECStatus PK11_Finalize(PK11Context *context);
 SECStatus PK11_DigestFinal(PK11Context *context, unsigned char *data,
                            unsigned int *outLen, unsigned int length);
 #define PK11_CipherFinal PK11_DigestFinal
+/* deprecated in favor of PK11_SaveContextAlloc, which handles buffer
+ * ownership correctly.  PK11_SaveContext fails (SEC_ERROR_OUTPUT_LEN) if the
+ * supplied buffer is too small to hold the state; it never allocates. */
 SECStatus PK11_SaveContext(PK11Context *cx, unsigned char *save,
                            int *len, int saveLength);
 
