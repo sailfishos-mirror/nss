@@ -10,7 +10,7 @@ Usage: python3 generate_release_doc.py <version> [output_file]
 
 Example:
   python3 generate_release_doc.py 3.118
-  python3 generate_release_doc.py 3.118.1 doc/rst/releases/nss_3_118_1.md
+  python3 generate_release_doc.py 3.118.1 doc/src/releases/nss_3_118_1.md
 """
 
 import os
@@ -81,7 +81,7 @@ def main():
         output_file = sys.argv[2].strip()
     else:
         version_underscore = version_string_to_underscore(version)
-        output_file = f"doc/rst/releases/nss_{version_underscore}.md"
+        output_file = f"doc/src/releases/nss_{version_underscore}.md"
 
     rtm_tag = version_string_to_RTM_tag(version)
     rtm_date = get_rtm_tag_date(rtm_tag)

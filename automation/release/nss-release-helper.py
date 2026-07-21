@@ -678,8 +678,8 @@ def generate_release_notes_index(args):
     latest_underscore = version_string_to_underscore(latest_version)
     esr_underscore = version_string_to_underscore(esr_version)
 
-    # Read all release note files from doc/rst/releases/
-    release_dir = "doc/rst/releases"
+    # Read all release note files from doc/src/releases/
+    release_dir = "doc/src/releases"
     if not os.path.exists(release_dir):
         exit_with_failure(f"Release notes directory not found: {release_dir}")
 
@@ -754,7 +754,7 @@ def release_nss(args):
     version_underscore = version_string_to_underscore(version_string)
     branch_name = f"NSS_{major}_{minor}_BRANCH"
     rtm_tag = f"NSS_{version_underscore}_RTM"
-    release_note_file = f"doc/rst/releases/nss_{version_underscore}.md"
+    release_note_file = f"doc/src/releases/nss_{version_underscore}.md"
 
     print_separator()
     print("RELEASE NSS")
@@ -861,7 +861,7 @@ def release_nss(args):
     print_separator()
 
     input(
-        "Are you making an ESR release? If so, please manually edit doc/rst/releases/index.md to adjust the ESR / main version note. Press enter when done."
+        "Are you making an ESR release? If so, please manually edit doc/src/releases/index.md to adjust the ESR / main version note. Press enter when done."
     )
 
     # Step 9: Commit the release notes
