@@ -76,17 +76,17 @@ NSS 3.12.4 source is also available on `ftp.mozilla.org` for secure HTTPS downlo
   - \\ will escape a special character
   - \$ matches the end of the string
   - Bracketed expressions:
-    [abc] matches one occurrence of a, b, or c.
-    [^abc] matches any character except a, b, or c.
+    \[abc] matches one occurrence of a, b, or c.
+    \[^abc] matches any character except a, b, or c.
     To be matched between [ and ], these characters must be escaped: \\ \]
     No other characters need be escaped between brackets.
     Unnecessary escaping is permitted.
-  - [a-z] matches any character between a and z, inclusive.
+  - \[a-z] matches any character between a and z, inclusive.
     The two range-definition characters must be alphanumeric ASCII.
     If one is upper case and the other is lower case, then the ASCII
     non-alphanumeric characters between Z and a will also be in range.
-  - [^a-z] matches any character except those between a and z, inclusive.
-    These forms cannot be combined, e.g [a-gp-z] does not work.
+  - \[^a-z] matches any character except those between a and z, inclusive.
+    These forms cannot be combined, e.g \[a-gp-z] does not work.
   - Exclusions:
     As a top level, outter-most expression only, the expression
     foo~bar will match the expression foo, provided it does not also

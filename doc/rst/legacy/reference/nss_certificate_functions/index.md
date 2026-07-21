@@ -220,10 +220,10 @@ certificates:
 - ? matches one character
 - \\ escapes a special character
 - \$ matches the end of the string
-- [abc] matches one occurrence of a, b, or c. The only character that needs to be escaped in
+- \[abc] matches one occurrence of a, b, or c. The only character that needs to be escaped in
   this is \], all others are not special.
-- [a-z] matches any character between a and z
-- [^az] matches any character except a or z
+- \[a-z] matches any character between a and z
+- \[^az] matches any character except a or z
 - \~ followed by another shell expression removes any pattern matching the shell expression from
   the match list
 - (foo|bar) matches either the substring foo or the substring bar. These can be shell

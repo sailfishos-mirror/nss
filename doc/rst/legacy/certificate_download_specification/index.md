@@ -56,7 +56,7 @@ more information about how multiple certificates are handled.
 Any of the above {ref}`mozilla_projects_nss_certificate_download_specification#binary_formats`
 can also be imported in text form. The text form begins with the following line:
 
-```{code}
+```
 -----BEGIN CERTIFICATE-----
 ```
 
@@ -66,7 +66,7 @@ This data must be base64 encoded as described by [RFC
 1113](https://datatracker.ietf.org/doc/html/rfc1113). Following the data should be the
 following line:
 
-```{code}
+```
 -----END CERTIFICATE-----
 ```
 

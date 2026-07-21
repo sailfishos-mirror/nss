@@ -866,9 +866,9 @@ string --> simple_string
 
 "complex_string"
 
-simple_string --> [^ \\tn""{""}"]+
+simple_string --> \[^ \\tn""{""}"]+
 
-complex_string --> ([^"\\rn]|(\\")|(\\\\))+
+complex_string --> (\[^"\\rn]|(\\")|(\\\\))+
 
 Quotes and backslashes must be escaped with a backslash. A complex string
 

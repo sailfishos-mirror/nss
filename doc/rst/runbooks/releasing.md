@@ -46,9 +46,9 @@ The NSS Release Owner will run the release script:
 
 `<esr_version>` is the current NSS ESR version (e.g. `3.ZZZ.X`).
 
-Note that if you're making an ESR or patch release, you'll need to manually update `index.rst` when prompted by the script. You may also be asked to merge the changes to this file.
+Note that if you're making an ESR or patch release, you'll need to manually update `index.md` when prompted by the script. You may also be asked to merge the changes to this file.
 
-This will update the version numbers, generate release notes and tag the release as `NSS_3_XXX_RTM`. The release notes will be placed in `doc/rst/releases/nss_3_XXX.rst` and the index of release notes will be updated. After it syncs to Github, you can manually uplift the tagged release into mozilla-unified via `./mach nss-uplift {tag_name}`.
+This will update the version numbers, generate release notes and tag the release as `NSS_3_XXX_RTM`. The release notes will be placed in `doc/rst/releases/nss_3_XXX.md` and the index of release notes will be updated. After it syncs to Github, you can manually uplift the tagged release into mozilla-unified via `./mach nss-uplift {tag_name}`.
 
 :::{warning}
 The nss-uplift script does not currently update the root CA telemetry. This must be done manually.

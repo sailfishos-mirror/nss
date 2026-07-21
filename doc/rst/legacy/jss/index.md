@@ -132,25 +132,25 @@ modules and tokens that are configured in the NSS DB and freely access all of it
 | -  `NSS FIPS Validation`_                       |                                                 |
 | -  `NSS Roadmap page`_                          |                                                 |
 +-------------------------------------------------+-------------------------------------------------+
+
+.. _Introduction to Public-Key Cryptography: https://developer.mozilla.org/en-US/docs/Introduction_to_Public-Key_Cryptography
+.. _Introduction to SSL: https://developer.mozilla.org/en-US/docs/Introduction_to_SSL
+.. _NSS sources building testing: NSS_Sources_Building_Testing
+.. _4.3.1 Release Notes: /4.3.1_Release_Notes
+.. _4.3 Release Notes: https://developer.mozilla.org/en-US/docs/JSS/4_3_ReleaseNotes
+.. _Older Release Notes: http://www-archive.mozilla.org/projects/security/pki/jss/index.html
+.. _Build Instructions for JSS 4.4.x: https://developer.mozilla.org/en-US/docs/JSS/Build_instructions_for_JSS_4.4.x
+.. _Building JSS 4.3.x: https://developer.mozilla.org/en-US/docs/JSS/Build_instructions_for_JSS_4.3.x
+.. _Older Build Instructions: http://www-archive.mozilla.org/projects/security/pki/jss/index.html
+.. _Download binaries, source, and javadoc: ftp://ftp.mozilla.org/pub/mozilla.org/security/jss/releases/
+.. _View the source online: http://mxr.mozilla.org/mozilla/source/security/jss/
+.. _JSS tests: https://hg.mozilla.org/projects/jss/file/tip/README
+.. _wiki.mozilla.org (NSS): http://wiki.mozilla.org/NSS
+.. _NSS FIPS Validation: http://wiki.mozilla.org/FIPS_Validation
+.. _NSS Roadmap page: http://wiki.mozilla.org/NSS:Roadmap
+.. _Mailing list: https://lists.mozilla.org/listinfo/dev-tech-crypto
+.. _Newsgroup (dev.tech.crypto): http://groups.google.com/group/mozilla.dev.tech.crypto
+.. _RSS feed: http://groups.google.com/group/mozilla.dev.tech.crypto/feeds
+.. _Security: https://developer.mozilla.org/en-US/docs/Security
 ```
 ::::
-
-[4.3 release notes]: https://developer.mozilla.org/en-US/docs/JSS/4_3_ReleaseNotes
-[4.3.1 release notes]: /4.3.1_Release_Notes
-[build instructions for jss 4.4.x]: https://developer.mozilla.org/en-US/docs/JSS/Build_instructions_for_JSS_4.4.x
-[building jss 4.3.x]: https://developer.mozilla.org/en-US/docs/JSS/Build_instructions_for_JSS_4.3.x
-[download binaries, source, and javadoc]: ftp://ftp.mozilla.org/pub/mozilla.org/security/jss/releases/
-[introduction to public-key cryptography]: https://developer.mozilla.org/en-US/docs/Introduction_to_Public-Key_Cryptography
-[introduction to ssl]: https://developer.mozilla.org/en-US/docs/Introduction_to_SSL
-[jss tests]: https://hg.mozilla.org/projects/jss/file/tip/README
-[mailing list]: https://lists.mozilla.org/listinfo/dev-tech-crypto
-[newsgroup (dev.tech.crypto)]: http://groups.google.com/group/mozilla.dev.tech.crypto
-[nss fips validation]: http://wiki.mozilla.org/FIPS_Validation
-[nss roadmap page]: http://wiki.mozilla.org/NSS:Roadmap
-[nss sources building testing]: NSS_Sources_Building_Testing
-[older build instructions]: http://www-archive.mozilla.org/projects/security/pki/jss/index.html
-[older release notes]: http://www-archive.mozilla.org/projects/security/pki/jss/index.html
-[rss feed]: http://groups.google.com/group/mozilla.dev.tech.crypto/feeds
-[security]: https://developer.mozilla.org/en-US/docs/Security
-[view the source online]: http://mxr.mozilla.org/mozilla/source/security/jss/
-[wiki.mozilla.org (nss)]: http://wiki.mozilla.org/NSS

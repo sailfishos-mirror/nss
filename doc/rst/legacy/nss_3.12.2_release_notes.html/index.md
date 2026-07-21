@@ -6,7 +6,7 @@
 
 ## [NSS 3.12.2 Release Notes](#nss_3.12.2_release_notes)
 
-(target-1)=
+(nss-3-12-2-release-date)=
 
 ### [2008-10-20](#2008-10-20)
 

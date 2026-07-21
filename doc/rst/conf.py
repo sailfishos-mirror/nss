@@ -12,7 +12,8 @@ source_suffix = {
 }
 
 # Suppress cross-reference warnings for labels outside the NSS standalone
-# build (e.g. :ref: to Firefox-managed docs).
-suppress_warnings = ["ref.ref"]
+# build (e.g. cross-references to Firefox-managed docs). MyST emits these
+# under the myst.xref_missing category rather than ref.ref.
+suppress_warnings = ["ref.ref", "myst.xref_missing"]
 
 exclude_patterns = []
