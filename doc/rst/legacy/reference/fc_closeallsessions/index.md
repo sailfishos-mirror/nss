@@ -11,11 +11,13 @@ FC_CloseAllSessions - close all sessions between an application and a token.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_CloseAllSessions(
   CK_SLOT_ID slotID
  );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -46,6 +48,7 @@ role).
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_closesession`,
   [NSC_CloseAllSessions](/en-US/NSC_CloseAllSessions)
 :::

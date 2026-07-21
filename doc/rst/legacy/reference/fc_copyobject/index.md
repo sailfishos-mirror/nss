@@ -11,6 +11,7 @@ FC_CopyObject - create a copy of an object.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_CopyObject(
   CK_SESSION_HANDLE hSession,
@@ -20,6 +21,7 @@ CK_RV FC_CopyObject(
   CK_OBJECT_HANDLE_PTR phNewObject
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -62,6 +64,7 @@ key object.
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_destroyobject`,
   [NSC_CopyObject](/en-US/NSC_CopyObject)
 :::

@@ -281,6 +281,7 @@ functions, that are publicly available to higer-level APIs.
 |          |                     |                     |               | watcomfx.h          |
 +----------+---------------------+---------------------+---------------+---------------------+
 ```
+
 :::
 
 ## [Naming Conventions](#naming_conventions)

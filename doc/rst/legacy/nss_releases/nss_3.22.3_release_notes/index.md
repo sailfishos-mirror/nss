@@ -35,6 +35,7 @@ No new functionality is introduced in this release.
 ## [Bugs fixed in NSS 3.22.3](#bugs_fixed_in_nss_3.22.3)
 
 :::{container}
+
 - [Bug 1243641](https://bugzilla.mozilla.org/show_bug.cgi?id=1243641) - Increase
   compatibility of TLS extended master secret, don't send an empty TLS extension last in the
   handshake

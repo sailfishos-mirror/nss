@@ -11,6 +11,7 @@ FC_GetObjectSize - create a copy of an object.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_GetObjectSize(
   CK_SESSION_HANDLE hSession,
@@ -18,6 +19,7 @@ CK_RV FC_GetObjectSize(
   CK_ULONG_PTR pusSize
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -52,5 +54,6 @@ or private key object.
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_GetObjectSize](/en-US/NSC_GetObjectSize)
 :::

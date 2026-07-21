@@ -35,6 +35,7 @@ No new functionality is introduced in this release.
 ## [Notable Changes in NSS 3.19.2](#notable_changes_in_nss_3.19.2)
 
 :::{container}
+
 - [Bug 1172128](https://bugzilla.mozilla.org/show_bug.cgi?id=1172128) - In NSS 3.19.1, the
   minimum key sizes that the freebl cryptographic implementation (part of the softoken
   cryptographic module used by default by NSS) was willing to generate or use was increased -

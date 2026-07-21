@@ -13,7 +13,7 @@ in a particular CRL.
 
 Synopsis
 
-crlutil [options] 
+crlutil [options]
 
 [arguments](arguments)
 
@@ -271,7 +271,7 @@ Where:
 
 authKeyIdent: identifies the name of an extension critical: value of 1 of
 
-0. Should be set to 1 if this extension is critical or 0 otherwise.
+1. Should be set to 1 if this extension is critical or 0 otherwise.
 
 key-id: key identifier represented in octet string. dn:: is a CA
 
@@ -425,11 +425,11 @@ The NSS site relates
 
 directly to NSS code changes and releases.
 
-Mailing lists: 
+Mailing lists:
 
 <mailto:pki-devel@redhat.com>
 
- and 
+ and
 
 <mailto:pki-users@redhat.com>
 
@@ -461,12 +461,11 @@ References
 
 Visible links
 
-1. 
+1.
 
 <http://pki.fedoraproject.org/wiki/>
 
-2.
-
+1.
 
 [http://www.mozilla.org/projects/security/pki/nss/](https://www.mozilla.org/projects/security/pki/nss/)
 :::

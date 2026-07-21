@@ -11,6 +11,7 @@ FC_DecryptFinal - finish a multi-part decryption operation.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_DecryptFinal(
   CK_SESSION_HANDLE hSession,
@@ -18,6 +19,7 @@ CK_RV FC_DecryptFinal(
   CK_ULONG_PTR pusLastPartLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -51,6 +53,7 @@ A user must log into the token (to assume the NSS User role) before calling `FC_
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_decryptinit`,
   [NSC_DecryptFinal](/en-US/NSC_DecryptFinal)
 :::

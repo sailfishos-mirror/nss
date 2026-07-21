@@ -52,6 +52,7 @@ Applications that use or depend on these symbols can and will break in future NS
 ### [Bugs fixed in NSS 3.16.2.1](#bugs_fixed_in_nss_3.16.2.1)
 
 :::{container}
+
 - [Bug 1064636](https://bugzilla.mozilla.org/show_bug.cgi?id=1064636) - (CVE-2014-1568) RSA
   Signature Forgery in NSS
 :::

@@ -37,6 +37,7 @@ We will add message protection (encryption and MACing) examples to this program 
 ### [Sample Code](#sample_code)
 
 :::{container}
+
 ```{code}
 #include <iostream.h>
 #include "pk11pub.h"
@@ -710,4 +711,5 @@ done:
   return rv;
 }
 ```
+
 :::

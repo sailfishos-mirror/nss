@@ -96,11 +96,11 @@ If making a change to the roots trusted for website authentication, you can conf
 You can also dump certificates from a copy of `libnssckbi.so`:
 
 ```
-$ mkdir tmp; cd tmp
-$ certutil -N -d .
-$ modutil -add builtins -dbdir . -libfile /path/to/libnssckbi.so
-$ certutil -L -h builtins  # list all certificates in the builtins module
-$ certutil -L -n "<friendly name>" -d .  # pretty print one cert
+mkdir tmp; cd tmp
+certutil -N -d .
+modutil -add builtins -dbdir . -libfile /path/to/libnssckbi.so
+certutil -L -h builtins  # list all certificates in the builtins module
+certutil -L -n "<friendly name>" -d .  # pretty print one cert
 ```
 
 ## Root Store Consumers

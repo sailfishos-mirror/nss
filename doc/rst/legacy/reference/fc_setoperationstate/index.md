@@ -11,6 +11,7 @@ FC_SetOperationState - restore the cryptographic operation state of a session.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_SetOperationState(
   CK_SESSION_HANDLE hSession,
@@ -20,6 +21,7 @@ CK_RV FC_SetOperationState(
   CK_OBJECT_HANDLE hAuthenticationKey
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -64,6 +66,7 @@ assume the NSS User role).
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_getoperationstate`,
   [NSC_SetOperationState](/en-US/NSC_SetOperationState)
 :::

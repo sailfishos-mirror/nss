@@ -26,6 +26,7 @@ NSS 3.38 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - Added support for the TLS Record Size Limit Extension.
 - When creating a certificate request (CSR) using certutil -R, an existing orphan private key
   can be reused. Parameter -k may be used to specify the ID of an existing orphan key. The
@@ -53,6 +54,7 @@ NSS 3.38 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.38](#notable_changes_in_nss_3.38)
 
 :::{container}
+
 - Fixed [CVE-2018-0495](https://nvd.nist.gov/vuln/detail/CVE-2018-0495) in [bug
   1464971](https://bugzilla.mozilla.org/show_bug.cgi?id=1464971).
 - Various security fixes in the ASN.1 code.

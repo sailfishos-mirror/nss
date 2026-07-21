@@ -11,6 +11,7 @@ FC_DeriveKey - derive a key from a base key
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_DeriveKey(
   CK_SESSION_HANDLE hSession,
@@ -21,6 +22,7 @@ CK_RV FC_DeriveKey(
   CK_OBJECT_HANDLE_PTR phKey
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -70,5 +72,6 @@ A user must log into the token (to assume the NSS User role) before calling `FC_
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_DeriveKey](/en-US/NSC_DeriveKey)
 :::

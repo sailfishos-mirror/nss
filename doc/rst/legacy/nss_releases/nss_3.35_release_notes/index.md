@@ -26,6 +26,7 @@ NSS 3.35 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - TLS 1.3 support has been updated to draft -23. This includes a large number of changes since
   3.34, which supported only draft -18. See below for details.
 
@@ -46,6 +47,7 @@ NSS 3.35 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.35](#notable_changes_in_nss_3.35)
 
 :::{container}
+
 - Previously, NSS used the DBM file format by default. Starting with version 3.35, NSS uses the
   SQL file format by default. Below, are explanations that could be helpful for environments
   that need to adopt to the new default.

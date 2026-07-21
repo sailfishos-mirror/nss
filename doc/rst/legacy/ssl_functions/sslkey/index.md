@@ -5,6 +5,7 @@
 ::::{container}
 
 :::{note}
+
 - This page is part of the {ref}`mozilla_projects_nss_ssl_functions_old_ssl_reference` that
   we are migrating into the format described in the [MDN Style
   Guide](https://developer.mozilla.org/en-US/docs/MDN/Guidelines). If you are inclined to
@@ -15,6 +16,7 @@
 ```{rubric} Key Functions
 :name: Key_Functions
 ```
+
 ::::
 
 [Chapter 6](#chapter_6_key_functions) Key Functions

@@ -44,6 +44,7 @@ python3 -m pip install gyp-next
 ```{code}
 <TODO>
 ```
+
 :::
 
 :::{note}
@@ -93,6 +94,7 @@ To download the source using `git-cinnabar` instead:
 git clone https://github.com/mozilla/nspr
 git clone hg::https://hg.mozilla.org/projects/nss
 ```
+
 :::
 
 ## [Build with gyp and ninja](#build)
@@ -167,6 +169,7 @@ Run the standard suite by:
 ```{code}
 HOST=localhost DOMSUF=localdomain USE_64=1 ./tests/all.sh
 ```
+
 :::
 
 (unit-test-configuration)=
@@ -265,7 +268,7 @@ The following static libraries aren't included in any shared libraries
 - `libjar.a`/`jar.lib` provides an API for creating JAR files.
 
 The following static libraries are included only in external loadable PKCS
-#11 modules:
+\# 11 modules:
 
 - `libnssckfw.a`/`nssckfw.lib` provides an API for writing PKCS #11 modules.
 - `libswfci.a`/`swfci.lib` provides support for software FORTEZZA.

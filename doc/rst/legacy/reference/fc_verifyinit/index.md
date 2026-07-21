@@ -11,6 +11,7 @@ FC_VerifyInit - initialize a verification operation.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_VerifyInit(
   CK_SESSION_HANDLE hSession,
@@ -18,6 +19,7 @@ CK_RV FC_VerifyInit(
   CK_OBJECT_HANDLE hKey
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -52,5 +54,6 @@ A user must log into the token (to assume the NSS User role) before calling `FC_
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_VerifyInit](/en-US/NSC_VerifyInit)
 :::

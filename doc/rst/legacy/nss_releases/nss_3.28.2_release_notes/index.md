@@ -24,6 +24,7 @@ NSS 3.28.2 source distributions are available on ftp.mozilla.org for secure HTTP
 ## [Incorrect version number](#incorrect_version_number)
 
 :::{container}
+
 - Note the version numbers embedded in the NSS 3.28.2 are wrong (it reports itself as version
   3.28.1).
 :::
@@ -42,6 +43,7 @@ and addresses some compatibility issues with TLS.
 ## [Bugs fixed in NSS 3.28.2](#bugs_fixed_in_nss_3.28.2)
 
 :::{container}
+
 - [Bug 1334114 - NSS 3.28 regression in signature scheme flexibility, causes connectivity issue
   between iOS 8 clients and NSS servers with ECDSA
   certificates](https://bugzilla.mozilla.org/show_bug.cgi?id=1334114)

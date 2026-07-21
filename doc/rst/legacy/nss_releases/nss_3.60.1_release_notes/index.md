@@ -27,6 +27,7 @@ Other releases are available at {ref}`mozilla_projects_nss_nss_releases#past_rel
 ## [Bugs fixed in NSS 3.60.1](#bugs_fixed_in_nss_3.60.1)
 
 :::{container}
+
 - [Bug 1682863](https://bugzilla.mozilla.org/show_bug.cgi?id=1682863) - Fix remaining hang
   issues with slow third-party PKCS #11 tokens.
 :::

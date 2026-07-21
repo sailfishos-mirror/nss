@@ -37,6 +37,7 @@ upgrade immediately.
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - No new major functionality is introduced in this release. This release is a patch release to
   address [CVE-2013-1739](http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-1739).
 :::
@@ -46,6 +47,7 @@ upgrade immediately.
 ### [Bugs fixed in NSS 3.14.4](#bugs_fixed_in_nss_3.14.4)
 
 :::{container}
+
 - <https://bugzilla.mozilla.org/buglist.cgi?bug_id=894370%2C832942%2C863947&bug_id_type=anyexact&list_id=8338081&resolution=FIXED&classification=Components&query_format=advanced&product=NSS>
 :::
 

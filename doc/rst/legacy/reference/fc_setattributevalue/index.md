@@ -11,6 +11,7 @@ FC_SetAttributeValue - set the values of attributes of an object.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_SetAttributeValue(
   CK_SESSION_HANDLE hSession,
@@ -19,6 +20,7 @@ CK_RV FC_SetAttributeValue(
   CK_ULONG usCount
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -57,5 +59,6 @@ object.
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_SetAttributeValue](/en-US/NSC_SetAttributeValue)
 :::

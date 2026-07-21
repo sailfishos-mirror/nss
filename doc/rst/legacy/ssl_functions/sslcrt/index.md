@@ -5,6 +5,7 @@
 ::::{container}
 
 :::{note}
+
 - This page is part of the {ref}`mozilla_projects_nss_ssl_functions_old_ssl_reference` that
   we are migrating into the format described in the [MDN Style
   Guide](https://developer.mozilla.org/en-US/docs/Project:MDC_style_guide). If you are
@@ -15,6 +16,7 @@
 ```{rubric} Certificate Functions
 :name: Certificate_Functions
 ```
+
 ::::
 
 [Chapter 5](#chapter_5_certificate_functions) Certificate Functions
@@ -513,7 +515,7 @@ The function returns a `CERTCertNicknames` object containing the requested nickn
 ```
 
 `CERT_GetCertNicknames` must call one or more PK11 functions to obtain the services of a PKCS
-#11 module. Some of the PK11 functions require a PIN argument (see
+\# 11 module. Some of the PK11 functions require a PIN argument (see
 {ref}`mozilla_projects_nss_ssl_functions_sslfnc#1088040` for details), which must be specified in
 the `wincx` parameter. To obtain the value to pass in the `wincx` parameter, call
 {ref}`mozilla_projects_nss_ssl_functions_sslfnc#1123385`.
@@ -619,6 +621,7 @@ The function returns one of these values:
 ## [Comparing SecItem Objects](#comparing_secitem_objects)
 
 :::{container}
+
 ```{rubric} SECITEM_CompareItem
 ```
 
@@ -668,4 +671,5 @@ typedef enum _SECComparison {
    SECGreaterThan = 1
 } SECComparison;
 ```
+
 :::

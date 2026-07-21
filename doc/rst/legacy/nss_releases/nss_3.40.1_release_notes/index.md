@@ -27,6 +27,7 @@ NSS 3.40 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - No new functionality is introduced in this release. This is a patch release to fix
   CVE-2018-12404
 
@@ -41,6 +42,7 @@ NSS 3.40 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Bugs fixed in NSS 3.40.1](#bugs_fixed_in_nss_3.40.1)
 
 :::::{container}
+
 - ::::{container} field indent
 
   :::{container}

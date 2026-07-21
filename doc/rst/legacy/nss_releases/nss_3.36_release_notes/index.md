@@ -26,6 +26,7 @@ NSS 3.36 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - Experimental APIs for TLS session cache handling.
 :::
 
@@ -34,6 +35,7 @@ NSS 3.36 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.36](#notable_changes_in_nss_3.36)
 
 :::{container}
+
 - Replaced existing vectorized ChaCha20 code with verified HACL\* implementation.
 :::
 

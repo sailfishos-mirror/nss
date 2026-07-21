@@ -25,6 +25,7 @@ NSS 3.19 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Security Fixes in NSS 3.19](#security_fixes_in_nss_3.19)
 
 :::{container}
+
 - [Bug 1086145](https://bugzilla.mozilla.org/show_bug.cgi?id=1086145) /
   [CVE-2015-2721](http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-2721) - Fixed a
   bug related to the ordering of TLS handshake messages. This was also known
@@ -38,6 +39,7 @@ NSS 3.19 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - For some certificates, such as root CA certificates that don't embed any constraints, NSS
   might impose additional constraints such as name constraints. A new API
   ([CERT_GetImposedNameConstraints](http://mxr.mozilla.org/nss/ident?i=CERT_GetImposedNameConstraints)) has
@@ -60,6 +62,7 @@ NSS 3.19 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.19](#notable_changes_in_nss_3.19)
 
 :::{container}
+
 - The SSL 3 protocol has been disabled by default.
 - NSS now more strictly validates TLS extensions and will fail a handshake that contains
   malformed extensions ([bug 753136](https://bugzilla.mozilla.org/show_bug.cgi?id=753136)).

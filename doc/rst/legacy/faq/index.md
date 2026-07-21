@@ -93,10 +93,10 @@ Information](https://wiki.mozilla.org/NSS).
 :::{container}
 NSS supports [SSL v2 and v3](https://developer.mozilla.org/en-US/docs/Glossary/SSL),
 [TLS](https://developer.mozilla.org/en-US/docs/Glossary/TLS), [PKCS
-#5](https://developer.mozilla.org/en-US/docs/Glossary/PKCS_.235), [PKCS
-#7](https://developer.mozilla.org/en-US/docs/Glossary/PKCS_.237), [PKCS
-#11](https://developer.mozilla.org/en-US/docs/Glossary/PKCS_.2311), [PKCS
-#12](https://developer.mozilla.org/en-US/docs/Glossary/PKCS_.2312),
+\# 5](https://developer.mozilla.org/en-US/docs/Glossary/PKCS_.235), [PKCS
+\# 7](https://developer.mozilla.org/en-US/docs/Glossary/PKCS_.237), [PKCS
+\# 11](https://developer.mozilla.org/en-US/docs/Glossary/PKCS_.2311), [PKCS
+\# 12](https://developer.mozilla.org/en-US/docs/Glossary/PKCS_.2312),
 [S/MIME](https://developer.mozilla.org/en-US/Glossary/en-US/docs/Glossary/S.2FMIME), and
 [X.509 v3](https://developer.mozilla.org/en-US/docs/Mozilla/Security/x509_Certificates)
 certificates. For complete details, see [Encryption Technologies Available in NSS
@@ -153,7 +153,7 @@ applications can support a wide variety of hardware accelerators.
 
 :::{container}
 NSS supports the PKCS #11 interface for smart card integration. Applications that use the PKCS
-#11 interface provided by NSS will therefore support smart cards from leading vendors such as
+\# 11 interface provided by NSS will therefore support smart cards from leading vendors such as
 ActiveCard, Litronic, SafeNet, and SecureID Technologies that also support the PKCS #11
 interface.
 :::
@@ -163,9 +163,11 @@ interface.
 ### [Does NSS require Netscape Portable Runtime (NSPR)?](#does_nss_require_netscape_portable_runtime_.28nspr.29.3f)
 
 :::{container}
+
 ```{rubric} To provide cross-platform support, NSS utilizes Netscape Portable Runtime (NSPR) libraries as a portability interface and implementation that provides consistent cross-platform semantics for network I/O and threading models. You can use NSPR throughout your application or only in the portion that calls into NSS. Mozilla strongly recommends that multithreaded applications use the NSPR or native OS threading model. (In recent NSPR releases, the NSPR threading model is compatible with the native threading model if the OS has native threads.) Alternatively, you can adapt the open-source NSPR implementation to be compatible with your existing application's threading models. More information about NSPR may be found at [Netscape Portable Runtime](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSPR).
 :name: to_provide_cross-platform_support_nss_utilizes_netscape_portable_runtime_nspr_libraries_as_a_portability_interface_and_implementation_that_provides_consistent_cross-platform_semantics_for_network_io_and_threading_models._you_can_use_nspr_throughout_your_application_or_only_in_the_portion_that_calls_into_nss._mozilla_strongly_recommends_that_multithreaded_applications_use_the_nspr_or_native_os_threading_model._in_recent_nspr_releases_the_nspr_threading_model_is_compatible_with_the_native_threading_model_if_the_os_has_native_threads._alternatively_you_can_adapt_the_open-source_nspr_implementation_to_be_compatible_with_your_existing_applications_threading_models._more_information_about_nspr_may_be_found_at_netscape_portable_runtime.
 ```
+
 :::
 
 (can-i-use-nss-even-if-my-application-protocol-isn-27t-http-3f)=

@@ -34,6 +34,7 @@ number of bug fixes.
 ## [Notable Changes in NSS 3.16.4](#notable_changes_in_nss_3.16.4)
 
 :::{container}
+
 - The following **1024-bit** root CA certificate was **restored** to allow more time to develop
   a better transition strategy for affected sites. It was removed in
   {ref}`mozilla_projects_nss_nss_3_16_3_release_notes`, but discussion in the

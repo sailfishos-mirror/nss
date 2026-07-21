@@ -24,6 +24,7 @@ NSS 3.29 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.29](#notable_changes_in_nss_3.29)
 
 :::{container}
+
 - Fixed a NSS 3.28 regression in the signature scheme flexibility that causes connectivity
   issues between iOS 8 clients and NSS servers with ECDSA certificates
   ([bug1334114](https://bugzilla.mozilla.org/show_bug.cgi?id=1334114)).

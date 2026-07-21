@@ -11,6 +11,7 @@ FC_VerifyRecover - Verify data in a single recoverable operation.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_VerifyRecover(
   CK_SESSION_HANDLE hSession,
@@ -20,6 +21,7 @@ CK_RV FC_VerifyRecover(
   CK_ULONG_PTR pusDataLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -64,5 +66,6 @@ A user must log into the token (to assume the NSS User role) before calling `FC_
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_VerifyRecover](/en-US/NSC_VerifyRecover)
 :::

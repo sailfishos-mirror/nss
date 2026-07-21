@@ -26,6 +26,7 @@ NSS 3.20 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - The TLS library has been extended to support DHE ciphersuites in server applications.
 
 ```{rubric} New Functions
@@ -60,6 +61,7 @@ NSS 3.20 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.20](#notable_changes_in_nss_3.20)
 
 :::{container}
+
 - The TLS library has been extended to support DHE ciphersuites in server applications.
 
 - For backward compatibility reasons, the server side implementation of the TLS library keeps

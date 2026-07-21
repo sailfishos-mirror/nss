@@ -11,6 +11,7 @@
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_Login(
   CK_SESSION_HANDLE hSession,
@@ -19,6 +20,7 @@ CK_RV FC_Login(
   CK_ULONG ulPinLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -86,5 +88,6 @@ user's PIN is already initialized.
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_Login](/en-US/NSC_Login)
 :::

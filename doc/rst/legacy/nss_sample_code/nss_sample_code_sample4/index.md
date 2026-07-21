@@ -7,6 +7,7 @@
 ## [NSS Sample Code 4: PKI Encryption](#nss_sample_code_4_pki_encryption)
 
 :::{container}
+
 ```{code}
 /* Example code to illustrate PKI crypto ops (encrypt with public key,
  * decrypt with private key)
@@ -153,4 +154,5 @@ char *passwdcb(PK11SlotInfo *info, PRBool retry, void *arg)
     return NULL;
 }
 ```
+
 :::

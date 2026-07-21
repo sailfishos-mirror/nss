@@ -11,6 +11,7 @@ FC_OpenSession - open a session between an application and a token.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_OpenSession(
   CK_SLOT_ID slotID,
@@ -20,6 +21,7 @@ CK_RV FC_OpenSession(
   CK_SESSION_HANDLE_PTR phSession
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -65,6 +67,7 @@ A user may call `FC_OpenSession` without logging into the token (to assume the N
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_closesession`,
   [NSC_OpenSession](/en-US/NSC_OpenSession)
 :::

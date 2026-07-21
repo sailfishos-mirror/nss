@@ -17,6 +17,7 @@ Newsgroup: [mozilla.dev.tech.crypto](news://news.mozilla.org/mozilla.dev.tech.cr
 ### [Contents](#contents)
 
 :::{container}
+
 - [Introduction](#introduction)
 - [Distribution Information](#distribution_information)
 - [New in NSS 3.12.3](#new_in_nss_3.12.3)
@@ -38,14 +39,14 @@ NSS 3.12.3 is tri-licensed under the MPL 1.1/GPL 2.0/LGPL 2.1.
 ### [Distribution Information](#distribution_information)
 
 :::{container}
-The CVS tag for the NSS 3.12.3 release is NSS_3_12_3_RTM. NSS 3.12.3 requires 
+The CVS tag for the NSS 3.12.3 release is NSS_3_12_3_RTM. NSS 3.12.3 requires
 
 [NSPR
 4.7.4](https://www.mozilla.org/projects/nspr/release-notes/nspr474.html)
 
 .
 
-See the 
+See the
 
 [Documentation](#documentation)
 
@@ -78,6 +79,7 @@ and shared libraries, which NSS 3.12.3 requires. NSPR 4.7.4 binary distributions
 ### [New in NSS 3.12.3](#new_in_nss_3.12.3)
 
 :::{container}
+
 - Changes in behavior:
 
 - In the development of NSS 3.12.3, it became necessary to change some old library behaviors due
@@ -411,7 +413,7 @@ compatible with future versions of the NSS shared libraries.
 ### [Feedback](#feedback)
 
 :::{container}
-Bugs discovered should be reported by filing a bug report with 
+Bugs discovered should be reported by filing a bug report with
 
 [mozilla.org
 Bugzilla](https://bugzilla.mozilla.org/)

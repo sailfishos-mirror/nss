@@ -111,6 +111,7 @@ Run the standard suite by:
 ```{code}
 HOST=localhost DOMSUF=localdomain USE_64=1 nss/tests/all.sh
 ```
+
 :::
 
 ### [Unit test configuration](#unit_test_configuration)
@@ -118,25 +119,24 @@ HOST=localhost DOMSUF=localdomain USE_64=1 nss/tests/all.sh
 :::{container}
 NSS tests are configured using environment variables.
 
-The scripts will attempt to infer values for 
+The scripts will attempt to infer values for
 
 `HOST`
 
- and 
+ and
 
 `DOMSUF`
 
 , but can fail. Replace
 
-
 `localhost`
 
- and 
+ and
 
 `localdomain`
 
  with the hostname and domain suffix for your host. You need
-to be able to connect to 
+to be able to connect to
 
 `$HOST.$DOMSUF`
 

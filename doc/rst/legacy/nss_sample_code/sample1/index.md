@@ -3,6 +3,7 @@
 # sample1
 
 :::{container}
+
 1. A program to compute the hash of a file and save it to another file.
 
 ```{code} c
@@ -226,4 +227,5 @@ int main(int argc, char **argv)
     return 0;
 }
 ```
+
 :::

@@ -11,6 +11,7 @@ FC_Digest - digest a block of data.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_Digest(
   CK_SESSION_HANDLE hSession,
@@ -20,6 +21,7 @@ CK_RV FC_Digest(
   CK_ULONG_PTR pusDigestLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -63,5 +65,6 @@ A user may call `FC_Digest` without logging into the token (to assume the NSS Us
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_digestinit`, [NSC_Digest](/en-US/NSC_Digest)
 :::

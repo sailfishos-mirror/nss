@@ -60,19 +60,19 @@ mkdir workarea
 
 cd workarea
 
-git clone 
+git clone
 
 <https://github.com/mozilla/nspr>
 
-hg clone 
+hg clone
 
 <https://hg.mozilla.org/projects/nss>
 
 cd nss
 
-# set USE_64=1 on 64 bit architectures
+\# set USE_64=1 on 64 bit architectures
 
-# set BUILD_OPT=1 to get an optimized build
+\# set BUILD_OPT=1 to get an optimized build
 
 make nss_build_all
 

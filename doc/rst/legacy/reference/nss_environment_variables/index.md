@@ -363,6 +363,7 @@ separate set of environment variables that affect how NSS is built, documented b
 |                        |                        | functionality.*        |                        |
 +------------------------+------------------------+------------------------+------------------------+
 ```
+
 :::
 
 (build-time-environment-variables)=
@@ -516,4 +517,5 @@ These environment variables affect the build (compilation) of NSS.
 |                        |                        | effect                 |                        |
 +------------------------+------------------------+------------------------+------------------------+
 ````
+
 ::::

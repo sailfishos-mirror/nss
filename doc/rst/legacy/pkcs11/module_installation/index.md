@@ -22,6 +22,7 @@ for installing PKCS #11 modules.
 ## [Using the Firefox preferences to install PKCS #11 modules](#using_the_firefox_preferences_to_install_pkcs_11_modules)
 
 :::{container}
+
 1. Save the PKCS #11 module to a permanent location on your local computer
 2. Open the Firefox preferences dialog. Choose "Advanced" > "Encryption" > "Security Devices"
 3. Choose "Load"
@@ -43,6 +44,7 @@ PKCS #11 modules and make them accessible to the browser as sources of keys and 
 ## [See also](#see_also)
 
 :::{container}
+
 - [Web security](https://developer.mozilla.org/en-US/docs/Web/Security)
 - {ref}`mozilla_projects_nss_pkcs11`
 - `pkcs11.installModule()`

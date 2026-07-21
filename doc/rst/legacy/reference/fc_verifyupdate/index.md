@@ -11,6 +11,7 @@ FC_VerifyUpdate - process the next block of a multi-part verify operation.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_VerifyUpdate(
   CK_SESSION_HANDLE hSession,
@@ -18,6 +19,7 @@ CK_RV FC_VerifyUpdate(
   CK_ULONG usPartLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -54,6 +56,7 @@ A user must log into the token (to assume the NSS User role) before calling `FC_
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_verifyfinal`,
   [NSC_VerifyUpdate](/en-US/NSC_VerifyUpdate)
 :::

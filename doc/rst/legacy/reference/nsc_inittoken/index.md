@@ -11,6 +11,7 @@
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV NSC_InitToken(
   CK_SLOT_ID slotID,
@@ -19,6 +20,7 @@ CK_RV NSC_InitToken(
   CK_CHAR_PTR pLabel
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -101,5 +103,6 @@ those keys.
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_InitPIN](/en-US/NSC_InitPIN), {ref}`mozilla_projects_nss_reference_fc_inittoken`
 :::

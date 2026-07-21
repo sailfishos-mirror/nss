@@ -211,18 +211,17 @@ Authors: Elio Maldonado \<
 
 Copyright
 
-3. 2010, Red Hat, Inc. Licensed under the GNU Public License version 2.
+1. 2010, Red Hat, Inc. Licensed under the GNU Public License version 2.
 
 References
 
 Visible links
 
-1. 
+1.
 
 <http://pki.fedoraproject.org/wiki/>
 
-2.
-
+1.
 
 [http://www.mozilla.org/projects/security/pki/nss/](https://www.mozilla.org/projects/security/pki/nss/)
 :::

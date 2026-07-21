@@ -9,6 +9,7 @@
 ::::{container}
 
 :::{container} notecard note
+
 - We are migrating the {ref}`mozilla_projects_nss_ssl_functions_old_ssl_reference` into the
   format described in the [MDN Style
   Guide](https://developer.mozilla.org/en-US/docs/MDN/Guidelines). If you are inclined to
@@ -56,6 +57,7 @@ Based on {ref}`mozilla_projects_nss_ssl_functions_ssltyp` in the SSL Reference.
 ## [NSS initialization and shutdown](#nss_initialization_and_shutdown)
 
 :::{container}
+
 - NSS_Init
 - NSS_InitReadWrite
 - NSS_NoDB_Init

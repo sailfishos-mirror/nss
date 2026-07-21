@@ -11,6 +11,7 @@ FC_FindObjectsInit - initialize the parameters for an object search.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_FindObjectsInit(
   CK_SESSION_HANDLE hSession,
@@ -18,6 +19,7 @@ CK_RV FC_FindObjectsInit(
   CK_ULONG usCount
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -54,6 +56,7 @@ private key objects.
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_findobjects`,
   [NSC_FindObjectsInit](/en-US/NSC_FindObjectsInit)
 :::

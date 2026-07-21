@@ -18,6 +18,7 @@ For the primary NSS documentation pages please visit {ref}`mozilla_projects_nss`
 ## [New in NSS 3.14.2](#new_in_nss_3.14.2)
 
 :::{container}
+
 - NSS will now make use of the Intel AES-NI and AVX instruction sets for hardware-accelerated
   AES-GCM on 64-bit Linux systems. Note: the new assembly code requires GNU as version 2.19 or
   newer. On Red Hat Enterprise Linux 5.x systems, install the binutils220 package and add
@@ -43,6 +44,7 @@ For the primary NSS documentation pages please visit {ref}`mozilla_projects_nss`
 ## [Notable Changes in NSS 3.14.2](#notable_changes_in_nss_3.14.2)
 
 :::{container}
+
 - Bug 805604 - Support for AES-NI and AVX accelerated AES-GCM was contributed by Shay Gueron of
   Intel. If compiled on Linux systems in 64-bit mode, NSS will include runtime detection to
   check if the platform supports AES-NI and PCLMULQDQ. If so, NSS uses the optimized code path,
@@ -76,6 +78,7 @@ For the primary NSS documentation pages please visit {ref}`mozilla_projects_nss`
 ## [Bugs Fixed in NSS 3.14.2](#bugs_fixed_in_nss_3.14.2)
 
 :::{container}
+
 - <https://bugzilla.mozilla.org/buglist.cgi?list_id=5502456;resolution=FIXED;classification=Components;query_format=advanced;target_milestone=3.14.2;product=NSS>
 :::
 

@@ -26,6 +26,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.63.1](#bugs_fixed_in_nss_3.63.1)
 
 :::{container}
+
 - REVERTING Bug 1692094 - Turn off Websites Trust Bit for 'Chambers of Commerce Root - 2008' and
   'Global Chambersign Root - 2008’.
 :::

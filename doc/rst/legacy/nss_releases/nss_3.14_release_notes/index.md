@@ -127,6 +127,7 @@ Changes in NSS 3.14
 ## [Changes in NSS 3.14](#changes_in_nss_3.14)
 
 :::{container}
+
 - [Bug 333601](https://bugzilla.mozilla.org/show_bug.cgi?id=333601) - Performance
   enhancements for Intel Macs
 

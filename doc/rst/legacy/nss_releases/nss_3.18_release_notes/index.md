@@ -26,6 +26,7 @@ NSS 3.18 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - When importing certificates and keys from a PKCS#12 source, it's now possible to override the
   nicknames, prior to importing them into the NSS database, using new API
   SEC_PKCS12DecoderRenameCertNicknames.
@@ -70,6 +71,7 @@ NSS 3.18 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.18](#notable_changes_in_nss_3.18)
 
 :::{container}
+
 - The highest TLS protocol version enabled by default has been increased from TLS 1.0 to TLS
   1.2. Similarly, the highest DTLS protocol version enabled by default has been increased from
   DTLS 1.0 to DTLS 1.2.

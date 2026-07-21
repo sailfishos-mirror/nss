@@ -29,6 +29,7 @@ NSS 3.14.1 source distributions are also available on ftp.mozilla.org for secure
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - NSS now has the ability to create signed OCSP responses.
 
   - The ability to create signed OCSP responses has been added in NSS 3.14.1. Note that this
@@ -58,6 +59,7 @@ NSS 3.14.1 source distributions are also available on ftp.mozilla.org for secure
 ### [Notable Changes in NSS 3.14.1](#notable_changes_in_nss_3.14.1)
 
 :::{container}
+
 - Windows CE support has been removed from the code base.
 - [Bug 812399](https://bugzilla.mozilla.org/show_bug.cgi?id=812399) - In NSS 3.14, a
   regression caused [Bug 641052](https://bugzilla.mozilla.org/show_bug.cgi?id=641052) /

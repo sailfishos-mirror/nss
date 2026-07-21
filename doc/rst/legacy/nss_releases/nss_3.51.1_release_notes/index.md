@@ -27,6 +27,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.51.1](#notable_changes_in_nss_3.51.1)
 
 :::{container}
+
 - [Bug 1617968](https://bugzilla.mozilla.org/show_bug.cgi?id=1617968) - Update Delegated
   Credentials implementation to draft-07.
 :::
@@ -36,6 +37,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.51.1](#bugs_fixed_in_nss_3.51.1)
 
 :::{container}
+
 - [Bug 1619102](https://bugzilla.mozilla.org/show_bug.cgi?id=1619102) - Add workaround option
   to include both DTLS and TLS versions in DTLS supported_versions.
 - [Bug 1619056](https://bugzilla.mozilla.org/show_bug.cgi?id=1619056) - Update README: TLS

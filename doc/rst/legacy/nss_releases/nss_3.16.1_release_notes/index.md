@@ -27,6 +27,7 @@ NSS 3.16.1 source distributions are available on ftp.mozilla.org for secure HTTP
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - Added the "ECC" flag for modutil to select the module used for elliptic curve cryptography
   (ECC) operations.
 
@@ -71,6 +72,7 @@ NSS 3.16.1 source distributions are available on ftp.mozilla.org for secure HTTP
 ## [Notable Changes in NSS 3.16.1](#notable_changes_in_nss_3.16.1)
 
 :::{container}
+
 - Imposed [name constraints](https://hg.mozilla.org/projects/nss/rev/742307da0792) on the
   French government root CA ANSSI (DCISS).
 :::

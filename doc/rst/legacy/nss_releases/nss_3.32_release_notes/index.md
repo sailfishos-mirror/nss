@@ -24,6 +24,7 @@ NSS 3.32 source distributions are available on ftp.mozilla.org, for secure HTTPS
 ## [Notable Changes in NSS 3.32](#notable_changes_in_nss_3.32)
 
 :::{container}
+
 - Various minor improvements and correctness fixes.
 
 - The Code Signing trust bit was **turned off** for all, included root certificates.

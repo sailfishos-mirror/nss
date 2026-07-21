@@ -19,6 +19,7 @@ If you have suggestions for this page, please post them to
 ### [Building NSS](#building_nss)
 
 :::{container}
+
 - Having /usr/ucb/bin in the path before /usr/ccs/bin breaks the build on 64-bit Solaris.
 
 - The Solaris compiler needs to be workshop-5.0 or greater.
@@ -54,6 +55,7 @@ the number of simultaneous sockets supported.
 ### [Building JSS](#building_jss)
 
 :::{container}
+
 - **Windows Only:** The shell invoked by gmake, `shmsdos.exe`, is likely to crash when
   invoking some Java tools on Windows. The current workaround is to use some other shell in
   place of `shmsdos`, such as `sh.exe`, which should be distributed with the [Cygnus

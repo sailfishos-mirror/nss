@@ -46,7 +46,7 @@ addition, during an application session with OCSP enabled, a large number of OCS
 have to be sent. Therefore the API should allow for keep-alive (persistent) HTTP connections.
 
 HTTP URIs consist of host:port and a path, e.g.
-http://ocsp.provider.com:80/cgi-bin/ocsp-responder
+<http://ocsp.provider.com:80/cgi-bin/ocsp-responder>
 
 If NSS needs to access a HTTP server, it will request that an "http server session object" be
 created (SEC_HttpServer_CreateSessionFcn).

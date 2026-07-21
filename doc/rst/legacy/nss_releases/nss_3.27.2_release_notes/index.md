@@ -49,6 +49,7 @@ Previous versions of NSS leaked the memory used to store distinguished names whe
 ## [Bugs fixed in NSS 3.27.2](#bugs_fixed_in_nss_3.27.2)
 
 :::{container}
+
 - The following bug has been fixed in NSS 3.27.2: [Bug 1318561 - SSL_SetTrustAnchors
   leaks](https://bugzilla.mozilla.org/show_bug.cgi?id=1318561)
 :::

@@ -24,6 +24,7 @@ It shows the following:
 ### [util.h](#util.h)
 
 :::{container}
+
 ```{code} c
 /* This Source Code Form is subject to the terms of the Mozilla Public
 * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -169,11 +170,13 @@ ReadDERFromFile(SECItem *der, const char *inFileName, PRBool ascii);
 
 #endif /* _UTIL_H */
 ```
+
 :::
 
 ### [Util.c](#util.c)
 
 :::{container}
+
 ```{code} c
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -740,4 +743,5 @@ cleanup:
     return rv;
 }
 ```
+
 :::

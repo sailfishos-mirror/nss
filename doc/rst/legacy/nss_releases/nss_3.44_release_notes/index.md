@@ -32,6 +32,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 ```{rubric} New Functions
 ```
 
@@ -45,6 +46,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.44](#notable_changes_in_nss_3.44)
 
 :::{container}
+
 - It is now possible to build NSS as a static library (Bug
   [1543545](https://bugzilla.mozilla.org/show_bug.cgi?id=1543545))
 - Initial support for building for iOS.
@@ -55,6 +57,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.44](#bugs_fixed_in_nss_3.44)
 
 :::{container}
+
 - [1501542](https://bugzilla.mozilla.org/show_bug.cgi?id=1501542) - Implement CheckARMSupport
   for Android
 - [1531244](https://bugzilla.mozilla.org/show_bug.cgi?id=1531244) - Use \_\_builtin_bswap64 in

@@ -25,6 +25,7 @@ NSS 3.34.1 source distributions are available on ftp.mozilla.org for secure HTTP
 ## [Notable Changes in NSS 3.34.1](#notable_changes_in_nss_3.34.1)
 
 :::{container}
+
 - The following CA certificate was **Re-Added**. It was previously removed in NSS 3.34, but now
   re-added with only the Email trust bit set. ([bug
   1418678](https://bugzilla.mozilla.org/show_bug.cgi?id=1418678))
@@ -45,10 +46,12 @@ NSS 3.34.1 source distributions are available on ftp.mozilla.org for secure HTTP
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - None
 
 ```{rubric} New Functions
 ```
+
 :::
 
 (bugs-fixed-in-nss-3-34-1)=

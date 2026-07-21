@@ -35,6 +35,7 @@ bugs.
 ## [Bugs fixed in NSS 3.37.3](#bugs_fixed_in_nss_3.37.3)
 
 :::{container}
+
 - Bug 1459739 - Fix build on armv6/armv7 and other platforms.
 - Bug 1461731 - Fix crash on macOS related to authentication tokens, e.g. PK11or WebAuthn.
 :::

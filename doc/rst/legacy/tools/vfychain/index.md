@@ -148,7 +148,7 @@ The NSS site relates
 
 directly to NSS code changes and releases.
 
-Mailing lists: 
+Mailing lists:
 
 <https://lists.mozilla.org/listinfo/dev-tech-crypto>
 
@@ -181,7 +181,6 @@ References
 Visible links
 
 1.
-
 
 [http://www.mozilla.org/projects/security/pki/nss/](https://www.mozilla.org/projects/security/pki/nss/)
 :::

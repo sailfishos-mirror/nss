@@ -35,6 +35,7 @@ bugs.
 ## [Bugs fixed in NSS 3.36.4](#bugs_fixed_in_nss_3.36.4)
 
 :::{container}
+
 - Bug 1461731 - Fix crash on macOS related to authentication tokens, e.g. PK11or WebAuthn.
 :::
 

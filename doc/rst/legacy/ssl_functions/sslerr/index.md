@@ -5,6 +5,7 @@
 ::::{container}
 
 :::{note}
+
 - This page is part of the {ref}`mozilla_projects_nss_ssl_functions_old_ssl_reference` that
   we are migrating into the format described in the [MDN Style
   Guide](https://developer.mozilla.org/en-US/docs/Project:MDC_style_guide). If you are
@@ -15,6 +16,7 @@
 ```{rubric} NSS and SSL Error Codes
 :name: NSS_and_SSL_Error_Codes
 ```
+
 ::::
 
 [Chapter 8](#chapter_8_nss_and_ssl_error_codes)NSS and SSL Error Codes
@@ -856,6 +858,7 @@ retrieves the error codes described in this chapter.
 |                                |                                | decompressed."                 |
 +--------------------------------+--------------------------------+--------------------------------+
 ```
+
 :::
 
 (sec-error-codes)=
@@ -1430,4 +1433,5 @@ retrieves the error codes described in this chapter.
 |                                |                                | (unknown error value mapping)  |
 +--------------------------------+--------------------------------+--------------------------------+
 ```
+
 :::

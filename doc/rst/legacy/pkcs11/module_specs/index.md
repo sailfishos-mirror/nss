@@ -285,6 +285,7 @@ library=dkck32.dll name="DataKey SignaSURE 3600" NSS="TrustOrder=50 ciphers= "
 library=swft32.dll name="Netscape Software Fortezza" parameters="keyfile=/u/relyea/keyfile" NSS="TrustOrder=50 ciphers=FORTEZZA slotParams=0x1=[slotFlags='FORTEZZA']"
 library=core32.dll name="Litronic Netsign"
 ```
+
 :::
 
 (softoken-specific-parameters)=
@@ -297,7 +298,7 @@ initialize if the **parameters**= is not specified. If another application wishe
 softoken, that application must supply a non-`NULL` `libraryParameters` value in the
 `CK_C_INITIALIZE_ARGS` structure passed at `C_INITIALIZE` time. The parameter passed to
 softoken is a space separated list of name/value pairs exactly like those specified in the PKCS
-#11 module spec.
+\# 11 module spec.
 
 Valid values are:
 

@@ -29,6 +29,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - [Bug 818686](https://bugzilla.mozilla.org/show_bug.cgi?id=818686) - Support XDG basedir
   specification
 
@@ -43,6 +44,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.42](#notable_changes_in_nss_3.42)
 
 ::::::{container}
+
 - The following CA certificates were **Added**:
 
   - None
@@ -84,9 +86,10 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.42](#bugs_fixed_in_nss_3.42)
 
 ::::::{container}
+
 - [Bug 1490006](https://bugzilla.mozilla.org/show_bug.cgi?id=1490006) - Reject invalid
   CH.legacy_version in TLS 1.3
-- [Bug 1507135](https://bugzilla.mozilla.org/show_bug.cgi?id=1507135)[STRIKEOUT:and][Bug
+- [Bug 1507135][https://bugzilla.mozilla.org/show_bug.cgi?id=1507135](STRIKEOUT:and)[Bug
   1507174](https://bugzilla.mozilla.org/show_bug.cgi?id=1507174)[STRIKEOUT:- Add additional
   null checks to several CMS functions to fix a rare CMS crash. Thanks to Hanno Böck and Damian
   Poddebniak for the discovery and fixes.] Note: This was mistakenly not in release 3.42, and is

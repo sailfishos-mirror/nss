@@ -26,6 +26,7 @@ NSS 3.30 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - In the PKCS#11 root CA module (nssckbi), CAs with positive trust are marked with a new boolean
   attribute, CKA_NSS_MOZILLA_CA_POLICY, set to true. Applications that need to distinguish them
   from other root CAs, may use the exported function PK11_HasAttributeSet.
@@ -76,6 +77,7 @@ NSS 3.30 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.30](#notable_changes_in_nss_3.30)
 
 :::{container}
+
 - The TLS server code has been enhanced to support session tickets when no RSA certificate (e.g.
   only an ECDSA certificate) is configured.
 - RSA-PSS signatures produced by key pairs with a modulus bit length that is not a multiple of 8

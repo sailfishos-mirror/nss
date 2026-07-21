@@ -26,6 +26,7 @@ NSS 3.27 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - Allow custom named group priorities for TLS key exchange handshake (SSL_NamedGroupConfig).
 - Added support for RSA-PSS signatures in TLS 1.2 and TLS 1.3
 
@@ -42,6 +43,7 @@ NSS 3.27 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.27](#notable_changes_in_nss_3.27)
 
 :::{container}
+
 - *UPDATE 2016-10-02:*
 
   - The maximum TLS version supported has been increased to TLS 1.3 (draft).

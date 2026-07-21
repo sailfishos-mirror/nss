@@ -13,6 +13,7 @@ Newsgroup: [mozilla.dev.tech.crypto](news://news.mozilla.org/mozilla.dev.tech.cr
 ### [Task List](#task_list)
 
 :::{container}
+
 1. In analyze mode, there should be an option to create a file containing a graph of the
    certificate database without any information about the user's certificates (no common names,
    email addresses, etc.). This file could be mailed to a mail alias to assist in finding the

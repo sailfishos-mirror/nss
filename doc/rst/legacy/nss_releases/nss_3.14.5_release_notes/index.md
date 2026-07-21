@@ -37,6 +37,7 @@ upgrade immediately.
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - No new major functionality is introduced in this release. This release is a patch release to
   address [CVE-2013-5605](http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-5605).
 :::
@@ -46,6 +47,7 @@ upgrade immediately.
 ### [Bugs fixed in NSS 3.14.5](#bugs_fixed_in_nss_3.14.5)
 
 :::{container}
+
 - <https://bugzilla.mozilla.org/buglist.cgi?bug_id=934016&bug_id_type=anyexact&resolution=FIXED&classification=Components&query_format=advanced&product=NSS>
 :::
 

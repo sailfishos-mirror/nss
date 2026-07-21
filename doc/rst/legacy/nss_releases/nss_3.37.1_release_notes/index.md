@@ -35,6 +35,7 @@ bugs.
 ## [Bugs fixed in NSS 3.37.1](#bugs_fixed_in_nss_3.37.1)
 
 :::{container}
+
 - Bug 1462303 - Connecting to a server that was recently upgraded to TLS 1.3 would result in a
   SSL_RX_MALFORMED_SERVER_HELLO error.
 - Bug 1460673 - Fix a rare bug with PKCS#12 files.

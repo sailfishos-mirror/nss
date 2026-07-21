@@ -18,6 +18,7 @@ news.mozilla.org="">mozilla.dev.tech.crypto\</ahref="news:>
 ### [Contents](#contents)
 
 :::{container}
+
 - [Introduction](#introduction)
 - [Distribution Information](#distribution)
 - [Bugs Fixed](#bugsfixed)

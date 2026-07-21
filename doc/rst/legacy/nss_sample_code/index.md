@@ -18,7 +18,6 @@ Old samples in the process of being replaced.
 
 These are very old examples in need of replacement. See
 
-
 <https://bugzilla.mozilla.org/show_bug.cgi?id=490238>
 
 You are welcome to download the new samples via:

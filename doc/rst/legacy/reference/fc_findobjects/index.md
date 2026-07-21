@@ -11,6 +11,7 @@ FC_FindObjects - Search for one or more objects
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_FindObjects(
   CK_SESSION_HANDLE hSession,
@@ -19,6 +20,7 @@ CK_RV FC_FindObjects(
   CK_ULONG_PTR pusObjectCount
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -56,6 +58,7 @@ zero if there are none.
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_findobjectsinit`,
   [NSC_FindObjects](/en-US/NSC_FindObjects)
 :::

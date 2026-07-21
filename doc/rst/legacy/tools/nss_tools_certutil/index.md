@@ -456,6 +456,7 @@ Certificate Database Tool command options and their arguments are defined as fol
 |                                                 | 32800 <https://tools.ietf.org/html/rfc32800>`__ |
 +-------------------------------------------------+-------------------------------------------------+
 ```
+
 :::
 
 ## [Usage](#usage)
@@ -572,6 +573,7 @@ Before it creates the request file, the Certificate Database Tool prompts you fo
 ```{code}
 Enter Password or Pin for "Communicator Certificate DB":
 ```
+
 :::
 
 (creating-a-certificate)=
@@ -595,6 +597,7 @@ self-signed certificate created above, `myissuer`.
 ```{code}
 certutil -C -m 2345 -i mycert.req -o mycert.crt -c myissuer -d certdir
 ```
+
 :::
 
 (adding-a-certificate-to-the-database)=
@@ -651,4 +654,5 @@ or
 ```{code}
 UID=jsmith, E=jsmith@netscape.com, CN=John Smith, O=Netscape Communications Corp., C=US : Certificate not approved for this operation
 ```
+
 :::

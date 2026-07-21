@@ -35,6 +35,7 @@ No new functionality is introduced in this release.
 ## [Bugs fixed in NSS 3.49.1](#bugs_fixed_in_nss_3.49.1)
 
 :::{container}
+
 - [Bug 1606992](https://bugzilla.mozilla.org/show_bug.cgi?id=1606992) - Cache the most recent
   PBKDF2 password hash, to speed up repeated SDR operations, important with the increased KDF
   iteration counts.

@@ -17,6 +17,7 @@ Newsgroup: [mozilla.dev.tech.crypto](news://news.mozilla.org/mozilla.dev.tech.cr
 ### [Contents](#contents)
 
 :::{container}
+
 - [Introduction](#introduction)
 - [Distribution Information](#distribution_information)
 - [New in NSS 3.12.1](#new_in_nss_3.12.1)
@@ -67,6 +68,7 @@ and shared libraries, which NSS 3.12.1 requires. NSPR 4.7.1 binary distributions
 ### [New in NSS 3.12.1](#new_in_nss_3.12.1)
 
 :::{container}
+
 - New functions in the nss shared library:
 
   CERT_NameToAsciiInvertible (see cert.h)

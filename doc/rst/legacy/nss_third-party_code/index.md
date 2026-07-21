@@ -15,6 +15,7 @@ is configurable at build time, with various trade-offs.
 ## [Compiled In](#compiled_in)
 
 :::{container}
+
 - sqlite [/lib/sqlite]
 - BerkleyDB [/lib/dbm]
 - zlib [/lib/zlib]
@@ -27,6 +28,7 @@ is configurable at build time, with various trade-offs.
 ## [Used for Tests](#used_for_tests)
 
 :::{container}
+
 - GTest [/gtests]
 :::
 
@@ -35,6 +37,7 @@ is configurable at build time, with various trade-offs.
 ### [Downloaded by certain test tooling](#downloaded_by_certain_test_tooling)
 
 :::{container}
+
 - TLSFuzzer [/tests/tlsfuzzer]
 - BoGo tests [/tests/bogo]
 - BoringSSL, OpenSSL [/tests/interop]

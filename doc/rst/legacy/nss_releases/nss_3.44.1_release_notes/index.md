@@ -31,6 +31,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ### [New Functionality](#new_functionality)
 
 ::::{container}
+
 - :::{container}
   [1546229](https://bugzilla.mozilla.org/show_bug.cgi?id=1546229) - Add IPSEC IKE support
   to softoken
@@ -46,6 +47,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.44.1](#bugs_fixed_in_nss_3.44.1)
 
 ::::{container}
+
 - :::{container}
   [1554336](https://bugzilla.mozilla.org/show_bug.cgi?id=1554336) - Optimize away unneeded
   loop in mpi.c

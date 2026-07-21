@@ -26,6 +26,7 @@ NSS 3.16 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - Supports the Linux x32 ABI. (This requires NSPR 4.10.4.) To build for the Linux x32 target,
   set the environment variable USE_X32=1 when building NSS.
 
@@ -53,6 +54,7 @@ NSS 3.16 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.16](#notable_changes_in_nss_3.16)
 
 :::{container}
+
 - ECC is enabled by default. It is no longer necessary to set the environment variable
   NSS_ENABLE_ECC=1 when building NSS. To disable ECC, set the environment variable
   NSS_DISABLE_ECC=1 when building NSS.

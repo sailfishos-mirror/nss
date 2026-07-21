@@ -31,21 +31,20 @@ NSS 3.12.6 is tri-licensed under the MPL 1.1/GPL 2.0/LGPL 2.1.
 ```{rubric} Distribution Information
 ```
 
-The CVS tag for the NSS 3.12.6 release is 
+The CVS tag for the NSS 3.12.6 release is
 
 `NSS_3_12_6_RTM`
 
-. NSS 3.12.6 requires 
+. NSS 3.12.6 requires
 
 [NSPR
 4.8.4](https://www.mozilla.org/projects/nspr/release-notes/)
 
 .
 
-See the 
+See the
 
 [Documentation](http://mdn.beonex.com/en/NSS_3.12.6_release_notes.html#docs)
-
 
 section for the build instructions.
 
@@ -57,7 +56,7 @@ secure HTTPS download:
 
 You also need to download the NSPR 4.8.4 binary distributions to get the NSPR 4.8.4
 header files and shared libraries, which NSS 3.12.6 requires. NSPR 4.8.4 binary
-distributions are in 
+distributions are in
 
 <https://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v4.8.4/>
 
@@ -140,7 +139,7 @@ distributions are in
 - TLS Server Name Indication (SNI) for servers is almost fully implemented in NSS
   3.12.6.
 
-  See 
+  See
 
   [bug 360421](https://bugzilla.mozilla.org/show_bug.cgi?id=360421)
 

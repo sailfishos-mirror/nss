@@ -25,6 +25,7 @@ are planning to use a binary release of JSS, here's how to get JSS working with 
 ### [Gather components](#gather_components)
 
 :::{container}
+
 1. You need the JSS classes and the NSPR, NSS, and JSS shared libraries.
 
 2. **NSPR and NSS Shared Libraries**

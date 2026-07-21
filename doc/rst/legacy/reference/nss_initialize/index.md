@@ -11,6 +11,7 @@ NSS_Initialize - initialize NSS.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 SECStatus NSS_Initialize(const char *configdir,
                          const char *certPrefix,
@@ -18,6 +19,7 @@ SECStatus NSS_Initialize(const char *configdir,
                          const char *secmodName,
                          PRUint32 flags);
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -92,6 +94,7 @@ The `flags` parameter is a bitwise OR of the following flags:
 ## [Examples](#examples)
 
 :::{container}
+
 ```{code}
 #include <nss.h>
 
@@ -101,10 +104,12 @@ const char *configdir;
 configdir = ...;  /* application-specific */
 rv = NSS_Initialize(configdir, "", "", SECMOD_DB, NSS_INIT_NOROOTINIT | NSS_INIT_OPTIMIZESPACE);
 ```
+
 :::
 
 ## [See also](#see_also)
 
 :::{container}
+
 - NSS_Init, NSS_InitReadWrite, NSS_NoDB_Init, NSS_Shutdown
 :::

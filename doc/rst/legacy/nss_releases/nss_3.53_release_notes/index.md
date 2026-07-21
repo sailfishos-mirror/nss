@@ -32,6 +32,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.53](#notable_changes_in_nss_3.53)
 
 :::{container}
+
 - When using the Makefiles, NSS can be built in parallel, speeding up those builds to more
   similar performance as the build.sh/ninja/gyp system. ([Bug
   290526](https://bugzilla.mozilla.org/show_bug.cgi?id=290526))
@@ -61,6 +62,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.53](#bugs_fixed_in_nss_3.53)
 
 :::{container}
+
 - [Bug 1640260](https://bugzilla.mozilla.org/show_bug.cgi?id=1640260) - Initialize PBE params
   (ASAN fix)
 - [Bug 1618404](https://bugzilla.mozilla.org/show_bug.cgi?id=1618404) - Set

@@ -43,6 +43,7 @@ with a recently added utility function.
 ## [Notable Changes in NSS 3.16.3](#notable_changes_in_nss_3.16.3)
 
 :::{container}
+
 - The following **1024-bit** CA certificates were **Removed**
 
   - CN = Entrust.net Secure Server Certification Authority

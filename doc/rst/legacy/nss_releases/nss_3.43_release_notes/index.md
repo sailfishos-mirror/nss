@@ -29,6 +29,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 ```{rubric} New Functions
 ```
 
@@ -50,6 +51,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.43](#notable_changes_in_nss_3.43)
 
 ::::::{container}
+
 - :::::{container} field indent
 
   ::::{container}
@@ -90,6 +92,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.43](#bugs_fixed_in_nss_3.43)
 
 :::{container}
+
 - [Bug 1528669](https://bugzilla.mozilla.org/show_bug.cgi?id=1528669) and [Bug
   1529308](https://bugzilla.mozilla.org/show_bug.cgi?id=1529308) - Improve Gyp build system
   handling

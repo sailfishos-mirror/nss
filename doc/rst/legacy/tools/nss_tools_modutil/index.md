@@ -221,6 +221,7 @@ Options specify an action. Option arguments modify an action. The options and ar
 |                                                 |    stored in ``key3.db``.                       |
 +-------------------------------------------------+-------------------------------------------------+
 ```
+
 :::
 
 ## \` \<#usage_2>\`\_\_ Usage
@@ -367,6 +368,7 @@ Platforms {
    }
 }
 ```
+
 :::
 
 (script-grammar)=
@@ -607,6 +609,7 @@ Creating "c:\databases\key3.db"...done.
 Creating "c:\databases\cert8.db"...done.
 Creating "c:\databases\secmod.db"...done.
 ```
+
 :::
 
 (displaying-module-information)=
@@ -672,6 +675,7 @@ Access: NOT Write Protected
 Login Type: Login required
 User Pin: NOT Initialized
 ```
+
 :::
 
 (setting-a-default-provider)=
@@ -708,6 +712,7 @@ Using database directory c:\databases...
 ```{code}
 Successfully changed defaults.
 ```
+
 :::
 
 (enabling-a-slot)=
@@ -743,6 +748,7 @@ Using database directory c:\databases...
 ```{code}
 Slot "Cryptographic Reader" enabled.
 ```
+
 :::
 
 (enabling-fips-compliance)=
@@ -773,6 +779,7 @@ After you press Enter, the tool displays the following:
 ```
 FIPS mode enabled.
 ```
+
 :::
 
 (adding-a-cryptographic-module)=
@@ -806,6 +813,7 @@ Using database directory C:\databases...
 Module "Cryptorific Module" added to database.
 C:\modutil>
 ```
+
 :::
 
 (installing-a-cryptographic-module-from-a-jar-file)=
@@ -903,6 +911,7 @@ Installed module "Cryptorific Module" into module database
 Installation completed successfully
 C:\modutil>
 ```
+
 :::
 
 (changing-the-password-on-a-token)=
@@ -941,4 +950,5 @@ Re-enter new password:
 Token "Communicator Certificate DB" password changed successfully.
 C:\modutil>
 ```
+
 :::

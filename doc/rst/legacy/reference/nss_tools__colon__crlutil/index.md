@@ -274,7 +274,7 @@ Where:
 
 authKeyIdent: identifies the name of an extension critical: value of 1 of
 
-0. Should be set to 1 if this extension is critical or 0 otherwise.
+1. Should be set to 1 if this extension is critical or 0 otherwise.
 
 key-id: key identifier represented in octet string. dn:: is a CA
 
@@ -456,7 +456,7 @@ Licensed under the Mozilla Public License, v. 2.0.
 
 If a copy of the MPL was not distributed with this file, You can
 
-obtain one at 
+obtain one at
 
 <https://mozilla.org/MPL/2.0/>
 
@@ -468,12 +468,11 @@ References
 
 Visible links
 
-1. 
+1.
 
 <http://pki.fedoraproject.org/wiki/>
 
-2.
-
+1.
 
 [http://www.mozilla.org/projects/security/pki/nss/](https://www.mozilla.org/projects/security/pki/nss/)
 :::

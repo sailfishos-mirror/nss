@@ -5,6 +5,7 @@
 ::::{container}
 
 :::{note}
+
 - This page is part of the {ref}`mozilla_projects_nss_ssl_functions_old_ssl_reference` that
   we are migrating into the format described in the [MDN Style
   Guide](https://developer.mozilla.org/en-US/docs/MDN/Guidelines). If you are inclined to
@@ -15,6 +16,7 @@
 ```{rubric} SSL Functions
 :name: SSL_Functions
 ```
+
 ::::
 
 ## [Chapter 4 SSL Functions](#chapter_4_ssl_functions)
@@ -2845,6 +2847,7 @@ This callback function has the following parameters:
 ```{rubric} See Also
 :name: see_also_4
 ```
+
 :::
 
 (ssl-communication-functions)=
@@ -3641,6 +3644,7 @@ If the socket is already connected before SSL gets involved, you must provide th
 ## [NSS Shutdown Function](#nss_shutdown_function)
 
 :::{container}
+
 ```{rubric} NSS_Shutdown
 :name: nss_shutdown
 ```

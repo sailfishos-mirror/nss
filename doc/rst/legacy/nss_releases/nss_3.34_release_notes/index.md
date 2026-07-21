@@ -24,6 +24,7 @@ NSS 3.34 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.34](#notable_changes_in_nss_3.34)
 
 :::{container}
+
 - The following CA certificates were **Added**:
 
   - CN = GDCA TrustAUTH R5 ROOT
@@ -149,6 +150,7 @@ NSS 3.34 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - When listing an NSS database. using `certutil -L`, and the database hasn't yet been
   initialized with any non-empty or empty password, the text "Database needs user init" will be
   included in the listing.
@@ -172,6 +174,7 @@ NSS 3.34 source distributions are available on ftp.mozilla.org for secure HTTPS 
 
 ```{rubric} New Functions
 ```
+
 :::
 
 (bugs-fixed-in-nss-3-34)=

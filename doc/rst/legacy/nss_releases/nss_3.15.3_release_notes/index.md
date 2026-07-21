@@ -52,6 +52,7 @@ and [CVE-2013-5606](http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-5606)
 ### [Bugs fixed in NSS 3.15.3](#bugs_fixed_in_nss_3.15.3)
 
 :::{container}
+
 - [Bug 850478](https://bugzilla.mozilla.org/show_bug.cgi?id=850478) - List RC4_128 cipher
   suites after AES_128 cipher suites
 - [Bug 919677](https://bugzilla.mozilla.org/show_bug.cgi?id=919677) - Don't advertise TLS

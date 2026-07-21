@@ -26,6 +26,7 @@ NSS 3.17 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - When using ECDHE, the TLS server code may be configured to generate a fresh ephemeral ECDH key
   for each handshake, by setting the SSL_REUSE_SERVER_ECDHE_KEY socket option to PR_FALSE. The
   SSL_REUSE_SERVER_ECDHE_KEY option defaults to PR_TRUE, which means the server's ephemeral ECDH
@@ -44,6 +45,7 @@ New Macros
 ## [Notable Changes in NSS 3.17](#notable_changes_in_nss_3.17)
 
 :::{container}
+
 - The manual pages for the certutil and pp tools have been updated to document the new
   parameters that had been added in NSS 3.16.2.
 - On Windows, the new build variable USE_STATIC_RTL can be used to specify the static C runtime

@@ -25,6 +25,7 @@ NSS 3.15.1 source distributions are also available on ftp.mozilla.org for secure
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - TLS 1.2: TLS 1.2 ([RFC 5246](https://datatracker.ietf.org/doc/html/rfc5246)) is supported.
   HMAC-SHA256 cipher suites ([RFC 5246](https://datatracker.ietf.org/doc/html/rfc5246) and
   [RFC 5289](https://datatracker.ietf.org/doc/html/rfc5289)) are supported, allowing TLS to
@@ -72,6 +73,7 @@ None.
 ### [Notable Changes in NSS 3.15.1](#notable_changes_in_nss_3.15.1)
 
 :::{container}
+
 - [Bug 856060](https://bugzilla.mozilla.org/show_bug.cgi?id=856060) - Enforce name
   constraints on the common name in libpkix when no subjectAltName is present.
 - [Bug 875156](https://bugzilla.mozilla.org/show_bug.cgi?id=875156) - Add const to the
@@ -97,6 +99,7 @@ None.
 ### [Bugs fixed in NSS 3.15.1](#bugs_fixed_in_nss_3.15.1)
 
 :::{container}
+
 - <https://bugzilla.mozilla.org/buglist.cgi?list_id=5689256;resolution=FIXED;classification=Components;query_format=advanced;target_milestone=3.15.1;product=NSS>
 :::
 

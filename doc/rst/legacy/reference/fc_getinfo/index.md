@@ -11,9 +11,11 @@ FC_GetInfo - return general information about the PKCS #11 library.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV  FC_GetInfo(CK_INFO_PTR pInfo);
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -90,10 +92,12 @@ printf("    library version: %d.%d\n",
     (int)info.libraryVersion.major, (int)info.libraryVersion.minor);
 printf("\n");
 ```
+
 :::
 
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_GetInfo](/en-US/NSC_GetInfo)
 :::

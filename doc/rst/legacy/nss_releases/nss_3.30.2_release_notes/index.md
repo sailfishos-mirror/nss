@@ -34,6 +34,7 @@ root CA certificates.
 ## [Notable Changes in NSS 3.30.2](#notable_changes_in_nss_3.30.2)
 
 :::{container}
+
 - The following CA certificates were **Removed**:
 
   - O = Japanese Government, OU = ApplicationCA
@@ -81,6 +82,7 @@ root CA certificates.
 ## [Bugs fixed in NSS 3.30.2](#bugs_fixed_in_nss_3.30.2)
 
 :::{container}
+
 - [Bug 1350859](https://bugzilla.mozilla.org/show_bug.cgi?id=1350859) - March 2017 batch of
   root CA changes
 - [Bug 1349705](https://bugzilla.mozilla.org/show_bug.cgi?id=1349705) - Implemented domain

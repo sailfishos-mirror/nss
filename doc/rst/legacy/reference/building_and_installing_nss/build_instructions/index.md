@@ -75,6 +75,7 @@ changes as noted).
 ## [Build Instructions for Recent Versions (Mercurial)](<#build_instructions_for_recent_versions_(mercurial)>)
 
 :::{container}
+
 1. Clone the NSPR and NSS repositories.
 
    ```{code}
@@ -127,6 +128,7 @@ For information on troubleshooting the build system, see
 ## [Build Instructions for Older Versions (CVS)](<#build_instructions_for_older_versions_(cvs)>)
 
 :::{container}
+
 1. Set the environment variable `CVSROOT` to
    `:pserver:anonymous@cvs-mirror.mozilla.org:/cvsroot`
 

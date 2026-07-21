@@ -11,11 +11,13 @@ FC_GetFunctionStatus - get the status of a function running in parallel
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_GetFunctionStatus(
   CK_SESSION_HANDLE hSession
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -43,5 +45,6 @@ CK_RV FC_GetFunctionStatus(
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_GetFunctionStatus](/en-US/NSC_GetFunctionStatus)
 :::

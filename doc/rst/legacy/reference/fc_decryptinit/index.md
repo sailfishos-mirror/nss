@@ -11,6 +11,7 @@ FC_DecryptInit - initialize a decryption operation.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_DecryptInit(
   CK_SESSION_HANDLE hSession,
@@ -18,6 +19,7 @@ CK_RV FC_DecryptInit(
   CK_OBJECT_HANDLE hKey
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -51,5 +53,6 @@ A user must log into the token (to assume the NSS User role) before calling `FC_
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_DecryptInit](/en-US/NSC_DecryptInit)
 :::

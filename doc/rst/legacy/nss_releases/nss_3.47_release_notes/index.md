@@ -47,6 +47,7 @@ will be released in early December:
 ## [Notable Changes in NSS 3.47](#notable_changes_in_nss_3.47)
 
 :::{container}
+
 - [Bug 1152625](https://bugzilla.mozilla.org/show_bug.cgi?id=1152625) - Support AES HW
   acceleration on ARMv8
 - [Bug 1267894](https://bugzilla.mozilla.org/show_bug.cgi?id=1267894) - Allow per-socket
@@ -60,6 +61,7 @@ will be released in early December:
 ## [Bugs fixed in NSS 3.47](#bugs_fixed_in_nss_3.47)
 
 :::{container}
+
 - [Bug 1459141](https://bugzilla.mozilla.org/show_bug.cgi?id=1459141) - Make softoken CBC
   padding removal constant time
 - [Bug 1589120](https://bugzilla.mozilla.org/show_bug.cgi?id=1589120) - More CBC padding

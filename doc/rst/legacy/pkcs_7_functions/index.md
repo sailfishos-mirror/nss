@@ -53,4 +53,5 @@ Function name/documentation          Source code NSS versions
 ``SECMIME_DecryptionAllowed``        MXR         3.4 and later
 ==================================== =========== ===============
 ```
+
 :::

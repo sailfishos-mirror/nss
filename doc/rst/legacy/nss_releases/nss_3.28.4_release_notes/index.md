@@ -33,6 +33,7 @@ No new functionality is introduced in this release.
 ## [Bugs fixed in NSS 3.28.4](#bugs_fixed_in_nss_3.28.4)
 
 :::{container}
+
 - [Bug 1344380](https://bugzilla.mozilla.org/show_bug.cgi?id=1344380) / Out-of-bounds write
   in Base64 encoding in NSS
   ([CVE-2017-5461](https://www.mozilla.org/en-US/security/advisories/mfsa2017-10/#CVE-2017-5461))

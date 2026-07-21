@@ -9,7 +9,7 @@ certutil — Manage keys and certificate in the NSS database.
 
 Synopsis
 
-certutil [options] 
+certutil [options]
 
 [arguments](arguments)
 
@@ -415,7 +415,7 @@ certificate requests. Bracket this string with quotation marks if
 
 it contains spaces. The subject identification format follows RFC
 
-#1485.
+\# 1485.
 
 -t trustargs
 
@@ -541,7 +541,7 @@ Set an alternate exponent value to use in generating a new RSA
 
 public key for the database, instead of the default value of
 
-65537. The available alternate values are 3 and 17.
+1. The available alternate values are 3 and 17.
 
 -z noise-file
 
@@ -901,7 +901,7 @@ For example:
 
 \$ certutil -C -c "my-ca-cert" -i /home/certs/cert.req -o cert.cer -m 010 -v 12 -w 1 -d
 sql:/home/my/sharednssdb -1 nonRepudiation,dataEncipherment -5 sslClient -6 clientAuth -7
-jsmith@example.com
+<jsmith@example.com>
 
 Generating Key Pairs
 
@@ -1144,7 +1144,7 @@ ever intermediary CA to the actual certificate. For example, for an email
 
 certificate with two CAs in the chain:
 
-\$ certutil -d sql:/home/my/sharednssdb -O -n "jsmith@example.com"
+\$ certutil -d sql:/home/my/sharednssdb -O -n "<jsmith@example.com>"
 
 "Builtin Object Token:Thawte Personal Freemail CA" [E=personal-freemail@thawte.com,CN=Thawte
 Personal Freemail CA,OU=Certification Services Division,O=Thawte Consulting,L=Cape
@@ -1305,7 +1305,7 @@ be configured to use them. For example, this how-to article covers how to
 
 configure Firefox and Thunderbird to use the new shared NSS databases:
 
-o 
+o
 
 <https://wiki.mozilla.org/NSS_Shared_DB_Howto>
 
@@ -1313,7 +1313,7 @@ For an engineering draft on the changes in the shared NSS databases, see
 
 the NSS project wiki:
 
-o 
+o
 
 <https://wiki.mozilla.org/NSS_Shared_DB>
 
@@ -1327,15 +1327,15 @@ certutil has arguments or operations that use features defined in several
 
 IETF RFCs.
 
-o 
+o
 
 [http://tools.ietf.org/html/rfc5280](https://datatracker.ietf.org/doc/html/rfc5280)
 
-o 
+o
 
 [http://tools.ietf.org/html/rfc1113](https://datatracker.ietf.org/doc/html/rfc1113)
 
-o 
+o
 
 [http://tools.ietf.org/html/rfc1485](https://datatracker.ietf.org/doc/html/rfc1485)
 
@@ -1343,11 +1343,11 @@ The NSS wiki has information on the new database design and how to
 
 configure applications to use it.
 
-o 
+o
 
 <https://wiki.mozilla.org/NSS_Shared_DB_Howto>
 
-o 
+o
 
 <https://wiki.mozilla.org/NSS_Shared_DB>
 
@@ -1366,7 +1366,7 @@ The NSS site relates
 
 directly to NSS code changes and releases.
 
-Mailing lists: 
+Mailing lists:
 
 <https://lists.mozilla.org/listinfo/dev-tech-crypto>
 
@@ -1399,7 +1399,6 @@ References
 Visible links
 
 1.
-
 
 [http://www.mozilla.org/projects/security/pki/nss/](https://www.mozilla.org/projects/security/pki/nss/)
 :::

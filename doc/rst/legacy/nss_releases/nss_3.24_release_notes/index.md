@@ -31,6 +31,7 @@ and two functions to improve the use of temporary arenas.
 ### [New functionality](#new_functionality)
 
 :::{container}
+
 - NSS softoken has been updated with the latest National Institute of Standards and Technology
   (NIST) guidance (as of 2015):
 

@@ -11,6 +11,7 @@ FC_Verify - sign a block of data.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_Verify(
   CK_SESSION_HANDLE hSession,
@@ -20,6 +21,7 @@ CK_RV FC_Verify(
   CK_ULONG usSignatureLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -66,5 +68,6 @@ A user must log into the token (to assume the NSS User role) before calling `FC_
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_verifyinit`, [NSC_Verify](/en-US/NSC_Verify)
 :::

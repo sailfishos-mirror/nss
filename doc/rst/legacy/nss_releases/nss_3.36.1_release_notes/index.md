@@ -33,6 +33,7 @@ bugs.
 ## [Notable Changes in NSS 3.36.1](#notable_changes_in_nss_3.36.1)
 
 :::{container}
+
 - In NSS version 3.35 the iteration count in optimized builds, which is used for password based
   encryption algorithm related to encrypted PKCS#7 or PKCS#12 data, was increased to one million
   iterations. That change had caused an interoperability regression with operating systems that
@@ -44,6 +45,7 @@ bugs.
 ## [Bugs fixed in NSS 3.36.1](#bugs_fixed_in_nss_3.36.1)
 
 :::{container}
+
 - Certain smartcard operations could result in a deadlock.
 
 This Bugzilla query returns all the bugs fixed in NSS 3.36.1:

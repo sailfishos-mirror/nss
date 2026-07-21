@@ -27,6 +27,7 @@ following location.
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - Implemented DHE key agreement for TLS 1.3.
 - Added support for ChaCha with TLS 1.3.
 - Added support for TLS 1.2 ciphersuites that use SHA384 as the PRF.
@@ -50,6 +51,7 @@ following location.
 ## [Notable Changes in NSS 3.25](#notable_changes_in_nss_3.25)
 
 :::{container}
+
 - An SSL socket can no longer be configured to allow both TLS 1.3 and SSL v3.
 
 - Regression fix: NSS no longer reports a failure if an application attempts to disable the SSL

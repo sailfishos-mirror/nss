@@ -27,6 +27,7 @@ NSS 3.17.3 source distributions are available on ftp.mozilla.org for secure HTTP
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - Support for TLS_FALLBACK_SCSV has been added to the ssltap and tstclnt utilities.
 :::
 
@@ -35,6 +36,7 @@ NSS 3.17.3 source distributions are available on ftp.mozilla.org for secure HTTP
 ## [Notable Changes in NSS 3.17.3](#notable_changes_in_nss_3.17.3)
 
 :::{container}
+
 - The QuickDER decoder now decodes lengths robustly (CVE-2014-1569).
 
 - The following CA certificates were **Removed**

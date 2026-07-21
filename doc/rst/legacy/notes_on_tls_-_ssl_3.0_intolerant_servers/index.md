@@ -72,6 +72,7 @@ such a server, feel free to add it to this page. For up-to-date information, you
 ## [Users: How to avoid this problem?](#users:_how_to_avoid_this_problem.3f)
 
 :::{container}
+
 ```{rubric} Netscape 6.1 Preview Release 1, or Mozilla 0.9.1 and earlier
 :name: netscape_6.1_preview_release_1.2c_or_mozilla_0.9.1_and_earlier
 ```
@@ -104,6 +105,7 @@ details.
 ## [Website Administrators: How to avoid this problem?](#website_administrators:_how_to_avoid_this_problem.3f)
 
 :::{container}
+
 - Upgrade to a newer version if available, which corrects this problem. There will be other
   network clients which implement TLS/SSL 3.0 specification correctly and have a problem with
   your site. Let's not perpetuate the problem servers.
@@ -144,6 +146,7 @@ not catch all problem servers.
 ## [How to report an intolerant server](#how_to_report_an_intolerant_server)
 
 :::{container}
+
 - *Optional:*Get the name of the SSL server software used by the website. To do so, add
   `http://toolbar.netcraft.com/site_report?url=` to the beginning of the URL. The server
   software will appear next to **Server** under **SSL Certificate Information**.
@@ -159,6 +162,7 @@ not catch all problem servers.
 ## [Original Document Information](#original_document_information)
 
 :::{container}
+
 - Author : Katsuhiko Momoi
 - Last Updated Date: January 27th, 2003
 - Copyright © 2001-2003 Netscape. All rights reserved.

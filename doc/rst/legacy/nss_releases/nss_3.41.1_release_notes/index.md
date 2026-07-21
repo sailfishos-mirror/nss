@@ -37,6 +37,7 @@ No new functionality is introduced in this release. This is a patch release to f
 ## [Bugs fixed in NSS 3.41.1](#bugs_fixed_in_nss_3.41.1)
 
 :::{container}
+
 - Bug 1507135 and Bug 1507174 - Add additional null checks to several CMS functions to fix a
   rare CMS crash. Thanks to Hanno Böck and Damian Poddebniak for the discovery and fixes.
   (CVE-2018-18508)

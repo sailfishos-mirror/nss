@@ -7,6 +7,7 @@
 ## [NSS Sample Code 5: PKI Encryption with a raw public & private key in DER format](#nss_sample_code_5_pki_encryption_with_a_raw_public_private_key_in_der_format)
 
 :::{container}
+
 ```{code}
 /* Example code to illustrate PKI crypto ops (encrypt with public key,
  * decrypt with private key)
@@ -169,4 +170,5 @@ cleanup:
   exit(1);
 }
 ```
+
 :::

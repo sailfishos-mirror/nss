@@ -13,7 +13,7 @@
 :::{container}
 This technical note explains how to use NSS to perform RSA signing and encryption. The industry
 standard for RSA signing and encryption is [PKCS
-#1](http://www.rsasecurity.com/rsalabs/node.asp?id=2125). NSS supports PKCS #1 v1.5. NSS
+\# 1](http://www.rsasecurity.com/rsalabs/node.asp?id=2125). NSS supports PKCS #1 v1.5. NSS
 doesn't yet support PKCS #1 v2.0 and v2.1, in particular OAEP, but OAEP support is on our [to-do
 list](https://bugzilla.mozilla.org/show_bug.cgi?id=158747). Your contribution is welcome.
 :::
@@ -45,12 +45,11 @@ How are these keys created in NSS? There are a few possibilities.
 - Key pairs may be generated elsewhere, exported in encrypted form, and imported into a crypto
   module.
 
-- Public keys may be imported into NSS. Call 
+- Public keys may be imported into NSS. Call
 
   `SECKEY_ImportDERPublicKey()`
 
    with
-
 
   `type=CKK_RSA`
 
@@ -58,12 +57,12 @@ How are these keys created in NSS? There are a few possibilities.
   exponent, you need to first encode them into an RSA public key and then import the public
   key into NSS.
 
-  PKCS #1 defines an RSA public key as a 
+  PKCS #1 defines an RSA public key as a
 
   `SEQUENCE`
 
    of modulus and public exponent, both of
-  which are 
+  which are
 
   `INTEGER`
 
@@ -128,16 +127,15 @@ When the keys are no longer needed, they need to be destroyed.
 ### [Functions](#functions)
 
 :::{container}
-RSA signing and encryption functions are provided by two layers of NSS function: the 
+RSA signing and encryption functions are provided by two layers of NSS function: the
 
 `SGN_`
 
-
-and 
+and
 
 `VFY_`
 
- functions in cryptohi.h, and the 
+ functions in cryptohi.h, and the
 
 `PK11_`
 
@@ -145,52 +143,49 @@ and
 principle, you should use the highest layer of NSS you can possibly use for what you are trying
 to accomplish.
 
-For example, if you just need to generate or verify a signature, you can use the 
+For example, if you just need to generate or verify a signature, you can use the
 
 `SGN_`
 
  and
-
 
 `VFY_`
 
  functions in cryptohi.h.
 
 If you need to interoperate with a protocol that isn't implemented by NSS, then you may need to
-use the 
+use the
 
 `PK11_`
 
  functions. (This API pretty much consists of what was needed to implement SSL
-and S/MIME, plus a few enhancements over the years to support JSS.) When using the 
+and S/MIME, plus a few enhancements over the years to support JSS.) When using the
 
 `PK11_`
 
-
 interfaces, the same principal applies: use the highest available function.
 
-If you are really trying to send a key, you should use 
+If you are really trying to send a key, you should use
 
 `PK11_PubWrapSymKey()`
 
 . For a low
-level signature, use 
+level signature, use
 
 `PK11_Sign()`
 
 . Both of these functions do the PKCS #1 wrapping of the
-data. 
+data.
 
 `PK11_Sign`
 
- does not do the BER encoding of the hash (as is done in 
+ does not do the BER encoding of the hash (as is done in
 
 `SGN_`
 
-
 functions).
 
-If you are trying to just send data, use 
+If you are trying to just send data, use
 
 `PK11_PubEncryptPKCS1`
 
@@ -248,12 +243,14 @@ Perhaps this change made in PKCS #1 v2.0 confused many people, so it was reverse
 ### [Sample Code](#sample_code)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_nss_sample_code_nss_sample_code_sample4`
 :::
 
 ### [References](#references)
 
 :::{container}
+
 - [RSA Labs PKCS #1 web site](http://www.rsasecurity.com/rsalabs/node.asp?id=2125)
 - [RFC 3447](http://www.ietf.org/rfc/rfc3447.txt): RSA PKCS #1 v2.1
 - [Poupou's Blog: Common question: How to encrypt using

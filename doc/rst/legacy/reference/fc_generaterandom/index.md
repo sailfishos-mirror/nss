@@ -11,6 +11,7 @@ FC_GenerateRandom - generate a random number.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_GenerateRandom(
   CK_SESSION_HANDLE hSession,
@@ -18,6 +19,7 @@ CK_RV FC_GenerateRandom(
   CK_ULONG ulRandomLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -52,5 +54,6 @@ role).
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_GenerateRandom](/en-US/NSC_GenerateRandom)
 :::

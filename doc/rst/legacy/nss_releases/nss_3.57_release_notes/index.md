@@ -31,12 +31,14 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.57](#notable_changes_in_nss_3.57)
 
 :::{container}
+
 - NSPR dependency updated to 4.29.
 :::
 
 ### [Certificate Authority Changes](#certificate_authority_changes)
 
 :::{container}
+
 - The following CA certificates were Added:
 
   - [Bug 1663049](https://bugzilla.mozilla.org/show_bug.cgi?id=1663049) - CN=Trustwave
@@ -81,6 +83,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.57](#bugs_fixed_in_nss_3.57)
 
 :::{container}
+
 - [Bug 1651211](https://bugzilla.mozilla.org/show_bug.cgi?id=1651211) - Remove EE
   Certification Centre Root CA certificate.
 - [Bug 1653092](https://bugzilla.mozilla.org/show_bug.cgi?id=1653092) - Turn off Websites

@@ -233,6 +233,7 @@ functions, that are publicly available to higer-level APIs.
 |          |                     |                     |               | watcomfx.h          |
 +----------+---------------------+---------------------+---------------+---------------------+
 ```
+
 :::
 
 (naming-conventions)=

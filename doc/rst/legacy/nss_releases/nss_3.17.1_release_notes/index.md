@@ -47,6 +47,7 @@ Applications that use or depend on these symbols can and will break in future NS
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - [TLS_FALLBACK_SCSV](https://datatracker.ietf.org/doc/html/draft-ietf-tls-downgrade-scsv-00)
   is a signaling cipher suite value that indicates a handshake is the result of TLS version
   fallback.
@@ -74,6 +75,7 @@ Applications that use or depend on these symbols can and will break in future NS
 ## [Notable Changes in NSS 3.17.1](#notable_changes_in_nss_3.17.1)
 
 :::{container}
+
 - [Signature algorithms now use SHA-256 instead of SHA-1 by
   default](https://bugzilla.mozilla.org/show_bug.cgi?id=1058933).
 - Added support for Linux on little-endian powerpc64.

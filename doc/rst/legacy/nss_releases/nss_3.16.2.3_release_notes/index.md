@@ -32,6 +32,7 @@ was originally made available in NSS 3.17.1.
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - [TLS_FALLBACK_SCSV](https://datatracker.ietf.org/doc/html/draft-ietf-tls-downgrade-scsv-00)
   is a signaling cipher suite value that indicates a handshake is the result of TLS version
   fallback.
@@ -40,6 +41,7 @@ was originally made available in NSS 3.17.1.
 ### [New Macros](#new_macros)
 
 :::{container}
+
 - *in ssl.h*
 
   - **SSL_ENABLE_FALLBACK_SCSV** - an SSL socket option that enables TLS_FALLBACK_SCSV. Off by
@@ -60,6 +62,7 @@ was originally made available in NSS 3.17.1.
 ## [Notable Changes in NSS 3.16.2.3](#notable_changes_in_nss_3.16.2.3)
 
 :::{container}
+
 - [Bug 1057161](https://bugzilla.mozilla.org/show_bug.cgi?id=1057161): Check that an imported
   elliptic curve public key is valid. Previously NSS would only validate the peer's public key
   before performing ECDH key agreement. Now EC public keys are validated at import time.
@@ -70,6 +73,7 @@ was originally made available in NSS 3.17.1.
 ## [Bugs fixed in NSS 3.16.2.3](#bugs_fixed_in_nss_3.16.2.3)
 
 :::{container}
+
 - [Bug 1057161](https://bugzilla.mozilla.org/show_bug.cgi?id=1057161) - NSS hangs with 100%
   CPU on invalid EC key
 - [Bug 1036735](https://bugzilla.mozilla.org/show_bug.cgi?id=1036735) - Add support for

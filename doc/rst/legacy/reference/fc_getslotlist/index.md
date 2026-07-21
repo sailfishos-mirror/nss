@@ -11,6 +11,7 @@ FC_GetSlotList - Obtain a list of slots in the system.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_GetSlotList(
   CK_BBOOL tokenPresent,
@@ -18,6 +19,7 @@ CK_RV FC_GetSlotList(
   CK_ULONG_PTR pulCount
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -56,5 +58,6 @@ A user may call `FC_GetSlotList` without logging into the token (to assume the N
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_GetSlotList](/en-US/NSC_GetSlotList)
 :::

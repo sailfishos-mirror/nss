@@ -7,6 +7,7 @@
 ## [PKCS11 FAQ](#pkcs11_faq)
 
 :::{container}
+
 ```{rubric} QUESTIONS AND ANSWERS
 :name: questions_and_answers
 ```
@@ -254,7 +255,7 @@ private key, it calls the PCKS #11 module that holds the key.
 ```
 
 No. NSS will never try to pull private keys out of tokens (except as wrapped objects for PKCS
-#12). Operations the token does not support are considered impossible for the key to support.
+\# 12). Operations the token does not support are considered impossible for the key to support.
 
 NSS may try to pull and load symmetric keys, usually if the key exchange happens in a token that
 does not support the symmetric algorithm. NSS works very hard not to have to pull any key out of

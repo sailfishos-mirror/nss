@@ -35,6 +35,7 @@ No new functionality is introduced in this release.
 ## [Security Fixes in NSS 3.21.3](#security_fixes_in_nss_3.21.3)
 
 :::{container}
+
 - [Bug 1306103](https://bugzilla.mozilla.org/show_bug.cgi?id=1306103) /
   [CVE-2016-5285](http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-5285) - Fixed a
   possible DOS on NSS servers due to a missing NULL check.

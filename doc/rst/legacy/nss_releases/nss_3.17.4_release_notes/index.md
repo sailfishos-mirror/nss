@@ -35,6 +35,7 @@ No new functionality is introduced in this release. This is a patch release to f
 ## [Notable Changes in NSS 3.17.4](#notable_changes_in_nss_3.17.4)
 
 :::{container}
+
 - [Bug 1084986](https://bugzilla.mozilla.org/show_bug.cgi?id=1084986): If an SSL/TLS
   connection fails, because client and server don't have any common protocol version enabled,
   NSS has been changed to report error code SSL_ERROR_UNSUPPORTED_VERSION (instead of reporting

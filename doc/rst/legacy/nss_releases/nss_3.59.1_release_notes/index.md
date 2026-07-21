@@ -27,6 +27,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.59.1](#bugs_fixed_in_nss_3.59.1)
 
 :::{container}
+
 - [Bug 1679290](https://bugzilla.mozilla.org/show_bug.cgi?id=1679290) - Fix potential
   deadlock with certain third-party PKCS11 modules.
 :::

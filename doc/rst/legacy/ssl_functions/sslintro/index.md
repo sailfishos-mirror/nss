@@ -5,6 +5,7 @@
 ::::{container}
 
 :::{note}
+
 - This page is part of the {ref}`mozilla_projects_nss_ssl_functions_old_ssl_reference` that
   we are migrating into the format described in the [MDN Style
   Guide](https://developer.mozilla.org/en-US/docs/Project:MDC_style_guide). If you are
@@ -15,6 +16,7 @@
 ```{rubric} Overview of an SSL Application
 :name: Overview_of_an_SSL_Application
 ```
+
 ::::
 
 [Chapter 1](#chapter_1_overview_of_an_ssl_application) Overview of an SSL Application
@@ -252,13 +254,13 @@ following:
 
 `PR_Send`
 
- or 
+ or
 
 `PR_Write`
 
 `PR_Read`
 
- or 
+ or
 
 `PR_Recv`
 

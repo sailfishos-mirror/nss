@@ -27,6 +27,7 @@ NSS 3.15.5 source distributions are also available on ftp.mozilla.org for secure
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - Added support for the TLS [application layer protocol negotiation (ALPN)
   extension](http://www.iana.org/go/draft-friedl-tls-applayerprotoneg). Two SSL socket
   options, `SSL_ENABLE_NPN` and `SSL_ENABLE_ALPN`, can be used to control whether NPN or
@@ -44,6 +45,7 @@ NSS 3.15.5 source distributions are also available on ftp.mozilla.org for secure
 ### [Notable Changes in NSS 3.15.5](#notable_changes_in_nss_3.15.5)
 
 :::{container}
+
 - [Bug 950129](https://bugzilla.mozilla.org/show_bug.cgi?id=950129): Improve the OCSP
   fetching policy when verifying OCSP responses
 - [Bug 949060](https://bugzilla.mozilla.org/show_bug.cgi?id=949060): Validate the `iov`

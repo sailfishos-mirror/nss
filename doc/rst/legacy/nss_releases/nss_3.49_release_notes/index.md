@@ -31,6 +31,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.49](#notable_changes_in_nss_3.49)
 
 :::{container}
+
 - The legacy DBM database, **libnssdbm**, is no longer built by default when using gyp builds.
   See [Bug 1594933](https://bugzilla.mozilla.org/show_bug.cgi?id=1594933) for details.
 :::
@@ -40,6 +41,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.49](#bugs_fixed_in_nss_3.49)
 
 :::{container}
+
 - [Bug 1513586](https://bugzilla.mozilla.org/show_bug.cgi?id=1513586) - Set downgrade
   sentinel for client TLS versions lower than 1.2.
 - [Bug 1606025](https://bugzilla.mozilla.org/show_bug.cgi?id=1606025) - Remove

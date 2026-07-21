@@ -24,6 +24,7 @@ NSS 3.37 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.37](#notable_changes_in_nss_3.37)
 
 :::{container}
+
 - The TLS 1.3 implementation was updated to Draft 28.
 
 - An issue where NSS erroneously accepted HRR requests was resolved. This issue was found by

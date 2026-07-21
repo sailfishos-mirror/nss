@@ -7,6 +7,7 @@
 ## [Sample Code 3: Hashing, MAC](#sample_code_3_hashing_mac)
 
 :::{container}
+
 ```{code}
 /*
  * Demonstration program for hashing and MACs
@@ -164,4 +165,5 @@ done:
   return status;
 }
 ```
+
 :::

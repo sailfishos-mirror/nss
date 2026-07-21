@@ -11,6 +11,7 @@ FC_GetAttributeValue - get the value of attributes of an object.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_GetAttributeValue(
   CK_SESSION_HANDLE hSession,
@@ -19,6 +20,7 @@ CK_RV FC_GetAttributeValue(
   CK_ULONG usCount
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -57,5 +59,6 @@ of a secret or private key object.
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_GetAttributeValue](/en-US/NSC_GetAttributeValue)
 :::

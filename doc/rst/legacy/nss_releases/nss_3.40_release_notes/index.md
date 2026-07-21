@@ -26,6 +26,7 @@ NSS 3.40 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - The draft-00 version of encrypted SNI support is implemented
 - `tstclnt` now takes `-N` option to specify encrypted SNI key
 
@@ -40,6 +41,7 @@ NSS 3.40 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.40](#notable_changes_in_nss_3.40)
 
 :::{container}
+
 - The mozilla::pkix library has been ported from Mozilla PSM to NSS. This is a C++ library for
   building certification paths. mozilla::pkix APIs are not exposed in the libraries NSS builds.
 
@@ -58,6 +60,7 @@ NSS 3.40 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Bugs fixed in NSS 3.40](#bugs_fixed_in_nss_3.40)
 
 :::::{container}
+
 - ::::{container} field indent
 
   :::{container}

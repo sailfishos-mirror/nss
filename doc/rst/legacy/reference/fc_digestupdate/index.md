@@ -11,6 +11,7 @@ FC_DigestUpdate - process the next block of a multi-part digest operation.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_DigestUpdate(
   CK_SESSION_HANDLE hSession,
@@ -18,6 +19,7 @@ CK_RV FC_DigestUpdate(
   CK_ULONG usPartLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -53,6 +55,7 @@ A user may call `FC_DigestUpdate` without logging into the token (to assume the 
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_digestinit`,
   {ref}`mozilla_projects_nss_reference_fc_digestfinal`,
   [NSC_DigestUpdate](/en-US/NSC_DigestUpdate)

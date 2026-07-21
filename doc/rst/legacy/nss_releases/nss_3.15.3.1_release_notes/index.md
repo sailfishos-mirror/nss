@@ -49,6 +49,7 @@ that was mis-used to generate a certificate used by a network appliance.
 ### [Bugs fixed in NSS 3.15.3.1](#bugs_fixed_in_nss_3.15.3.1)
 
 :::{container}
+
 - [Bug 946351](https://bugzilla.mozilla.org/show_bug.cgi?id=946351) - Misissued Google
   certificates from DCSSI
 

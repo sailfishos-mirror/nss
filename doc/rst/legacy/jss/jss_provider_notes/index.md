@@ -25,6 +25,7 @@ It implements cryptographic operations in native code using the [NSS](../nss) li
 ### [Contents](#contents)
 
 :::{container}
+
 - [Signed JAR file](#signed-jar)
 - [Installing the Provider](#installing-provider)
 - [Specifying the CryptoToken](#specifying-token)
@@ -35,6 +36,7 @@ It implements cryptographic operations in native code using the [NSS](../nss) li
 ### [Signed JAR file](#signed_jar_file)
 
 :::{container}
+
 - JSS 3.2 implements several JCE (Java Cryptography Extension) algorithms. These algorithms have
   at various times been export-controlled by the US government. Sun therefore requires that JAR
   files implementing JCE algorithms be digitally signed by an approved organization. Netscape
@@ -58,6 +60,7 @@ It implements cryptographic operations in native code using the [NSS](../nss) li
 ### [Installing the Provider](#installing_the_provider)
 
 :::{container}
+
 - In order to use any part of JSS, including the JCA provider, you must first call
   `CryptoManager.initialize()`. By default, the JCA provider will be installed in the list of
   providers maintained by the `java.security.Security` class. If you do not wish the provider
@@ -70,6 +73,7 @@ It implements cryptographic operations in native code using the [NSS](../nss) li
 ### [Specifying the CryptoToken](#specifying_the_cryptotoken)
 
 :::{container}
+
 - All cryptographic operations in JSS and NSS occur on a particular PKCS #11 token, implemented
   in software or hardware. There is no clean way to specify this token through the JCA API. By
   default, the JSS provider carries out all operations except MessageDigest on the Internal Key
@@ -116,11 +120,13 @@ It implements cryptographic operations in native code using the [NSS](../nss) li
   dsaKpg.initialize(1024);
   KeyPair dsaPair = dsaKpg.generateKeyPair();
   ```
+
 :::
 
 ### [Supported Classes](#supported_classes)
 
 :::{container}
+
 - [Cipher](#cipher)
 
 - [DSAPrivateKey](#dsaprivatekey)
@@ -178,6 +184,7 @@ It implements cryptographic operations in native code using the [NSS](../nss) li
   - RC4
   - RSA
   - The following modes and padding schemes are supported:
+
   ```{eval-rst}
   +------------------------------+------------------------------+------------------------------+
   | Algorithm                    | Mode                         | Padding                      |
@@ -208,6 +215,7 @@ It implements cryptographic operations in native code using the [NSS](../nss) li
   |                              |                              | PKCS5Padding                 |
   +------------------------------+------------------------------+------------------------------+
   ```
+
   - The SecureRandom argument passed to `initSign()` and `initVerify()` is ignored, because
     NSS does not support specifying an external source of randomness.
 
@@ -231,6 +239,7 @@ It implements cryptographic operations in native code using the [NSS](../nss) li
   > - RSA
   > - The following transformations are supported for `generatePublic()` and
   >   `generatePrivate()`:
+
   ```{eval-rst}
   +----------------------------------------------+----------------------------------------------+
   | From                                         | To                                           |
@@ -250,6 +259,7 @@ It implements cryptographic operations in native code using the [NSS](../nss) li
   |                                              | ``DSAPrivateKey``                            |
   +----------------------------------------------+----------------------------------------------+
   ```
+
   > - `getKeySpec()` is not supported. This method exports key material in plaintext and is
   >   therefore insecure. Note that a public key's data can be accessed directly from the key.
   > - `translateKey()` simply gets the encoded form of the given key and then tries to import
@@ -347,6 +357,7 @@ It implements cryptographic operations in native code using the [NSS](../nss) li
   > - PBEWithSHA1And128RC4
   > - RC4
   > - `generateSecret` supports the following transformations:
+
   ```{eval-rst}
   +----------------------------------------------+----------------------------------------------+
   | KeySpec Class                                | Key Algorithm                                |
@@ -366,7 +377,9 @@ It implements cryptographic operations in native code using the [NSS](../nss) li
   |                                              | RC4                                          |
   +----------------------------------------------+----------------------------------------------+
   ```
+
   > - `getKeySpec` supports the following transformations:
+
   ```{eval-rst}
   +----------------------------------------------+----------------------------------------------+
   | Key Algorithm                                | KeySpec Class                                |
@@ -381,6 +394,7 @@ It implements cryptographic operations in native code using the [NSS](../nss) li
   | RC4                                          |                                              |
   +----------------------------------------------+----------------------------------------------+
   ```
+
   > - For increased security, some SecretKeys may not be extractable from their PKCS #11 token.
   >   In this case, the key should be wrapped (encrypted with another key), and then the
   >   encrypted key might be extractable from the token. This policy varies across PKCS #11

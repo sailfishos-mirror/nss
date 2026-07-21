@@ -9,6 +9,7 @@ One-line description of what the function does (more than just what it returns).
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 #include <headers.h>
 ReturnType Function_Name(
@@ -16,11 +17,13 @@ ReturnType Function_Name(
     ParamType        ParamName,
     ParamType        ParamName,          );
 ```
+
 :::
 
 ## [Parameters](#parameters)
 
 :::{container}
+
 ```{eval-rst}
 +---------------+---------------------------------------------------------------------------------+
 | ``ParamName`` | Sample: *in* pointer to a `CERTCertDBHandle </en-US/NSS/CERTCertDBHandle>`__    |
@@ -30,6 +33,7 @@ ReturnType Function_Name(
 |               | be ``siDERCertBuffer`` and whose ``data`` contains a DER-encoded certificate    |
 +---------------+---------------------------------------------------------------------------------+
 ```
+
 :::
 
 ## [Description](#description)

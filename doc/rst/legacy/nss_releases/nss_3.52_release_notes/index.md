@@ -31,6 +31,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.52](#notable_changes_in_nss_3.52)
 
 :::{container}
+
 - [Bug 1603628](https://bugzilla.mozilla.org/show_bug.cgi?id=1603628) - Update NSS to support
   PKCS #11 v3.0.
 
@@ -52,6 +53,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.52](#bugs_fixed_in_nss_3.52)
 
 :::{container}
+
 - [Bug 1633498](https://bugzilla.mozilla.org/show_bug.cgi?id=1633498) - Fix unused variable
   'getauxval' error on iOS compilation.
 - [Bug 1630721](https://bugzilla.mozilla.org/show_bug.cgi?id=1630721) - Add Softoken

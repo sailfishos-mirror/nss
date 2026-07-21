@@ -11,12 +11,14 @@ FC_GetSlotInfo - get information about a particular slot in the system.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_GetSlotInfo(
   CK_SLOT_ID slotID,
   CK_SLOT_INFO_PTR pInfo
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -59,5 +61,6 @@ A user may call `FC_GetSlotInfo` without logging into the token (to assume the N
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_GetSlotInfo](/en-US/NSC_GetSlotInfo)
 :::

@@ -26,6 +26,7 @@ NSS 3.39 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - The `tstclnt` and `selfserv` utilities added support for configuring the enabled TLS
   signature schemes using the `-J` parameter.
 - NSS will use RSA-PSS keys to authenticate in TLS. Support for these keys is disabled by
@@ -54,6 +55,7 @@ NSS 3.39 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.39](#notable_changes_in_nss_3.39)
 
 :::{container}
+
 - The TLS 1.3 implementation uses the final version number from [RFC
   8446](https://datatracker.ietf.org/doc/html/rfc8446).
 
@@ -110,6 +112,7 @@ NSS 3.39 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Bugs fixed in NSS 3.39](#bugs_fixed_in_nss_3.39)
 
 :::{container}
+
 - [Bug 1483128](https://bugzilla.mozilla.org/show_bug.cgi?id=1483128) - NSS responded to an
   SSLv2-compatible ClientHello with a ServerHello that had an all-zero random (CVE-2018-12384)
 

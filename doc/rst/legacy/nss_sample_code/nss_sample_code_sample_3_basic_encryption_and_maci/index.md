@@ -15,6 +15,7 @@ This example program demonstrates how to encrypt and MAC a file.
 ### [Sample Code 3](#sample_code_3)
 
 :::{container}
+
 ```{code} c
 /* NSPR Headers */
 #include <prthread.h>
@@ -1215,4 +1216,5 @@ cleanup:
 }
 </plstr.h></prtypes.h></prlog.h></prinit.h></prerror.h></plgetopt.h></prthread.h></opfilename></ipfilename></ipfilename></ipfilename></ipfilename></ipfilename></opfilename></ipfilename></noisefilename></dbpwdfile></dbpwd></dbdirpath></a|b></opfilename></ipfilename></dbpwdfile></dbpwd></noisefilename></dbdirpath></a|b></pk11priv.h></keyhi.h></plstr.h></prtypes.h></prlog.h></prinit.h></prerror.h></plgetopt.h></prthread.h>
 ```
+
 :::

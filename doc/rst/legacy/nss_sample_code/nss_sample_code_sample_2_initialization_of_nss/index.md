@@ -14,6 +14,7 @@ password handling.
 ### [Sample Code 1](#sample_code_1)
 
 :::{container}
+
 ```{code} c
 /* NSPR Headers */
 #include <prthread.h>
@@ -249,4 +250,5 @@ int main(int argc, char **argv)
 }
 </plainpasswc></plainpasswc></dbdirpath></passwdffile></plainpasswc></dbdirpath></pk11func.h></nss.h></prprf.h></plgetopt.h></prthread.h>
 ```
+
 :::

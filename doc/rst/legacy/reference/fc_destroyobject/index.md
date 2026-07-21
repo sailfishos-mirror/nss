@@ -11,12 +11,14 @@ FC_DestroyObject - destroy an object.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_DestroyObject(
   CK_SESSION_HANDLE hSession,
   CK_OBJECT_HANDLE hObject
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -47,5 +49,6 @@ private key object.
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_DestroyObject](/en-US/NSC_DestroyObject)
 :::

@@ -17,6 +17,7 @@ Newsgroup: [mozilla.dev.tech.crypto](news://news.mozilla.org/mozilla.dev.tech.cr
 ### [Contents](#contents)
 
 :::{container}
+
 - [Introduction](#introduction)
 - [Distribution Information](#distribution_information)
 - [New in NSS 3.12](#new_in_nss_3.12)
@@ -80,6 +81,7 @@ NSS 3.12 libraries have the following versions:
 ### [New in NSS 3.12](#new_in_nss_3.12)
 
 :::{container}
+
 - 3 new shared library are shipped with NSS 3.12:
 
   - nssutil

@@ -26,6 +26,7 @@ NSS 3.31 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - Allow certificates to be specified by RFC7512 PKCS#11 URIs.
 - Allow querying a certificate object for its temporary or permanent storage status in a thread
   safe way.
@@ -72,6 +73,7 @@ NSS 3.31 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.31](#notable_changes_in_nss_3.31)
 
 :::{container}
+
 - The APIs that set a TLS version range have been changed to trim the requested range to the
   overlap with a systemwide crypto policy, if configured. **SSL_VersionRangeGetSupported** can
   be used to query the overlap between the library's supported range of TLS versions and the

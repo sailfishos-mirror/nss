@@ -5,6 +5,7 @@
 ::::{container}
 
 :::{note}
+
 - This page is part of the {ref}`mozilla_projects_nss_ssl_functions_old_ssl_reference` that
   we are migrating into the format described in the [MDN Style
   Guide](https://developer.mozilla.org/en-US/docs/Project:MDC_style_guide). If you are
@@ -15,6 +16,7 @@
 ```{rubric} Selected SSL Types and Structures
 :name: Selected_SSL_Types_and_Structures
 ```
+
 ::::
 
 [Chapter 3](#chapter_3_selected_ssl_types_and_structures) Selected SSL Types and Structures
@@ -254,6 +256,7 @@ The enum includes the following enumerators:
 |    SECSuccess                                   |                                                 |
 +-------------------------------------------------+-------------------------------------------------+
 ```
+
 :::
 
 (managing-secitem-memory)=

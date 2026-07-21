@@ -35,6 +35,7 @@ No new functionality is introduced in this release.
 ## [Security Fixes in NSS 3.21.1](#security_fixes_in_nss_3.21.1)
 
 :::{container}
+
 - [Bug 1245528](https://bugzilla.mozilla.org/show_bug.cgi?id=1245528) /
   [CVE-2016-1950](http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-1950) - Fixed a
   heap-based buffer overflow related to the parsing of certain ASN.1 structures. An attacker

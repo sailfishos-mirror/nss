@@ -5,6 +5,7 @@
 ::::{container}
 
 :::{note}
+
 - This page is part of the {ref}`mozilla_projects_nss_ssl_functions_old_ssl_reference` that
   we are migrating into the format described in the [MDN Style
   Guide](https://developer.mozilla.org/en-US/docs/Project:MDC_style_guide). If you are
@@ -15,6 +16,7 @@
 ```{rubric} Getting Started With SSL
 :name: Getting_Started_With_SSL
 ```
+
 ::::
 
 ## [Chapter 2](#chapter_2_getting_started_with_ssl) Getting Started With SSL

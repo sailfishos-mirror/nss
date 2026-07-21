@@ -33,6 +33,7 @@ the preferred forum for all questions about NSS and NSS tools.
 ### [Overall Objectives](#overall_objectives)
 
 :::{container}
+
 1. Provide a tool for analyzing and repairing certificate databases ([dbck](#dbck)).
 2. Migrate tools from secutil.h interface to PKCS #11 interface.
 3. Eliminate redundant functionality in tools. Many tools implement private versions of
@@ -46,6 +47,7 @@ the preferred forum for all questions about NSS and NSS tools.
 ### [Tools information](#tools_information)
 
 :::{container}
+
 ```{eval-rst}
 +--------------+-----------------------------------------+-----------------------------------------+
 | **Tool**     | **Description**                         | **Links**                               |
@@ -119,4 +121,5 @@ the preferred forum for all questions about NSS and NSS tools.
 |              | This tool is very useful for debugging. |                                         |
 +--------------+-----------------------------------------+-----------------------------------------+
 ```
+
 :::

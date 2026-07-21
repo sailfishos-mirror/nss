@@ -35,6 +35,7 @@ experienced with NSS 3.28.
 ## [Notable Changes in NSS 3.28.1](#notable_changes_in_nss_3.28.1)
 
 :::{container}
+
 - The following CA certificates were **Removed**
 
   - CN = Buypass Class 2 CA 1

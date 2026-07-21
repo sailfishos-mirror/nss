@@ -9,42 +9,25 @@ signtool — Digitally sign objects and files.
 
 Synopsis
 
-signtool [-k keyName] 
+signtool [-k keyName]
 
 [-h](-h)
 
- 
-
 [-H](-H)
-
- 
 
 [-l](-l)
 
- 
-
 [-L](-L)
-
- 
 
 [-M](-M)
 
-
-
-
 [-v](-v)
-
- 
 
 [-w](-w)
 
 [-G nickname](-G_nickname)
 
- 
-
 [-s size](--keysize)
-
- 
 
 [-b basename](-b_basename)
 
@@ -183,7 +166,7 @@ automatically installed in your copy of the Communicator client software.
 
 Communicator supports the public-key cryptography standard known as PKCS
 
-#12, which governs key portability. You can, for example, move an
+\# 12, which governs key portability. You can, for example, move an
 
 object-signing certificate and its associated private key from one
 
@@ -361,7 +344,7 @@ the -G option, see "Generating Test Object-Signing
 
 Certificates""Generating Test Object-Signing Certificates" on page
 
-1241.
+1.
 
 -l
 
@@ -781,11 +764,11 @@ Signing a File
 
 mkdir signdir
 
-2. Put some file into it.
+1. Put some file into it.
 
 echo boo > signdir/test.f
 
-3. Specify the name of your object-signing certificate and sign the
+1. Specify the name of your object-signing certificate and sign the
 
 directory.
 
@@ -813,7 +796,7 @@ adding signdir/META-INF/signtool.rsa to testjar.jar
 
 tree "signdir" signed successfully
 
-4. Test the archive you just created.
+1. Test the archive you just created.
 
 signtool -v testjar.jar
 
@@ -907,7 +890,7 @@ country (must be exactly 2 characters): US
 
 username: someuser
 
-email address: 
+email address:
 
 <mailto:someuser@netscape.com>
 
@@ -973,7 +956,7 @@ slot: Communicator User Private Key and Certificate Services
 
 token: Communicator Certificate DB
 
-2. CryptOS
+1. CryptOS
 
 (this is an external module)
 
@@ -1075,11 +1058,11 @@ The NSS wiki has information on the new database design and how to
 
 configure applications to use it.
 
-o 
+o
 
 <https://wiki.mozilla.org/NSS_Shared_DB_Howto>
 
-o 
+o
 
 <https://wiki.mozilla.org/NSS_Shared_DB>
 
@@ -1098,7 +1081,7 @@ The NSS site relates
 
 directly to NSS code changes and releases.
 
-Mailing lists: 
+Mailing lists:
 
 <https://lists.mozilla.org/listinfo/dev-tech-crypto>
 
@@ -1131,7 +1114,6 @@ References
 Visible links
 
 1.
-
 
 [http://www.mozilla.org/projects/security/pki/nss/](https://www.mozilla.org/projects/security/pki/nss/)
 :::

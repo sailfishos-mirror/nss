@@ -425,4 +425,5 @@ indicates which versions of NSS support the function.
 | ``VFY_VerifyDigestWithAlgorithmID``     | MXR         | 3.12 and later                          |
 +-----------------------------------------+-------------+-----------------------------------------+
 ```
+
 :::

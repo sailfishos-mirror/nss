@@ -13,7 +13,6 @@ cryptography.
 
 These new examples are a work in progress. See
 
-
 <https://bugzilla.mozilla.org/show_bug.cgi?id=490238>
 
 How to download the samples:

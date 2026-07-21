@@ -11,6 +11,7 @@
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_InitPIN(
   CK_SESSION_HANDLE hSession,
@@ -18,6 +19,7 @@ CK_RV FC_InitPIN(
   CK_ULONG ulPinLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -68,5 +70,6 @@ user's PIN has not yet been set or has been reset.
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_InitPIN](/en-US/NSC_InitPIN), {ref}`mozilla_projects_nss_reference_fc_setpin`
 :::

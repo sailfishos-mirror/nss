@@ -37,6 +37,7 @@ No new functionality is introduced in this release. This is a patch release to f
 ## [Bugs fixed in NSS 3.36.8](#bugs_fixed_in_nss_3.36.8)
 
 ::::{container}
+
 - :::{container}
   [1554336](https://bugzilla.mozilla.org/show_bug.cgi?id=1554336) - Optimize away unneeded
   loop in mpi.c

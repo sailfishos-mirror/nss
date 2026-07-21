@@ -116,6 +116,7 @@ Options specify an action. Option arguments modify an action. The options and ar
 |   |
 +---+
 ```
+
 :::
 
 (password-based-encryption)=

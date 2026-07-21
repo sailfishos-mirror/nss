@@ -33,6 +33,7 @@ No new functionality is introduced in this release.
 ## [Notable Changes in NSS 3.29.3](#notable_changes_in_nss_3.29.3)
 
 :::{container}
+
 - A rare crash when initializing an SSL socket fails has been fixed.
 :::
 

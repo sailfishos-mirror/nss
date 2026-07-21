@@ -11,6 +11,7 @@ FC_DigestFinal - finish a multi-part digest operation.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_DigestFinal(
   CK_SESSION_HANDLE hSession,
@@ -18,6 +19,7 @@ CK_RV FC_DigestFinal(
   CK_ULONG_PTR pulDigestLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -53,6 +55,7 @@ A user may call `FC_DigestFinal` without logging into the token (to assume the N
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_digestinit`,
   [NSC_DigestFinal](/en-US/NSC_DigestFinal)
 :::

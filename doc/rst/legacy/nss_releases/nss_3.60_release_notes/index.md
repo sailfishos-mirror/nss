@@ -31,6 +31,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.60](#notable_changes_in_nss_3.60)
 
 :::{container}
+
 - TLS 1.3 Encrypted Client Hello (draft-ietf-tls-esni-08) support has been added, replacing the
   ESNI (draft-ietf-tls-esni-01). See [bug
   1654332](https://bugzilla.mozilla.org/show_bug.cgi?id=1654332) for more information.
@@ -39,6 +40,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ### [Certificate Authority Changes](#certificate_authority_changes)
 
 :::{container}
+
 - The following CA certificates were added:
 
   - [Bug 1678166](https://bugzilla.mozilla.org/show_bug.cgi?id=1678166) - NAVER Global Root
@@ -96,6 +98,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.60](#bugs_fixed_in_nss_3.60)
 
 :::{container}
+
 - Bug 1654332 - Implement Encrypted Client Hello (draft-ietf-tls-esni-08) in NSS.
 - Bug 1678189 - Update CA list version to 2.46.
 - Bug 1670769 - Remove 10 GeoTrust, thawte, and VeriSign root certs from NSS.

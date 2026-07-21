@@ -39,6 +39,7 @@ No new functionality is introduced in this release.
 ## [Bugs fixed in NSS 3.44.3](#bugs_fixed_in_nss_3.44.3)
 
 :::{container}
+
 - [Bug 1579060](https://bugzilla.mozilla.org/show_bug.cgi?id=1579060) - Don't set the
   CONSTRUCTED bit for issuerUniqueID and subjectUniqueID in mozilla::pkix
 - [CVE-2019-11745](https://bugzilla.mozilla.org/show_bug.cgi?id=CVE-2019-11745) -

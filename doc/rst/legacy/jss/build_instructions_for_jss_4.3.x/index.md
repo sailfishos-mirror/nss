@@ -72,10 +72,9 @@ Now you are ready to build JSS. Follow these steps:
 
    It has been recently reported that special build instructions are necessary to succeed
    building JSS on OSX. Please
-   see 
+   see
 
    [HOWTO_successfully_compile_JSS_and_NSS_for_32_and_64_bits_on_OSX_10.6\_(10.6.7)](</HOWTO_successfully_compile_JSS_and_NSS_for_32_and_64_bits_on_OSX_10.6_(10.6.7)>)
-
 
    for contributed instructions.
 

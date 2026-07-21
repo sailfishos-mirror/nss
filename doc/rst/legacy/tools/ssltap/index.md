@@ -121,17 +121,17 @@ your development machine is called intercept. The simplest way to use the
 
 debugging tool is to execute the following command from a command shell:
 
-\$ ssltap www.netscape.com
+\$ ssltap <www.netscape.com>
 
 The program waits for an incoming connection on the default port 1924. In
 
-your browser window, enter the URL 
+your browser window, enter the URL
 
 <http://intercept:1924>
 
 . The browser
 
-retrieves the requested page from the server at www.netscape.com, but the
+retrieves the requested page from the server at <www.netscape.com>, but the
 
 page is intercepted and passed on to the browser by the debugging tool on
 
@@ -958,11 +958,11 @@ The NSS site relates
 
 directly to NSS code changes and releases.
 
-Mailing lists: 
+Mailing lists:
 
 <mailto:pki-devel@redhat.com>
 
- and 
+ and
 
 <mailto:pki-users@redhat.com>
 
@@ -996,15 +996,13 @@ Visible links
 
 1.
 
-
 [http://www.mozilla.org/projects/secu.../pki/nss/tools](https://www.mozilla.org/projects/security/pki/nss/tools)
 
-2. 
+1.
 
 <http://pki.fedoraproject.org/wiki/>
 
-3.
-
+1.
 
 [http://www.mozilla.org/projects/security/pki/nss/](https://www.mozilla.org/projects/security/pki/nss/)
 :::

@@ -25,6 +25,7 @@ NSS 3.19.1 source distributions are available on ftp.mozilla.org for secure HTTP
 ## [Security Fixes in NSS 3.19.1](#security_fixes_in_nss_3.19.1)
 
 :::{container}
+
 - [Bug
   1138554](https://bugzilla.mozilla.org/show_bug.cgi?id=1138554) / [CVE-2015-4000](http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-4000) -
   The minimum strength of keys that libssl will accept for finite field algorithms (RSA,
@@ -47,6 +48,7 @@ recently published [logjam attack](https://weakdh.org/).
 ## [Notable Changes in NSS 3.19.1](#notable_changes_in_nss_3.19.1)
 
 :::{container}
+
 - NSS reports the bit length of keys more accurately. Thus, the SECKEY_PublicKeyStrength and
   SECKEY_PublicKeyStrengthInBits functions could report smaller values for values that have
   leading zero values. This affects the key strength values that are reported by

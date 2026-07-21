@@ -27,6 +27,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.56](#notable_changes_in_nss_3.56)
 
 :::{container}
+
 - NSPR dependency updated to 4.28.
 - The known issue where Makefile builds failed to locate seccomon.h was fixed in [Bug
   1653975](https://bugzilla.mozilla.org/show_bug.cgi?id=1653975).
@@ -37,6 +38,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.56](#bugs_fixed_in_nss_3.56)
 
 :::{container}
+
 - [Bug 1650702](https://bugzilla.mozilla.org/show_bug.cgi?id=1650702) - Support SHA-1 HW
   acceleration on ARMv8
 - [Bug 1656981](https://bugzilla.mozilla.org/show_bug.cgi?id=1656981) - Use MPI comba and

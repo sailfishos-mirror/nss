@@ -11,6 +11,7 @@ FC_CreateObject - create a new object.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_CreateObject(
   CK_SESSION_HANDLE hSession,
@@ -19,6 +20,7 @@ CK_RV FC_CreateObject(
   CK_OBJECT_HANDLE_PTR phObject
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -56,6 +58,7 @@ A user must log into the token (to assume the NSS User role) before calling `FC_
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_destroyobject`,
   [NSC_CreateObject](/en-US/NSC_CreateObject)
 :::

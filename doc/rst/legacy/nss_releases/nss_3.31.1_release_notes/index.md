@@ -41,6 +41,7 @@ No new functionality is introduced in this release.
 ## [Bugs fixed in NSS 3.31.1](#bugs_fixed_in_nss_3.31.1)
 
 :::{container}
+
 - [Bug 1381784](https://bugzilla.mozilla.org/show_bug.cgi?id=1381784) - Potential deadlock
   when using an external PKCS#11 token.
 :::

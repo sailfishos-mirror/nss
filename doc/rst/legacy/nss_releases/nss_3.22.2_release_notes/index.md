@@ -35,6 +35,7 @@ No new functionality is introduced in this release.
 ## [Security Fixes in NSS 3.22.2](#security_fixes_in_nss_3.22.2)
 
 :::{container}
+
 - [Bug 1245528](https://bugzilla.mozilla.org/show_bug.cgi?id=1245528) /
   [CVE-2016-1950](http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-1950) - Fixed a
   heap-based buffer overflow related to the parsing of certain ASN.1 structures. An attacker
@@ -47,6 +48,7 @@ No new functionality is introduced in this release.
 ## [Notable Changes in NSS 3.22.2](#notable_changes_in_nss_3.22.2)
 
 :::{container}
+
 - [Bug 1247990](https://bugzilla.mozilla.org/show_bug.cgi?id=1247990) - The root CA changes
   from {ref}`mozilla_projects_nss_nss_3_23_release_notes` have been backported.
 :::

@@ -27,6 +27,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.59](#notable_changes_in_nss_3.59)
 
 :::{container}
+
 - Exported two existing functions from libnss, CERT_AddCertToListHeadWithData and
   CERT_AddCertToListTailWithData
 :::
@@ -36,6 +37,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ### [Build Requirements](#build_requirements)
 
 :::{container}
+
 - NSS will soon require GCC 4.8 or newer. Gyp-based builds will stop supporting older GCC
   versions in the next release, NSS 3.60 planned for December, followed later by the make-based
   builds. Users of older GCC versions can continue to use the make-based build system while they
@@ -47,6 +49,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.59](#bugs_fixed_in_nss_3.59)
 
 :::{container}
+
 - [Bug 1607449](https://bugzilla.mozilla.org/show_bug.cgi?id=1607449) - Lock
   cert->nssCertificate to prevent a potential data race
 - [Bug 1672823](https://bugzilla.mozilla.org/show_bug.cgi?id=1672823) - Add Wycheproof test

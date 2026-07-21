@@ -27,6 +27,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.54](#notable_changes_in_nss_3.54)
 
 :::{container}
+
 - Support for TLS 1.3 external pre-shared keys ([Bug
   1603042](https://bugzilla.mozilla.org/show_bug.cgi?id=1603042)).
 - Use ARM Cryptography Extension for SHA256, when available. ([Bug
@@ -36,6 +37,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ### [Certificate Authority Changes](#certificate_authority_changes)
 
 :::{container}
+
 - The following CA certificates were Added:
 
   - [Bug 1645186](https://bugzilla.mozilla.org/show_bug.cgi?id=1645186) - certSIGN Root CA
@@ -106,6 +108,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.54](#bugs_fixed_in_nss_3.54)
 
 :::{container}
+
 - [Bug 1528113](https://bugzilla.mozilla.org/show_bug.cgi?id=1528113) - Use ARM Cryptography
   Extension for SHA256.
 - [Bug 1603042](https://bugzilla.mozilla.org/show_bug.cgi?id=1603042) - Add TLS 1.3 external

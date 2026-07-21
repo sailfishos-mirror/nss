@@ -11,9 +11,11 @@ FC_Finalize - indicate that an application is done with the PKCS #11 library.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_Finalize (CK_VOID_PTR pReserved);
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -53,6 +55,7 @@ initialized.
 ## [Examples](#examples)
 
 :::{container}
+
 ```{code}
 #include <assert.h>
 
@@ -67,11 +70,13 @@ assert(crv == CKR_OK);
 /* invoke FC_Finalize as pFunctionList->C_Finalize */
 crv = pFunctionList->C_Finalize(NULL);
 ```
+
 :::
 
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_initialize`,
   [NSC_Initialize](/en-US/NSC_Initialize), [NSC_Finalize](/en-US/NSC_Finalize)
 :::

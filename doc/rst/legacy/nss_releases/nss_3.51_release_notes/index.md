@@ -32,6 +32,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.51](#notable_changes_in_nss_3.51)
 
 :::{container}
+
 - Updated DTLS 1.3 implementation to Draft-34. See [Bug
   1608892](https://bugzilla.mozilla.org/show_bug.cgi?id=1608892) for details.
 :::
@@ -41,6 +42,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.51](#bugs_fixed_in_nss_3.51)
 
 :::{container}
+
 - [Bug 1608892](https://bugzilla.mozilla.org/show_bug.cgi?id=1608892) - Update DTLS 1.3
   implementation to draft-34.
 - [Bug 1611209](https://bugzilla.mozilla.org/show_bug.cgi?id=1611209) - Correct swapped

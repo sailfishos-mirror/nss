@@ -27,18 +27,18 @@ NSS 3.12.9 is tri-licensed under the MPL 1.1/GPL 2.0/LGPL 2.1.
 ```{rubric} Distribution Information
 ```
 
-The CVS tag for the NSS 3.12.9 release is 
+The CVS tag for the NSS 3.12.9 release is
 
 `NSS_3.12.9_RTM`
 
-. NSS 3.12.9 requires 
+. NSS 3.12.9 requires
 
 [NSPR
 4.8.7](https://www.mozilla.org/projects/nspr/release-notes/nspr486.html)
 
 .
 
-See the 
+See the
 
 [Documentation](#docs)
 
@@ -74,6 +74,7 @@ files and shared libraries, which NSS 3.12.9 requires. NSPR 4.8.7 binary distrib
 
 ```{rubric} New error codes
 ```
+
 :::
 ::::
 :::::

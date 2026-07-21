@@ -27,6 +27,7 @@ NSS 3.41 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - [Bug 1252891](https://bugzilla.mozilla.org/show_bug.cgi?id=1252891) - Implemented EKU
   handling for IPsec IKE.
 
@@ -52,6 +53,7 @@ NSS 3.41 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.41](#notable_changes_in_nss_3.41)
 
 :::{container}
+
 - The following CA certificates were **Added**:
 
   - CN = Certigna Root CA
@@ -114,6 +116,7 @@ NSS 3.41 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Bugs fixed in NSS 3.41](#bugs_fixed_in_nss_3.41)
 
 :::{container}
+
 - [Bug 1412829](https://bugzilla.mozilla.org/show_bug.cgi?id=1412829), Reject empty
   supported_signature_algorithms in Certificate Request in TLS 1.2
 - [Bug 1485864](https://bugzilla.mozilla.org/show_bug.cgi?id=1485864) - Cache side-channel

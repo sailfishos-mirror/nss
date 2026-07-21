@@ -27,6 +27,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.61](#bugs_fixed_in_nss_3.61)
 
 :::{container}
+
 - Bug 1682071 - Fix issue with IKE Quick mode deriving incorrect key values under certain
   conditions.
 - Bug 1684300 - Fix default PBE iteration count when NSS is compiled with NSS_DISABLE_DBM.

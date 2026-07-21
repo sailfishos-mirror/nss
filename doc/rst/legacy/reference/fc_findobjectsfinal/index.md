@@ -11,11 +11,13 @@ FC_FindObjectsFinal - terminate an object search.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_FindObjectsFinal(
   CK_SESSION_HANDLE hSession,
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -39,6 +41,7 @@ Clears the object search criteria for a session.
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_findobjects`,
   [NSC_FindObjectsFinal](/en-US/NSC_FindObjectsFinal)
 :::

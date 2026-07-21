@@ -11,6 +11,7 @@ FC_GetMechanismList - get a list of mechanism types supported by a token.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_GetMechanismList(
   CK_SLOT_ID slotID,
@@ -18,6 +19,7 @@ CK_RV FC_GetMechanismList(
   CK_ULONG_PTR pusCount
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -55,5 +57,6 @@ role).
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_GetMechanismList](/en-US/NSC_GetMechanismList)
 :::

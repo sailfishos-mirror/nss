@@ -20,8 +20,10 @@ show a certain way.
 :name: include_these_files
 ```
 
+```c
 #include "ssl.h"
 #include "cert.h"
+```
 
 ```{rubric} Get the handle of the cert associated with an SSL connection
 :name: get_the_handle_of_the_cert_associated_with_an_ssl_connection
@@ -223,8 +225,9 @@ SECITEM_FreeItem(&data.maxusers, PR_FALSE);
   the decoded value, The caller should free up the storage allocated in value->data.
   *SECStatus CERT_FindSubjectKeyIDExten (CERTCertificate \*cert, SECItem \*retItem);*
 
-*
-*
+-
+-
+
 :::
 
 (for-more-information)=
@@ -232,6 +235,7 @@ SECITEM_FreeItem(&data.maxusers, PR_FALSE);
 ## [For more information](#for_more_information)
 
 :::{container}
+
 - Browse through the NSS source code online at
   <http://lxr.mozilla.org/mozilla/source/security/nss/> and <http://lxr.mozilla.org/security/>
 - documentation on some cert funcs

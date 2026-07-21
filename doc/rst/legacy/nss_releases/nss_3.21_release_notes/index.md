@@ -29,6 +29,7 @@ NSS 3.21 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Security Fixes in NSS 3.21](#security_fixes_in_nss_3.21)
 
 :::{container}
+
 - [Bug 1158489](https://bugzilla.mozilla.org/show_bug.cgi?id=1158489)
   \` \<<https://bugzilla.mozilla.org/show_bug.cgi?id=1138554>>\`\_\_ /
   [CVE-2015-7575](http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-7575) - Prevent
@@ -42,6 +43,7 @@ NSS 3.21 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - `certutil` now supports a `--rename` option to change a nickname ([bug
   1142209](https://bugzilla.mozilla.org/show_bug.cgi?id=1142209))
 - TLS extended master secret extension ([RFC
@@ -161,6 +163,7 @@ NSS 3.21 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.21](#notable_changes_in_nss_3.21)
 
 :::{container}
+
 - NSS now builds with elliptic curve ciphers enabled by default ([bug
   1205688](https://bugzilla.mozilla.org/show_bug.cgi?id=1205688))
 

@@ -26,6 +26,7 @@ NSS 3.15 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - Support for OCSP Stapling ([RFC 6066](https://datatracker.ietf.org/doc/html/rfc6066),
   Certificate Status Request) has been added for both client and server sockets. TLS client
   applications may enable this via a call to
@@ -101,6 +102,7 @@ NSS 3.15 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.15](#notable_changes_in_nss_3.15)
 
 :::{container}
+
 - *SECITEM_ReallocItem* is now deprecated. Please consider using *SECITEM_ReallocItemV2* in all
   future code.
 

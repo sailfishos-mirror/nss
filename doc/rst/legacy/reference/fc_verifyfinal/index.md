@@ -11,6 +11,7 @@ FC_VerifyFinal - finish a multi-part verify operation.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_VerifyFinal(
   CK_SESSION_HANDLE hSession,
@@ -18,6 +19,7 @@ CK_RV FC_VerifyFinal(
   CK_ULONG usSignatureLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -51,6 +53,7 @@ A user must log into the token (to assume the NSS User role) before calling `FC_
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_verifyupdate`,
   [NSC_VerifyFinal](/en-US/NSC_VerifyFinal)
 :::

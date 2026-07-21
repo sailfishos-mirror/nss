@@ -38,6 +38,7 @@ No new functionality is introduced in this release.
 ## [Bugs fixed in NSS 3.53.1](#bugs_fixed_in_nss_3.53.1)
 
 :::{container}
+
 - [CVE-2020-12402](https://bugzilla.mozilla.org/show_bug.cgi?id=CVE-2020-12402) - Use
   constant-time GCD and modular inversion in MPI.
 :::

@@ -19,6 +19,7 @@ It implements cryptographic operations in native code using the
 ### [Contents](#contents)
 
 :::{container}
+
 - [Signed JAR
   file](https://www.mozilla.org/projects/security/pki/jss/provider_notes.html#signed-jar)
 - [Installing the
@@ -114,11 +115,13 @@ KeyPair rsaPair = rsaKpg.generateKeyPair();
 dsaKpg.initialize(1024);
 KeyPair dsaPair = dsaKpg.generateKeyPair();
 ```
+
 :::
 
 ### [Supported Classes](#supported_classes)
 
 :::{container}
+
 - [Cipher](https://www.mozilla.org/projects/security/pki/jss/provider_notes.html#Cipher)
 - [DSAPrivateKey](https://www.mozilla.org/projects/security/pki/jss/provider_notes.html#DSAPrivateKey)
 - DSAPublicKey
@@ -138,6 +141,7 @@ KeyPair dsaPair = dsaKpg.generateKeyPair();
 ### [Cipher](#cipher)
 
 :::{container}
+
 ```{rubric} Supported Algorithms
 ```
 
@@ -196,12 +200,14 @@ KeyPair dsaPair = dsaKpg.generateKeyPair();
 ### [DSAPrivateKey](#dsaprivatekey)
 
 :::{container}
+
 - `getX()` is not supported because NSS does not support extracting data from private keys.
 :::
 
 ### [KeyFactory](#keyfactory)
 
 :::{container}
+
 ```{rubric} Supported Algorithms
 ```
 
@@ -246,6 +252,7 @@ KeyPair dsaPair = dsaKpg.generateKeyPair();
 ### [KeyGenerator](#keygenerator)
 
 :::{container}
+
 ```{rubric} Supported Algorithms
 ```
 
@@ -264,6 +271,7 @@ KeyPair dsaPair = dsaKpg.generateKeyPair();
 ### [KeyPairGenerator](#keypairgenerator)
 
 :::{container}
+
 ```{rubric} Supported Algorithms
 ```
 
@@ -279,6 +287,7 @@ KeyPair dsaPair = dsaKpg.generateKeyPair();
 ### [Mac](#mac)
 
 :::{container}
+
 ```{rubric} Supported Algorithms
 ```
 
@@ -294,6 +303,7 @@ KeyPair dsaPair = dsaKpg.generateKeyPair();
 ### [MessageDigest](#messagedigest)
 
 :::{container}
+
 ```{rubric} Supported Algorithms
 ```
 
@@ -305,6 +315,7 @@ KeyPair dsaPair = dsaKpg.generateKeyPair();
 ### [RSAPrivateKey](#rsaprivatekey)
 
 :::{container}
+
 ```{rubric} Notes
 ```
 
@@ -317,6 +328,7 @@ KeyPair dsaPair = dsaKpg.generateKeyPair();
 ### [SecretKeyFactory](#secretkeyfactory)
 
 :::{container}
+
 ```{rubric} Supported Algorithms
 ```
 
@@ -400,6 +412,7 @@ KeyPair dsaPair = dsaKpg.generateKeyPair();
 ### [SecretKey](#secretkey)
 
 :::{container}
+
 ```{rubric} Supported Algorithms
 ```
 
@@ -420,6 +433,7 @@ KeyPair dsaPair = dsaKpg.generateKeyPair();
 ### [SecureRandom](#securerandom)
 
 :::{container}
+
 ```{rubric} Supported Algorithms
 ```
 
@@ -433,6 +447,7 @@ KeyPair dsaPair = dsaKpg.generateKeyPair();
 ### [Signature](#signature)
 
 :::{container}
+
 ```{rubric} Supported Algorithms
 ```
 

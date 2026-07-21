@@ -11,6 +11,7 @@ FC_GetOperationState - get the cryptographic operation state of a session.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_GetOperationState(
   CK_SESSION_HANDLE hSession,
@@ -18,6 +19,7 @@ CK_RV FC_GetOperationState(
   CK_ULONG_PTR pulOperationStateLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -53,6 +55,7 @@ function only works for digest operations for now. Therefore, a user may call
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_setoperationstate`,
   [NSC_GetOperationState](/en-US/NSC_GetOperationState)
 :::

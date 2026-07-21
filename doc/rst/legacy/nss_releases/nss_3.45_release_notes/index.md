@@ -38,6 +38,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 ```{rubric} New Functions
 ```
 
@@ -55,6 +56,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.45](#notable_changes_in_nss_3.45)
 
 :::{container}
+
 - [Bug 1540403](https://bugzilla.mozilla.org/show_bug.cgi?id=1540403) - Implement Delegated
   Credentials
   ([draft-ietf-tls-subcerts](https://datatracker.ietf.org/doc/draft-ietf-tls-subcerts/))
@@ -100,6 +102,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ### [Certificate Authority Changes](#certificate_authority_changes)
 
 :::{container}
+
 - The following CA certificates were **Removed**:
 
   - [Bug 1552374](https://bugzilla.mozilla.org/show_bug.cgi?id=1552374) - CN = Certinomis -
@@ -113,6 +116,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.45](#bugs_fixed_in_nss_3.45)
 
 ::::{container}
+
 - [Bug 1540541](https://bugzilla.mozilla.org/show_bug.cgi?id=1540541) - Don't unnecessarily
   strip leading 0's from key material during PKCS11 import
   ([CVE-2019-11719](https://bugzilla.mozilla.org/show_bug.cgi?id=CVE-2019-11719))

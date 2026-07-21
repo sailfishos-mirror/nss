@@ -11,6 +11,7 @@ FC_DigestEncryptUpdate - continue a multi-part digest and encryption operation
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_DigestEncryptUpdate(
   CK_SESSION_HANDLE hSession,
@@ -20,6 +21,7 @@ CK_RV FC_DigestEncryptUpdate(
   CK_ULONG_PTR pulEncryptedPartLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -65,5 +67,6 @@ A user must log into the token (to assume the NSS User role) before calling
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_DigestEncryptUpdate](/en-US/NSC_DigestEncryptUpdate)
 :::

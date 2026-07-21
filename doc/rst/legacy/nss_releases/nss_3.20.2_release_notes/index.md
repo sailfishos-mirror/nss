@@ -25,6 +25,7 @@ NSS 3.20.2 source distributions are available on ftp.mozilla.org for secure HTTP
 ## [Security Fixes in NSS 3.20.2](#security_fixes_in_nss_3.20.2)
 
 :::{container}
+
 - [Bug 1158489](https://bugzilla.mozilla.org/show_bug.cgi?id=1158489)
   \` \<<https://bugzilla.mozilla.org/show_bug.cgi?id=1138554>>\`\_\_ /
   [CVE-2015-7575](http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-7575) - Prevent

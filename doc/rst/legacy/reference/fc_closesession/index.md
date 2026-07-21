@@ -11,11 +11,13 @@ FC_CloseSession - close a session opened between an application and a token.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_CloseSession(
   CK_SESSION_HANDLE hSession
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -41,5 +43,6 @@ A user may call `FC_CloseSession` without logging into the token (to assume the 
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_opensession`
 :::

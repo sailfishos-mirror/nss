@@ -1050,7 +1050,7 @@ For example:
 
 -v 12 -w 1 -d sql:/home/my/sharednssdb -1 nonRepudiation,dataEncipherme
 
-nt -5 sslClient -6 clientAuth -7 
+nt -5 sslClient -6 clientAuth -7
 
 <mailto:jsmith@example.com>
 
@@ -1334,7 +1334,7 @@ intermediary CA to the actual certificate. For example, for an
 
 email certificate with two CAs in the chain:
 
-\$ certutil -d sql:/home/my/sharednssdb -O -n "jsmith@example.com"
+\$ certutil -d sql:/home/my/sharednssdb -O -n "<jsmith@example.com>"
 
 "Builtin Object Token:Thawte Personal Freemail CA" \[E=personal-freemail@
 
@@ -1526,7 +1526,7 @@ how-to article covers how to configure Firefox and Thunderbird
 
 to use the new shared NSS databases:
 
-\* 
+\*
 
 <https://wiki.mozilla.org/NSS_Shared_DB_Howto>
 
@@ -1534,7 +1534,7 @@ For an engineering draft on the changes in the shared NSS
 
 databases, see the NSS project wiki:
 
-\* 
+\*
 
 <https://wiki.mozilla.org/NSS_Shared_DB>
 
@@ -1548,15 +1548,15 @@ certutil has arguments or operations that use features defined
 
 in several IETF RFCs.
 
-\* 
+\*
 
 [http://tools.ietf.org/html/rfc5280](https://datatracker.ietf.org/doc/html/rfc5280)
 
-\* 
+\*
 
 [http://tools.ietf.org/html/rfc1113](https://datatracker.ietf.org/doc/html/rfc1113)
 
-\* 
+\*
 
 [http://tools.ietf.org/html/rfc1485](https://datatracker.ietf.org/doc/html/rfc1485)
 
@@ -1564,11 +1564,11 @@ The NSS wiki has information on the new database design and how
 
 to configure applications to use it.
 
-\* 
+\*
 
 <https://wiki.mozilla.org/NSS_Shared_DB_Howto>
 
-\* 
+\*
 
 <https://wiki.mozilla.org/NSS_Shared_DB>
 
@@ -1614,7 +1614,7 @@ LICENSE
 Licensed under the Mozilla Public License, v. 2.0. If a copy of the MPL was not
 distributed with this file, You can
 
-obtain one at 
+obtain one at
 
 <https://mozilla.org/MPL/2.0/>
 

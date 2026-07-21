@@ -11,6 +11,7 @@ FC_VerifyRecoverInit - initialize a verification operation where data is recover
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_VerifyRecoverInit(
   CK_SESSION_HANDLE hSession,
@@ -18,6 +19,7 @@ CK_RV FC_VerifyRecoverInit(
   CK_OBJECT_HANDLE hKey
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -53,5 +55,6 @@ A user must log into the token (to assume the NSS User role) before calling
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_VerifyRecoverInit](/en-US/NSC_VerifyRecoverInit)
 :::

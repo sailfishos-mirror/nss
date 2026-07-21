@@ -31,6 +31,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.55](#notable_changes_in_nss_3.55)
 
 :::{container}
+
 - P384 and P521 elliptic curve implementations are replaced with verifiable implementations from
   [Fiat-Crypto](https://github.com/mit-plv/fiat-crypto) and
   [ECCKiila](https://gitlab.com/nisec/ecckiila/). Special thanks to the Network and
@@ -49,6 +50,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ### [Known Issues](#known_issues)
 
 :::{container}
+
 - On some platforms, using the Makefile builds fails to locate seccomon.h; ensure you are using
   make all rather than just make. Another potential workaround is to use the gyp-based build.sh
   script. If this affects you, please help us narrow down the cause in [Bug
@@ -60,6 +62,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.55](#bugs_fixed_in_nss_3.55)
 
 :::{container}
+
 - [Bug 1631583](https://bugzilla.mozilla.org/show_bug.cgi?id=1631583) (CVE-2020-6829,
   CVE-2020-12400) - Replace P384 and P521 with new, verifiable implementations from
   [Fiat-Crypto](https://github.com/mit-plv/fiat-crypto) and

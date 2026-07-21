@@ -11,6 +11,7 @@ FC_SetPIN - Modify the user's PIN.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_SetPIN(
   CK_SESSION_HANDLE hSession,
@@ -20,6 +21,7 @@ CK_RV FC_SetPIN(
   CK_ULONG ulNewLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -66,5 +68,6 @@ User role) before calling `FC_SetPIN`.
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_SetPIN](/en-US/NSC_SetPIN)
 :::

@@ -11,6 +11,7 @@ FC_SignRecoverInit - initialize a sign recover operation.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_SignRecoverInit(
   CK_SESSION_HANDLE hSession,
@@ -18,6 +19,7 @@ CK_RV FC_SignRecoverInit(
   CK_OBJECT_HANDLE hKey
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -53,5 +55,6 @@ A user must log into the token (to assume the NSS User role) before calling
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_SignRecoverInit](/en-US/NSC_SignRecoverInit)
 :::

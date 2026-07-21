@@ -84,6 +84,7 @@ flags and a corresponding mask for these flags.
 ### [Distribution Information](#distribution_information)
 
 :::{container}
+
 - JSS is checked into `mozilla/security/jss/`.
 - The CVS tag for the JSS 4.3.1 release is `JSS_4_3_1_RTM`.
 - Source tarballs are available from
@@ -113,6 +114,7 @@ Documentation for JSS 4.3.1 is available as follows:
 ### [Platform Information](#platform_information)
 
 ::::{container}
+
 - You can check out the source from CVS by
 
   :::{note}
@@ -132,6 +134,7 @@ Documentation for JSS 4.3.1 is available as follows:
 ### [Known Bugs and Issues](#known_bugs_and_issues)
 
 :::{container}
+
 - For a list of reported bugs that have not yet been fixed, [click
   here.](http://bugzilla.mozilla.org/buglist.cgi?bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&&product=JSS)
   Note that some bugs may have been fixed since JSS 4.3.1 was released.
@@ -140,6 +143,7 @@ Documentation for JSS 4.3.1 is available as follows:
 ### [Compatibility](#compatibility)
 
 :::{container}
+
 - JSS 4.3.1 is backwards compatible with JSS 4.2. Applications compiled against JSS 4.2 will
   work with JSS 4.3.1.
 - The 4.3.1 version of libjss4.so/jss4.dll must only be used with jss4.jar. In general, a JSS
@@ -152,6 +156,7 @@ Documentation for JSS 4.3.1 is available as follows:
 ### [Feedback](#feedback)
 
 :::{container}
+
 - Bugs discovered should be reported by filing a bug report with
   [bugzilla](http://bugzilla.mozilla.org/enter_bug.cgi?product=JSS).
 

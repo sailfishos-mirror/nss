@@ -11,11 +11,13 @@ FC_Logout - log a user out from a token.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_Logout(
   CK_SESSION_HANDLE hSession
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -39,5 +41,6 @@ Logs the current user out of a USER_FUNCTIONS session.
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_closesession`, [NSC_Logout](/en-US/NSC_Logout)
 :::

@@ -39,6 +39,7 @@ No new functionality is introduced in this release.
 ## [Bugs fixed in NSS 3.47.1](#bugs_fixed_in_nss_3.47.1)
 
 :::{container}
+
 - [CVE-2019-11745](https://bugzilla.mozilla.org/show_bug.cgi?id=CVE-2019-11745) -
   EncryptUpdate should use maxout, not block size
 - [Bug 1590495](https://bugzilla.mozilla.org/show_bug.cgi?id=1590495) - Fix a crash that

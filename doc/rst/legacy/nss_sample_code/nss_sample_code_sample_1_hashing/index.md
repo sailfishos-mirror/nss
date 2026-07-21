@@ -14,6 +14,7 @@ another file. This program illustrates the use of NSS message APIs.
 ### [Sample Code 1](#sample_code_1)
 
 :::{container}
+
 ```{code} c
 /* NSPR Headers */
 #include <prprf.h>
@@ -245,4 +246,5 @@ int main(int argc, char **argv)
 
 </sechash.h></secmodt.h></secoid.h></prio.h></plgetopt.h></prtypes.h></prprf.h>
 ```
+
 :::

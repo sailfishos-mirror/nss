@@ -45,6 +45,7 @@ selected for client authentication and caused the client to abort the connection
 ## [Bugs fixed in NSS 3.25.1](#bugs_fixed_in_nss_3.25.1)
 
 :::{container}
+
 - The following bug has been fixed in NSS 3.25.1: [Ignore MD5 signature algorithms in
   certificate requests](https://bugzilla.mozilla.org/show_bug.cgi?id=1304407)
 :::

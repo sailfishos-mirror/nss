@@ -7,6 +7,7 @@
 ## [NSS Sample Code 2: Symmetric Encryption](#nss_sample_code_2_symmetric_encryption)
 
 :::{container}
+
 ```{code}
 /* Example code to illustrate DES enccryption/decryption using NSS.
  * The example skips the details of obtaining the Key & IV to use, and
@@ -161,4 +162,5 @@ out:
 
 }
 ```
+
 :::

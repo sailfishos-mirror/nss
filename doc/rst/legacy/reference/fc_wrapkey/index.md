@@ -11,6 +11,7 @@ FC_WrapKey - wrap a key
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_WrapKey(
   CK_SESSION_HANDLE hSession,
@@ -21,6 +22,7 @@ CK_RV FC_WrapKey(
   CK_ULONG_PTR pusWrappedKeyLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -68,5 +70,6 @@ A user must log into the token (to assume the NSS User role) before calling `FC_
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_WrapKey](/en-US/NSC_WrapKey)
 :::

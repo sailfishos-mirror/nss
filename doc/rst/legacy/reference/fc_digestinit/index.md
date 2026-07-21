@@ -11,12 +11,14 @@ FC_DigestInit - initialize a message-digest operation.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_DigestInit(
   CK_SESSION_HANDLE hSession,
   CK_MECHANISM_PTR pMechanism
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -46,5 +48,6 @@ A user may call `FC_DigestInit` without logging into the token (to assume the NS
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_DigestInit](/en-US/NSC_DigestInit)
 :::

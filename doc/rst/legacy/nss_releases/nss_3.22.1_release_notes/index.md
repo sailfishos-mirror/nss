@@ -35,6 +35,7 @@ No new functionality is introduced in this release.
 ## [Notable Changes in NSS 3.22.1](#notable_changes_in_nss_3.22.1)
 
 :::{container}
+
 - [bug 1194680](https://bugzilla.mozilla.org/show_bug.cgi?id=1194680): NSS has been changed
   to use the PR_GetEnvSecure function that was made available in NSPR 4.12
 :::

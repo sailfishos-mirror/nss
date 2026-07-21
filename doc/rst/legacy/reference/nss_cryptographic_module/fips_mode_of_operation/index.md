@@ -5,6 +5,7 @@
 ## [General-purpose functions](#general-purpose_functions)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_getfunctionlist`
 - {ref}`mozilla_projects_nss_reference_fc_initialize`
 - {ref}`mozilla_projects_nss_reference_fc_finalize`
@@ -16,6 +17,7 @@
 ## [Slot and token management functions](#slot_and_token_management_functions)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_getslotlist`
 - {ref}`mozilla_projects_nss_reference_fc_getslotinfo`
 - {ref}`mozilla_projects_nss_reference_fc_gettokeninfo`
@@ -32,6 +34,7 @@
 ## [Session management functions](#session_management_functions)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_opensession`
 - {ref}`mozilla_projects_nss_reference_fc_closesession`
 - {ref}`mozilla_projects_nss_reference_fc_closeallsessions`
@@ -135,6 +138,7 @@ These functions support DSA, RSA, ECDSA, and HMAC.
 ## [Dual-function cryptographic functions](#dual-function_cryptographic_functions)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_digestencryptupdate`
 - {ref}`mozilla_projects_nss_reference_fc_decryptdigestupdate`
 - {ref}`mozilla_projects_nss_reference_fc_signencryptupdate`
@@ -146,6 +150,7 @@ These functions support DSA, RSA, ECDSA, and HMAC.
 ## [Key management functions](#key_management_functions)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_generatekey`: DSA domain parameters (PQG)
 - {ref}`mozilla_projects_nss_reference_fc_generatekeypair`: DSA, RSA, and ECDSA. Performs
   pair-wise consistency test.
@@ -159,6 +164,7 @@ These functions support DSA, RSA, ECDSA, and HMAC.
 ## [Random number generation functions](#random_number_generation_functions)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_seedrandom`
 - {ref}`mozilla_projects_nss_reference_fc_generaterandom`: Performs continuous random number
   generator test.
@@ -169,6 +175,7 @@ These functions support DSA, RSA, ECDSA, and HMAC.
 ## [Parallel function management functions](#parallel_function_management_functions)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_getfunctionstatus`
 - {ref}`mozilla_projects_nss_reference_fc_cancelfunction`
 :::

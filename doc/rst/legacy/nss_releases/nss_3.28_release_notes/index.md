@@ -26,6 +26,7 @@ NSS 3.28 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - NSS includes support for [TLS 1.3 draft
   -18](https://datatracker.ietf.org/doc/html/draft-ietf-tls-tls13-18). This includes a
   number of improvements to TLS 1.3:
@@ -88,6 +89,7 @@ issues that you encounter in your tests.
 ## [Notable Changes in NSS 3.28](#notable_changes_in_nss_3.28)
 
 :::{container}
+
 - NSS can no longer be compiled with support for additional elliptic curves (the
   NSS_ECC_MORE_THAN_SUITE_B option, [bug
   1253912](https://bugzilla.mozilla.org/show_bug.cgi?id=1253912)). This was previously

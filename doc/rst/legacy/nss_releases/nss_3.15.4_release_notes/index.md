@@ -38,6 +38,7 @@ upgrade immediately.
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - Implemented OCSP querying using the HTTP GET method, which is the new default, and will fall
   back to the HTTP POST method.
 - Implemented OCSP server functionality for testing purposes (httpserv utility).
@@ -50,6 +51,7 @@ upgrade immediately.
 ### [New Functions](#new_functions)
 
 :::{container}
+
 - CERT_ForcePostMethodForOCSP
 - CERT_GetSubjectNameDigest
 - CERT_GetSubjectPublicKeyDigest
@@ -61,6 +63,7 @@ upgrade immediately.
 ### [New Types](#new_types)
 
 :::{container}
+
 - CERT_REV_M_FORCE_POST_METHOD_FOR_OCSP: When this flag is used, libpkix will never attempt to
   use the HTTP GET method for OCSP requests; it will always use POST.
 :::
@@ -76,6 +79,7 @@ None.
 ### [Notable Changes in NSS 3.15.4](#notable_changes_in_nss_3.15.4)
 
 :::{container}
+
 - Reordered the cipher suites offered in SSL/TLS client hello messages to match modern best
   practices.
 - Updated the set of root CA certificates (version 1.96).

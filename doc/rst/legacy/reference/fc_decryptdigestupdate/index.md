@@ -11,6 +11,7 @@ FC_DecryptDigestUpdate - continue a multi-part decrypt and digest operation
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_DecryptDigestUpdate(
   CK_SESSION_HANDLE hSession,
@@ -20,6 +21,7 @@ CK_RV FC_DecryptDigestUpdate(
   CK_ULONG_PTR pulPartLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -65,5 +67,6 @@ A user must log into the token (to assume the NSS User role) before calling
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_DecryptDigestUpdate](/en-US/NSC_DecryptDigestUpdate)
 :::

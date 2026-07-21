@@ -11,6 +11,7 @@
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_SeedRandom(
   CK_SESSION_HANDLE hSession,
@@ -18,6 +19,7 @@ CK_RV FC_SeedRandom(
   CK_ULONG usSeedLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -43,7 +45,7 @@ CK_RV FC_SeedRandom(
 that `FC_SeedRandom()` doesn't provide the initial seed material for the random number
 generator. The initial seed material is provided by the NSS cryptographic module itself.
 
-A user may call 
+A user may call
 
 `FC_SeedRandom()`
 
@@ -58,5 +60,6 @@ role).
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_SeedRandom](/en-US/NSC_SeedRandom)
 :::

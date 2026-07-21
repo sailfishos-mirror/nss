@@ -11,6 +11,7 @@ FC_Decrypt - Decrypt a block of data.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_Decrypt(
   CK_SESSION_HANDLE hSession,
@@ -20,6 +21,7 @@ CK_RV FC_Decrypt(
   CK_ULONG_PTR pusDataLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -62,5 +64,6 @@ A user must log into the token (to assume the NSS User role) before calling `FC_
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_decryptinit`, [NSC_Decrypt](/en-US/NSC_Decrypt)
 :::

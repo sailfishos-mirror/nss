@@ -9,6 +9,7 @@ Find a certificate in the database that matches a DER-encoded certificate.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 #include <cert.h>
 CERTCertificate *CERT_FindCertByDERCert(
@@ -16,11 +17,13 @@ CERTCertificate *CERT_FindCertByDERCert(
     CERTCertDBHandle *handle,
     SECItem          *derCert          );
 ```
+
 :::
 
 ## [Parameters](#parameters)
 
 :::{container}
+
 ```{eval-rst}
 +-------------+-----------------------------------------------------------------------------------+
 | ``handle``  | *in* pointer to a `CERTCertDBHandle </en-US/NSS/CERTCertDBHandle>`__ representing |
@@ -30,6 +33,7 @@ CERTCertificate *CERT_FindCertByDERCert(
 |             | ``siDERCertBuffer`` and whose ``data`` contains a DER-encoded certificate         |
 +-------------+-----------------------------------------------------------------------------------+
 ```
+
 :::
 
 ## [Description](#description)

@@ -11,7 +11,7 @@ decryption, on Cryptographic Message Syntax (CMS) messages.
 
 Synopsis
 
-cmsutil [options] 
+cmsutil [options]
 
 [arguments](arguments)
 
@@ -189,11 +189,11 @@ The NSS site relates
 
 directly to NSS code changes and releases.
 
-Mailing lists: 
+Mailing lists:
 
 <mailto:pki-devel@redhat.com>
 
- and 
+ and
 
 <mailto:pki-users@redhat.com>
 
@@ -225,12 +225,11 @@ References
 
 Visible links
 
-1. 
+1.
 
 <http://pki.fedoraproject.org/wiki/>
 
-2.
-
+1.
 
 [http://www.mozilla.org/projects/security/pki/nss/](https://www.mozilla.org/projects/security/pki/nss/)
 :::

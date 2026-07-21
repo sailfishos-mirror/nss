@@ -34,6 +34,7 @@ root CA certificates.
 ## [Notable Changes in NSS 3.18.1](#notable_changes_in_nss_3.18.1)
 
 :::{container}
+
 - The following CA certificate had the Websites and Code Signing trust **bits restored to their
   original state** to allow more time to develop a better transition strategy for affected
   sites. The Websites and Code Signing trust bits were turned off in

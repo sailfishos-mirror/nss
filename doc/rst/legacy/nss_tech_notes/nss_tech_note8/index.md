@@ -11,6 +11,7 @@
 ### [NSS Technical Note: 8](#nss_technical_note_8)
 
 :::{container}
+
 ```{code}
 27 February 2006
 Nelson B. Bolyard
@@ -122,4 +123,5 @@ But an implementation flaw caused the caching code to continue to use the
 client's timeout time values, not the server cache's own timeout values.
 That is the subject of bug 223242.
 ```
+
 :::

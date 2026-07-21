@@ -27,6 +27,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.42.1](#bugs_fixed_in_nss_3.42.1)
 
 :::{container}
+
 - [Bug 1507135](https://bugzilla.mozilla.org/show_bug.cgi?id=1507135) and [Bug
   1507174](https://bugzilla.mozilla.org/show_bug.cgi?id=1507174) - Add additional null checks
   to several CMS functions to fix a rare CMS crash. Thanks to Hanno Böck and Damian Poddebniak

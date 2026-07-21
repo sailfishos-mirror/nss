@@ -13,9 +13,11 @@ FC_Initialize - initialize the PKCS #11 library.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_Initialize(CK_VOID_PTR pInitArgs);
 ```
+
 :::
 
 ### [Parameters](#parameters)
@@ -102,6 +104,7 @@ parameters string.
 ## [Examples](#examples)
 
 :::{container}
+
 ```{code}
 #include <assert.h>
 
@@ -123,4 +126,5 @@ initArgs.pReserved = NULL;
 /* invoke FC_Initialize as pFunctionList->C_Initialize */
 crv = pFunctionList->C_Initialize(&initArgs);
 ```
+
 :::

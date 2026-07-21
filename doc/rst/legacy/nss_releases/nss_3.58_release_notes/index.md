@@ -31,6 +31,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.58](#bugs_fixed_in_nss_3.58)
 
 :::{container}
+
 - [Bug 1641480](https://bugzilla.mozilla.org/show_bug.cgi?id=1641480) (CVE-2020-25648) -
   Tighten CCS handling for middlebox compatibility mode.
 - [Bug 1631890](https://bugzilla.mozilla.org/show_bug.cgi?id=1631890) - Add support for

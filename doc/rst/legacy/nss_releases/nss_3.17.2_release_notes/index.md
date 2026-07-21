@@ -36,6 +36,7 @@ and other bugs.
 ## [Notable Changes in NSS 3.17.2](#notable_changes_in_nss_3.17.2)
 
 :::{container}
+
 - [Bug 1049435](https://bugzilla.mozilla.org/show_bug.cgi?id=1049435): Change
   RSA_PrivateKeyCheck to not require p > q. This fixes a regression introduced in NSS 3.16.2
   that prevented NSS from importing some RSA private keys (such as in PKCS #12 files) generated

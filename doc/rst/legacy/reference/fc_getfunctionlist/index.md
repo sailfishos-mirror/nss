@@ -12,9 +12,11 @@ operation.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_GetFunctionList(CK_FUNCTION_LIST_PTR *ppFunctionList);
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -48,6 +50,7 @@ role).
 ## [Examples](#examples)
 
 :::{container}
+
 ```{code}
 #include <assert.h>
 
@@ -59,10 +62,12 @@ assert(crv == CKR_OK);
 
 /* invoke the FC_XXX function as pFunctionList->C_XXX */
 ```
+
 :::
 
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_GetFunctionList](/en-US/NSC_GetFunctionList)
 :::

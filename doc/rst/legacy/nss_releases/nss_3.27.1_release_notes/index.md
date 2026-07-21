@@ -57,6 +57,7 @@ NSS 3.27.1 once again requires NSS_ENABLE_TLS_1_3 to be deliberately set to enab
 ## [Bugs fixed in NSS 3.27.1](#bugs_fixed_in_nss_3.27.1)
 
 :::{container}
+
 - The following bug has been fixed in NSS 3.27.1: [Re-disable TLS 1.3 by
   default](https://bugzilla.mozilla.org/show_bug.cgi?id=1306985)
 :::

@@ -9,6 +9,7 @@ Find a certificate in the database with the given issuer and serial number.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 #include <cert.h>
 CERTCertificate *CERT_FindCertByIssuerAndSN (
@@ -16,11 +17,13 @@ CERTCertificate *CERT_FindCertByIssuerAndSN (
     CERTCertDBHandle *handle,
     CERTIssuerAndSN *issuerAndSN            );
 ```
+
 :::
 
 ## [Parameters](#parameters)
 
 :::{container}
+
 ```{eval-rst}
 +-----------------+-------------------------------------------------------------------------------+
 | ``handle``      | *in* pointer to a `CERTCertDBHandle </en-US/NSS/CERTCertDBHandle>`__          |
@@ -31,6 +34,7 @@ CERTCertificate *CERT_FindCertByIssuerAndSN (
 |                 | [Example])                                                                    |
 +-----------------+-------------------------------------------------------------------------------+
 ```
+
 :::
 
 ## [Description](#description)
@@ -53,6 +57,7 @@ on the certificate instance.
 ## [Example](#example)
 
 :::{container}
+
 ```{code}
 CERTIssuerAndSN issuerSN;
 issuerSN.derIssuer.data = caName->data;
@@ -64,6 +69,7 @@ if ( issuerCert == NULL ) {
     PORT_SetError (SEC_ERROR_UNKNOWN_ISSUER);
 }
 ```
+
 :::
 
 ## [See Also](#see_also)

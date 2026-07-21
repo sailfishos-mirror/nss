@@ -11,6 +11,7 @@ FC_GetMechanismInfo - get information on a particular mechanism.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_GetMechanismInfo(
   CK_SLOT_ID slotID,
@@ -18,6 +19,7 @@ CK_RV FC_GetMechanismInfo(
   CK_MECHANISM_INFO_PTR pInfo
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -59,5 +61,6 @@ role).
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_GetMechanismInfo](/en-US/NSC_GetMechanismInfo)
 :::

@@ -11,6 +11,7 @@ FC_SignEncryptUpdate - continue a multi-part signing and encryption operation
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_SignEncryptUpdate(
   CK_SESSION_HANDLE hSession,
@@ -20,6 +21,7 @@ CK_RV FC_SignEncryptUpdate(
   CK_ULONG_PTR pulEncryptedPartLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -64,5 +66,6 @@ A user must log into the token (to assume the NSS User role) before calling
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_SignEncryptUpdate](/en-US/NSC_SignEncryptUpdate)
 :::

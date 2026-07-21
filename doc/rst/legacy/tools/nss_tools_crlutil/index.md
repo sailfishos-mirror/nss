@@ -142,6 +142,7 @@ follows:
 |   |
 +---+
 ```
+
 :::
 
 (crl-generation-script-syntax)=
@@ -158,14 +159,14 @@ CRL generation script file has the following syntax:
   > `update=YYYYMMDDhhmmssZ`
   > `nextupdate=YYYYMMDDhhmmssZ`
 
-  Field "next update" is optional. Time should be in 
+  Field "next update" is optional. Time should be in
 
   *GeneralizedTime*
 
    format
   (YYYYMMDDhhmmssZ).
 
-  For example: 
+  For example:
 
   `20050204153000Z`
 
@@ -391,7 +392,7 @@ The CRL Management Tool displays output similar to the following:
 
 `CN=NSS Test CA,O=BOGUS NSS,L=Mountain View,ST=California,C=US  CRL   CN=John Smith,O=Netscape,L=Mountain View,ST=California,C=US  CRL`
 
-To view a particular CRL user should specify 
+To view a particular CRL user should specify
 
 *-n nickname*
 
@@ -399,15 +400,9 @@ To view a particular CRL user should specify
 
 `crlutil -L -d`
 
-
-
 *certdir*
 
-
-
 `-n`
-
- 
 
 *nickname*
 

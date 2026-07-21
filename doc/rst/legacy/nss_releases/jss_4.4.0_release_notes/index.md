@@ -27,6 +27,7 @@ JSS 4.4.0 source distributions are available on ftp.mozilla.org for secure HTTPS
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 ```{rubric} New Functions
 ```
 
@@ -38,6 +39,7 @@ New Macros
 ## [Notable Changes in JSS 4.40](#notable_changes_in_jss_4.40)
 
 :::{container}
+
 - Picks up work done downstream for Fedora and RHEL and used by various Linux distributions with
   includes:.
 - Support for IPv6.
@@ -63,6 +65,7 @@ Build instructions for JSS at <https://hg.mozilla.org/projects/jss/file/tip/READ
 ### [Platform Information](#platform_information)
 
 :::{container}
+
 - You can check out the source from mercurial via hg clone -r 055aa3ce8a61
   <https://hg.mozilla.org/projects/jss>
 - JSS 4.4.0 works with OpenJDK versions 1.7 or higher we suggest the latest - OpenJDK 1.8.

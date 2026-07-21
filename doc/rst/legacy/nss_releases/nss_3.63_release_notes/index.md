@@ -26,6 +26,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.63](#bugs_fixed_in_nss_3.63)
 
 :::{container}
+
 - Bug 1688374 - Fix parallel build NSS-3.61 with make.
 - Bug 1697380 - Make a clang-format run on top of helpful contributions.
 - Bug 1683520 - ECCKiila P384, change syntax of nested structs initialization to prevent build

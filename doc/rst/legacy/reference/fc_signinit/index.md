@@ -11,6 +11,7 @@ FC_SignInit - initialize a signing operation.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_SignInit(
   CK_SESSION_HANDLE hSession,
@@ -18,6 +19,7 @@ CK_RV FC_SignInit(
   CK_OBJECT_HANDLE hKey
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -51,6 +53,7 @@ A user must log into the token (to assume the NSS User role) before calling `FC_
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_SignInit](/en-US/NSC_SignInit) {ref}`mozilla_projects_nss_reference_fc_sign`
   {ref}`mozilla_projects_nss_reference_fc_signupdate`
   {ref}`mozilla_projects_nss_reference_fc_signfinal`

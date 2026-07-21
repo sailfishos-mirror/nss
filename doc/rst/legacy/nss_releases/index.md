@@ -17,6 +17,7 @@ intended for Firefox ESR 78, which was released on **16 June 2020**.
 ## [Past releases](#past_releases)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_nss_3_63_1_release_notes`
 - {ref}`mozilla_projects_nss_nss_3_63_release_notes`
 - {ref}`mozilla_projects_nss_nss_3_62_release_notes`

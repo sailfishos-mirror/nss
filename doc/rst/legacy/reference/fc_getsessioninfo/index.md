@@ -11,12 +11,14 @@ FC_GetSessionInfo - obtain information about a session.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_GetSessionInfo(
   CK_SESSION_HANDLE hSession,
   CK_SESSION_INFO_PTR pInfo
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -59,6 +61,7 @@ information:
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_closesession`,
   [NSC_OpenSession](/en-US/NSC_OpenSession)
 :::

@@ -11,6 +11,7 @@
 ### [NSS Technical Note: 3](#nss_technical_note_3)
 
 :::{container}
+
 ```{code}
 09 May 2002
 Nelson B. Bolyard
@@ -226,4 +227,5 @@ This allows all SSL intermediate CAs to also be used as email intermediate CAs.
 #define NS_CERT_TYPE_OBJECT_SIGNING_CA  (0x01)  /* bit 7 */
 </x>
 ```
+
 :::

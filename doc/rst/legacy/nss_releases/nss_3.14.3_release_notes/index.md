@@ -27,6 +27,7 @@ NSS 3.14.3 source distributions are also available on ftp.mozilla.org for secure
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - No new major functionality is introduced in this release. This release is a patch release to
   address [CVE-2013-1620](http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-1620).
 
@@ -59,6 +60,7 @@ NSS 3.14.3 source distributions are also available on ftp.mozilla.org for secure
 ### [Notable Changes in NSS 3.14.3](#notable_changes_in_nss_3.14.3)
 
 :::{container}
+
 - [CVE-2013-1620](http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2013-1620)
 
   Recent research by Nadhem AlFardan and Kenny Patterson has highlighted a weakness in the
@@ -97,6 +99,7 @@ in the review and improvements to the initial patches.
 ### [Bugs fixed in NSS 3.14.3](#bugs_fixed_in_nss_3.14.3)
 
 :::{container}
+
 - <https://bugzilla.mozilla.org/buglist.cgi?list_id=5689256;resolution=FIXED;classification=Components;query_format=advanced;target_milestone=3.14.3;product=NSS>
 :::
 

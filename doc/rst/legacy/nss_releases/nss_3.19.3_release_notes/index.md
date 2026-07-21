@@ -34,6 +34,7 @@ root CA certificates.
 ## [Notable Changes in NSS 3.19.3](#notable_changes_in_nss_3.19.3)
 
 :::{container}
+
 - The following CA certificates were **Removed**
 
   - CN = Buypass Class 3 CA 1

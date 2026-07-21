@@ -11,6 +11,7 @@ FC_GenerateKey - generate a new key
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_GenerateKey(
   CK_SESSION_HANDLE hSession,
@@ -20,6 +21,7 @@ CK_RV FC_GenerateKey(
   CK_OBJECT_HANDLE_PTR phKey
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -62,5 +64,6 @@ A user must log into the token (to assume the NSS User role) before calling `FC_
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_GenerateKey](/en-US/NSC_GenerateKey)
 :::

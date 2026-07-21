@@ -35,6 +35,7 @@ No new functionality is introduced in this release.
 ## [Bugs fixed in NSS 3.44.2](#bugs_fixed_in_nss_3.44.2)
 
 :::{container}
+
 - [Bug 1582343](https://bugzilla.mozilla.org/show_bug.cgi?id=1582343)- Soft token MAC
   verification not constant time
 - [Bug 1577953](https://bugzilla.mozilla.org/show_bug.cgi?id=1577953)- Remove arbitrary

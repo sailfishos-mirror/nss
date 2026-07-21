@@ -26,6 +26,7 @@ NSS 3.26 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - the selfserv test utility has been enhanced to support ALPN (HTTP/1.1) and 0-RTT
 - added support for the System-wide crypto policy available on Fedora Linux, see
   <http://fedoraproject.org/wiki/Changes/CryptoPolicy>
@@ -38,6 +39,7 @@ NSS 3.26 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.26](#notable_changes_in_nss_3.26)
 
 :::{container}
+
 - The following CA certificate was **Added**
 
   - CN = ISRG Root X1

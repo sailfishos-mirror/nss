@@ -92,6 +92,7 @@ Options specify an action. Option arguments modify an action. The options and ar
 |                                                | nickname.                                      |
 +------------------------------------------------+------------------------------------------------+
 ```
+
 :::
 
 ## [Usage](#usage)

@@ -24,6 +24,7 @@ NSS 3.33 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.33](#notable_changes_in_nss_3.33)
 
 :::{container}
+
 - TLS compression is no longer supported. API calls that attempt to enable compression are
   accepted without failure. However, TLS compression will remain disabled.
 - This version of NSS uses a [formally verified
@@ -43,6 +44,7 @@ NSS 3.33 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - When listing an NSS database, using certutil -L, and the database hasn't yet been initialized
   with any non-empty or empty password, the text "Database needs user init" will be included in
   the listing.

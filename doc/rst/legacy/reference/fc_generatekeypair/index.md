@@ -11,6 +11,7 @@ FC_GenerateKeyPair - generate a new public/private key pair
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_GenerateKeyPair(
   CK_SESSION_HANDLE hSession,
@@ -23,6 +24,7 @@ CK_RV FC_GenerateKeyPair(
   CK_OBJECT_HANDLE_PTR phPrivateKey
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -78,5 +80,6 @@ A user must log into the token (to assume the NSS User role) before calling
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_GenerateKeyPair](/en-US/NSC_GenerateKeyPair)
 :::

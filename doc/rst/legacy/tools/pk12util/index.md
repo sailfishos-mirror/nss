@@ -206,7 +206,7 @@ slotPasswordFile|-K slotPassword] [-w p12filePasswordFile|-W p12filePassword]
 
 For example:
 
-# pk12util -i /tmp/cert-files/users.p12 -d sql:/home/my/sharednssdb
+\# pk12util -i /tmp/cert-files/users.p12 -d sql:/home/my/sharednssdb
 
 Enter a password which will be used to encrypt your keys.
 
@@ -238,7 +238,7 @@ slotPassword] [-w p12filePasswordFile|-W p12filePassword]
 
 For example:
 
-# pk12util -o certs.p12 -n Server-Cert -d sql:/home/my/sharednssdb
+\# pk12util -o certs.p12 -n Server-Cert -d sql:/home/my/sharednssdb
 
 Enter password for PKCS12 file:
 
@@ -259,7 +259,7 @@ slotPasswordFile|-K slotPassword] [-w p12filePasswordFile|-W p12filePassword]
 
 For example, this prints the default ASCII output:
 
-# pk12util -l certs.p12
+\# pk12util -l certs.p12
 
 Enter password for PKCS12 file:
 
@@ -309,7 +309,7 @@ to a sequentially-number file, beginning with file0001.der and continuing
 
 through file000N.der, incrementing the number for every certificate:
 
-# pk12util -l test.p12 -r
+\# pk12util -l test.p12 -r
 
 Enter password for PKCS12 file:
 
@@ -473,7 +473,7 @@ databases must be manually specified by using the sql: prefix with the
 
 given security directory. For example:
 
-# pk12util -i /tmp/cert-files/users.p12 -d sql:/home/my/sharednssdb
+\# pk12util -i /tmp/cert-files/users.p12 -d sql:/home/my/sharednssdb
 
 To set the shared database type as the default type for the tools, set the
 
@@ -491,7 +491,7 @@ be configured to use them. For example, this how-to article covers how to
 
 configure Firefox and Thunderbird to use the new shared NSS databases:
 
-o 
+o
 
 <https://wiki.mozilla.org/NSS_Shared_DB_Howto>
 
@@ -499,7 +499,7 @@ For an engineering draft on the changes in the shared NSS databases, see
 
 the NSS project wiki:
 
-o 
+o
 
 <https://wiki.mozilla.org/NSS_Shared_DB>
 
@@ -513,11 +513,11 @@ The NSS wiki has information on the new database design and how to
 
 configure applications to use it.
 
-o 
+o
 
 <https://wiki.mozilla.org/NSS_Shared_DB_Howto>
 
-o 
+o
 
 <https://wiki.mozilla.org/NSS_Shared_DB>
 
@@ -536,7 +536,7 @@ The NSS site relates
 
 directly to NSS code changes and releases.
 
-Mailing lists: 
+Mailing lists:
 
 <https://lists.mozilla.org/listinfo/dev-tech-crypto>
 
@@ -569,7 +569,6 @@ References
 Visible links
 
 1.
-
 
 [http://www.mozilla.org/projects/security/pki/nss/](https://www.mozilla.org/projects/security/pki/nss/)
 :::

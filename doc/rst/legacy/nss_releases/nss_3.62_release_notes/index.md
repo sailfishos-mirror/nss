@@ -27,6 +27,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.62](#bugs_fixed_in_nss_3.62)
 
 :::{container}
+
 - Bug 1688374 - Fix parallel build NSS-3.61 with make.
 - Bug 1682044 - pkix_Build_GatherCerts() + pkix_CacheCert_Add() can corrupt "cachedCertTable".
 - Bug 1690583 - Fix CH padding extension size calculation.

@@ -19,6 +19,7 @@ This is a library of utilities used by many of the samples. This code shows the 
 ### [Sample Code](#sample_code)
 
 :::{container}
+
 ```{code}
 #include <prlog.h>
 #include <termios.h>
@@ -545,4 +546,5 @@ cleanup:
 
 </nb)>
 ```
+
 :::

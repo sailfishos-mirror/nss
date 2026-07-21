@@ -84,6 +84,7 @@ higher.**
 ### [Distribution Information](#distribution_information)
 
 :::{container}
+
 - JSS is checked into `mozilla/security/jss/`.
 - The CVS tag for the JSS 4.3 release is `JSS_4_3_RTM`.
 - Source tarballs are available from
@@ -113,6 +114,7 @@ Documentation for JSS 4.3 is available as follows:
 ### [Platform Information](#platform_information)
 
 :::{container}
+
 - JSS 4.3 works with JDK versions 4 or higher we suggest the latest.
 - JSS 4.3 requires [NSS
   3.12](https://www.mozilla.org/projects/security/pki/nss/nss-3.12/nss-3.12-release-notes.html)
@@ -125,6 +127,7 @@ Documentation for JSS 4.3 is available as follows:
 ### [Known Bugs and Issues](#known_bugs_and_issues)
 
 :::{container}
+
 - For a list of reported bugs that have not yet been fixed, [click
   here.](http://bugzilla.mozilla.org/buglist.cgi?bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED&&product=JSS)
   Note that some bugs may have been fixed since JSS 4.3 was released.
@@ -133,6 +136,7 @@ Documentation for JSS 4.3 is available as follows:
 ### [Compatibility](#compatibility)
 
 :::{container}
+
 - JSS 4.3 is backwards compatible with JSS 4.2. Applications compiled against JSS 4.2 will work
   with JSS 4.3.
 - The 4.3 version of libjss4.so/jss4.dll must only be used with jss4.jar. In general, a JSS JAR
@@ -145,6 +149,7 @@ Documentation for JSS 4.3 is available as follows:
 ### [Feedback](#feedback)
 
 :::{container}
+
 - Bugs discovered should be reported by filing a bug report with
   [bugzilla](http://bugzilla.mozilla.org/enter_bug.cgi?product=JSS).
 

@@ -26,6 +26,7 @@ NSS 3.23 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 ::::{container}
+
 - ChaCha20/Poly1305 cipher and TLS cipher suites now supported ([bug
   917571](https://bugzilla.mozilla.org/show_bug.cgi?id=917571), [bug
   1227905](https://bugzilla.mozilla.org/show_bug.cgi?id=1227905))
@@ -51,6 +52,7 @@ NSS 3.23 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.23](#notable_changes_in_nss_3.23)
 
 :::{container}
+
 - The copy of SQLite shipped with NSS has been updated to version 3.10.2 ([bug
   1234698](https://bugzilla.mozilla.org/show_bug.cgi?id=1234698))
 
@@ -136,6 +138,7 @@ NSS 3.23 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Security Fixes in NSS 3.23](#security_fixes_in_nss_3.23)
 
 :::{container}
+
 - [Bug 1245528](https://bugzilla.mozilla.org/show_bug.cgi?id=1245528) /
   [CVE-2016-1950](http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-1950) - Fixed a
   heap-based buffer overflow related to the parsing of certain ASN.1 structures. An attacker

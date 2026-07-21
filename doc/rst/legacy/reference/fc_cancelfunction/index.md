@@ -11,11 +11,13 @@ FC_CancelFunction - cancel a function running in parallel
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_CancelFunction(
   CK_SESSION_HANDLE hSession
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -44,5 +46,6 @@ returns `CKR_FUNCTION_NOT_PARALLEL`.
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_CancelFunction](/en-US/NSC_CancelFunction)
 :::

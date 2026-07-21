@@ -38,6 +38,7 @@ No new functionality is introduced in this release.
 ## [Bugs fixed in NSS 3.52.1](#bugs_fixed_in_nss_3.52.1)
 
 :::{container}
+
 - [CVE-2020-12399](https://bugzilla.mozilla.org/show_bug.cgi?id=CVE-2020-12399) - Force a
   fixed length for DSA exponentiation
 :::

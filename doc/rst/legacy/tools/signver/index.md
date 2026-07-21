@@ -143,7 +143,7 @@ databases must be manually specified by using the sql: prefix with the
 
 given security directory. For example:
 
-# signver -A -s signature -d sql:/home/my/sharednssdb
+\# signver -A -s signature -d sql:/home/my/sharednssdb
 
 To set the shared database type as the default type for the tools, set the
 
@@ -161,7 +161,7 @@ be configured to use them. For example, this how-to article covers how to
 
 configure Firefox and Thunderbird to use the new shared NSS databases:
 
-o 
+o
 
 <https://wiki.mozilla.org/NSS_Shared_DB_Howto>
 
@@ -169,7 +169,7 @@ For an engineering draft on the changes in the shared NSS databases, see
 
 the NSS project wiki:
 
-o 
+o
 
 <https://wiki.mozilla.org/NSS_Shared_DB>
 
@@ -204,7 +204,7 @@ The NSS site relates
 
 directly to NSS code changes and releases.
 
-Mailing lists: 
+Mailing lists:
 
 <https://lists.mozilla.org/listinfo/dev-tech-crypto>
 
@@ -237,7 +237,6 @@ References
 Visible links
 
 1.
-
 
 [http://www.mozilla.org/projects/security/pki/nss/](https://www.mozilla.org/projects/security/pki/nss/)
 :::

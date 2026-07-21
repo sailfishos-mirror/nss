@@ -27,6 +27,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.50](#notable_changes_in_nss_3.50)
 
 :::{container}
+
 - Verified primitives from HACL\* were updated, bringing performance improvements for several
   platforms.
 
@@ -47,6 +48,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.50](#bugs_fixed_in_nss_3.50)
 
 :::{container}
+
 - [Bug 1599514](https://bugzilla.mozilla.org/show_bug.cgi?id=1599514) - Update DTLS 1.3
   implementation to Draft-30
 - [Bug 1603438](https://bugzilla.mozilla.org/show_bug.cgi?id=1603438) - Fix native tools

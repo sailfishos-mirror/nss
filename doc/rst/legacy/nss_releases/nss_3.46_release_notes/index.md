@@ -46,6 +46,7 @@ performance on ARM.
 ### [Certificate Authority Changes](#certificate_authority_changes)
 
 :::{container}
+
 - The following CA certificates were **Removed**:
 
   - [Bug 1574670](https://bugzilla.mozilla.org/show_bug.cgi?id=1574670) - Remove expired
@@ -88,6 +89,7 @@ will be released in October:
 ## [Bugs fixed in NSS 3.46](#bugs_fixed_in_nss_3.46)
 
 :::{container}
+
 - [Bug 1572164](https://bugzilla.mozilla.org/show_bug.cgi?id=1572164) - Don't unnecessarily
   free session in NSC_WrapKey
 - [Bug 1574220](https://bugzilla.mozilla.org/show_bug.cgi?id=1574220) - Improve controls

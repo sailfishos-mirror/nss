@@ -27,6 +27,7 @@ NSS 3.16.2 source distributions are available on ftp.mozilla.org for secure HTTP
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - DTLS 1.2 is supported.
 - The TLS application layer protocol negotiation (ALPN) extension is also supported on the
   server side.
@@ -66,6 +67,7 @@ NSS 3.16.2 source distributions are available on ftp.mozilla.org for secure HTTP
 ## [Notable Changes in NSS 3.16.2](#notable_changes_in_nss_3.16.2)
 
 :::{container}
+
 - The btoa command has a new command-line option -w *suffix*, which causes the output to be
   wrapped in BEGIN/END lines with the given suffix. Use "c" as a shorthand for the suffix
   CERTIFICATE.

@@ -35,6 +35,7 @@ upgrade immediately.
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - AES-GCM Ciphersuites: AES-GCM cipher suite (RFC 5288 and RFC 5289) support has been added when
   TLS 1.2 is negotiated. Specifically, the following cipher suites are now supported:
 
@@ -64,6 +65,7 @@ No new PKCS#11 mechanisms have been introduced
 ### [Notable Changes in NSS 3.15.2](#notable_changes_in_nss_3.15.2)
 
 :::{container}
+
 - [Bug 880543](https://bugzilla.mozilla.org/show_bug.cgi?id=880543) - Support for AES-GCM
   ciphersuites that use the SHA-256 PRF
 - [Bug 663313](https://bugzilla.mozilla.org/show_bug.cgi?id=663313) - MD2, MD4, and MD5
@@ -78,6 +80,7 @@ No new PKCS#11 mechanisms have been introduced
 ### [Bugs fixed in NSS 3.15.2](#bugs_fixed_in_nss_3.15.2)
 
 :::{container}
+
 - [Bug 734007](https://bugzilla.mozilla.org/show_bug.cgi?id=734007) - sizeof() used
   incorrectly
 - [Bug 900971](https://bugzilla.mozilla.org/show_bug.cgi?id=900971) - nssutil_ReadSecmodDB()

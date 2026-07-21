@@ -11,6 +11,7 @@ FC_DecryptVerifyUpdate - continue a multi-part decrypt and verify operation
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_DecryptVerifyUpdate(
   CK_SESSION_HANDLE hSession,
@@ -20,6 +21,7 @@ CK_RV FC_DecryptVerifyUpdate(
   CK_ULONG_PTR pulDataLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -65,5 +67,6 @@ A user must log into the token (to assume the NSS User role) before calling
 ## [See also](#see_also)
 
 :::{container}
+
 - [NSC_DecryptVerifyUpdate](/en-US/NSC_DecryptVerifyUpdate)
 :::

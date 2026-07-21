@@ -111,6 +111,7 @@ control the connection interception and output. The options for the command are 
 |                                                 | NNTPS   563 (NNTP over SSL)                     |
 +-------------------------------------------------+-------------------------------------------------+
 ```
+
 :::
 
 ## \` \<#examples_2>\`\_\_ Examples
@@ -608,6 +609,7 @@ alloclen = 63 bytes
 <additional records in same formats>
 Server socket closed.
 ```
+
 :::
 
 (usage-tips)=
@@ -615,6 +617,7 @@ Server socket closed.
 ## [Usage Tips](#usage_tips)
 
 :::{container}
+
 - When SSL restarts a previous session, it makes use of cached information to do a partial
   handshake. If you wish to capture a full SSL handshake, restart the browser to clear the
   session id cache.

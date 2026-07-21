@@ -7,6 +7,7 @@
 ## [NSS Sample Code 6: Persistent Symmetric Keys in NSS database](#nss_sample_code_6_persistent_symmetric_keys_in_nss_database)
 
 :::{container}
+
 ```{code}
 /* Example code to illustrate generation of a secret symmetric key ring
  * that PERSISTS in the NSS database. The symmetric keys can then be used
@@ -148,4 +149,5 @@ char *passwdcb(PK11SlotInfo *info, PRBool retry, void *arg)
     return NULL;
 }
 ```
+
 :::

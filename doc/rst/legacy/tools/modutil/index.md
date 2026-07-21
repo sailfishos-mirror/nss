@@ -11,7 +11,7 @@ database.
 
 Synopsis
 
-modutil [options] 
+modutil [options]
 
 [arguments](arguments)
 
@@ -1180,7 +1180,7 @@ be configured to use them. For example, this how-to article covers how to
 
 configure Firefox and Thunderbird to use the new shared NSS databases:
 
-o 
+o
 
 <https://wiki.mozilla.org/NSS_Shared_DB_Howto>
 
@@ -1188,7 +1188,7 @@ For an engineering draft on the changes in the shared NSS databases, see
 
 the NSS project wiki:
 
-o 
+o
 
 <https://wiki.mozilla.org/NSS_Shared_DB>
 
@@ -1204,11 +1204,11 @@ The NSS wiki has information on the new database design and how to
 
 configure applications to use it.
 
-o 
+o
 
 <https://wiki.mozilla.org/NSS_Shared_DB_Howto>
 
-o 
+o
 
 <https://wiki.mozilla.org/NSS_Shared_DB>
 
@@ -1227,7 +1227,7 @@ The NSS site relates
 
 directly to NSS code changes and releases.
 
-Mailing lists: 
+Mailing lists:
 
 <https://lists.mozilla.org/listinfo/dev-tech-crypto>
 
@@ -1263,7 +1263,7 @@ Visible links
 
 `file:///tmp/xmlto.6gGxS0/modutil.pro...r-install-file`
 
-2. 
+1.
 
 <https://www.mozilla.org/projects/security/pki/nss/>
 :::

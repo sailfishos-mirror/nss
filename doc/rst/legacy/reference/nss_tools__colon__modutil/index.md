@@ -1219,7 +1219,7 @@ For information about NSS and other tools related to NSS (like JSS), check
 
 out the NSS project wiki at
 
-[2]http://www.mozilla.org/projects/security/pki/nss/. The NSS site relates
+[2]<http://www.mozilla.org/projects/security/pki/nss/>. The NSS site relates
 
 directly to NSS code changes and releases.
 
@@ -1251,7 +1251,7 @@ Licensed under the Mozilla Public License, v. 2.0.
 
 If a copy of the MPL was not distributed with this file,
 
-You can obtain one at 
+You can obtain one at
 
 <https://mozilla.org/MPL/2.0/>
 
@@ -1269,7 +1269,7 @@ Visible links
 
 <file:///tmp/xmlto.eUWOJ0/modutil.pro...r-install-file>
 
-2. 
+1.
 
 <http://www.mozilla.org/projects/security/pki/nss/>
 :::

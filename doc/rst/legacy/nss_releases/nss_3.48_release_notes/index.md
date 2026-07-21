@@ -34,6 +34,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Notable Changes in NSS 3.48](#notable_changes_in_nss_3.48)
 
 :::{container}
+
 - [TLS 1.3](https://datatracker.ietf.org/doc/html/rfc8446) is the default maximum TLS
   version. See [Bug 1573118](https://bugzilla.mozilla.org/show_bug.cgi?id=1573118) for
   details.
@@ -53,6 +54,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ### [Certificate Authority Changes](#certificate_authority_changes)
 
 :::{container}
+
 - The following CA certificates were Added:
 
   - [Bug 1591178](https://bugzilla.mozilla.org/show_bug.cgi?id=1591178) - Entrust Root
@@ -66,6 +68,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Upcoming Changes in NSS 3.49](#upcoming_changes_in_nss_3.49)
 
 :::{container}
+
 - The legacy DBM database, **libnssdbm**, will no longer be built by default. See [Bug
   1594933](https://bugzilla.mozilla.org/show_bug.cgi?id=1594933) for details.
 :::
@@ -75,6 +78,7 @@ Other releases are available {ref}`mozilla_projects_nss_nss_releases`.
 ## [Bugs fixed in NSS 3.48](#bugs_fixed_in_nss_3.48)
 
 :::{container}
+
 - [Bug 1600775](https://bugzilla.mozilla.org/show_bug.cgi?id=1600775) - Require NSPR 4.24 for
   NSS 3.48
 - [Bug 1593401](https://bugzilla.mozilla.org/show_bug.cgi?id=1593401) - Fix race condition in

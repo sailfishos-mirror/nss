@@ -11,9 +11,11 @@ FC_GetTokenInfo - obtain information about a particular token in the system.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_GetTokenInfo(CK_SLOT_ID slotID, CK_TOKEN_INFO_PTR pInfo);
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -104,6 +106,7 @@ of the `CK_TOKEN_INFO` structure.
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_getslotinfo`,
   [NSC_GetTokenInfo](/en-US/NSC_GetTokenInfo)
 :::

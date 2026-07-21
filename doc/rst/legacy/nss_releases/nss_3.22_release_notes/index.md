@@ -26,6 +26,7 @@ NSS 3.22 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ### [New Functionality](#new_functionality)
 
 :::{container}
+
 - RSA-PSS signatures are now supported ([bug
   1215295](https://bugzilla.mozilla.org/show_bug.cgi?id=1215295))
 
@@ -150,6 +151,7 @@ NSS 3.22 source distributions are available on ftp.mozilla.org for secure HTTPS 
 ## [Notable Changes in NSS 3.22](#notable_changes_in_nss_3.22)
 
 :::{container}
+
 - NSS C++ tests are built by default, requiring a C++11 compiler. Set the NSS_DISABLE_GTESTS
   variable to 1 to disable building these tests.
 :::

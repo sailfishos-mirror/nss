@@ -11,9 +11,11 @@ FC_WaitForSlotEvent - waits for a slot event, such as token insertion or token r
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_WaitForSlotEvent(CK_FLAGS flags, CK_SLOT_ID_PTR pSlot CK_VOID_PTR pReserved);
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -43,5 +45,6 @@ This function is not supported by the NSS cryptographic module.
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_waitforslotevent`
 :::

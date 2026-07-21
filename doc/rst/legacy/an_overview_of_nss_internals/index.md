@@ -3,7 +3,7 @@
 # An overview of NSS Internals
 
 :::{container}
-A High-Level Overview to the Internals of 
+A High-Level Overview to the Internals of
 
 [Network Security Services
 (NSS)](https://developer.mozilla.org/en-US/docs/NSS)
@@ -343,7 +343,6 @@ a master password, an attacker stealing your key database will no longer be able
 to your private key, unless the attacker would also succeed in stealing the master password.
 
 Now you might be interest in how to get the
-
 
 {ref}`mozilla_projects_nss_nss_sources_building_testing`
 :::

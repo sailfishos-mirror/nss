@@ -11,6 +11,7 @@ FC_Sign - sign a block of data.
 ## [Syntax](#syntax)
 
 :::{container}
+
 ```{code}
 CK_RV FC_Sign(
   CK_SESSION_HANDLE hSession,
@@ -20,6 +21,7 @@ CK_RV FC_Sign(
   CK_ULONG_PTR pusSignatureLen
 );
 ```
+
 :::
 
 ## [Parameters](#parameters)
@@ -63,5 +65,6 @@ A user must log into the token (to assume the NSS User role) before calling `FC_
 ## [See also](#see_also)
 
 :::{container}
+
 - {ref}`mozilla_projects_nss_reference_fc_signinit`, [NSC_Sign](/en-US/NSC_Sign)
 :::

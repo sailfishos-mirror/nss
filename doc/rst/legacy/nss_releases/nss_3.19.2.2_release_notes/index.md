@@ -29,6 +29,7 @@ NSS 3.19.2.2 source distributions are available on ftp.mozilla.org for secure HT
 ## [Security Fixes in NSS 3.19.2.2](#security_fixes_in_nss_3.19.2.2)
 
 :::{container}
+
 - [Bug 1158489](https://bugzilla.mozilla.org/show_bug.cgi?id=1158489)
   \` \<<https://bugzilla.mozilla.org/show_bug.cgi?id=1138554>>\`\_\_ /
   [CVE-2015-7575](http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-7575) - Prevent
