@@ -3,8 +3,13 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 project = "NSS"
-extensions = []
+extensions = ["myst_parser"]
 root_doc = "index"
+
+# The documentation is authored in MyST-flavored Markdown.
+source_suffix = {
+    ".md": "markdown",
+}
 
 # Suppress cross-reference warnings for labels outside the NSS standalone
 # build (e.g. :ref: to Firefox-managed docs).
