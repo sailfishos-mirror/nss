@@ -2210,7 +2210,7 @@ tls13_MaybeGreaseEch(sslSocket *ss, const sslBuffer *preamble, sslBuffer *buf)
     derivedData = PK11_DeriveWithFlags(hmacPrk, CKM_HKDF_DATA,
                                        &paramsi, CKM_HKDF_DATA,
                                        CKA_DERIVE, kNonPayloadLen + payloadLen,
-                                       CKF_VERIFY);
+                                       0);
     if (!derivedData) {
         goto loser;
     }
