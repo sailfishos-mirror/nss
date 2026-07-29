@@ -223,6 +223,20 @@ tls13_HkdfExpandLabelGeneral(CK_MECHANISM_TYPE deriveMech, PK11SymKey *prk,
         (variant == ssl_variant_stream) ? strlen(kLabelPrefixTls) : strlen(kLabelPrefixDtls);
     const char *kLabelPrefix =
         (variant == ssl_variant_stream) ? kLabelPrefixTls : kLabelPrefixDtls;
+    CK_FLAGS flags = 0;
+    CK_KEY_TYPE targetKeyType = PK11_GetKeyType(algorithm, keySize);
+
+    /* PKCS #11 Mechanisms v3.0 Sec 2.62.4: CKM_HKDF_DATA outputs CKO_DATA.
+     * Sec 4.5.2: CKO_DATA objects cannot hold crypto operation flags */
+    if (deriveMech != CKM_HKDF_DATA) {
+        flags |= CKF_SIGN | CKF_VERIFY;
+
+        /* PKCS #11 v3.0 Sec 2.8.2: CKK_GENERIC_SECRET and CKK_HKDF
+         * explicitly do not support encrypt/decrypt operations. */
+        if (targetKeyType != CKK_GENERIC_SECRET && targetKeyType != CKK_HKDF) {
+            flags |= CKF_ENCRYPT | CKF_DECRYPT;
+        }
+    }
 
     PORT_Assert(prk);
     PORT_Assert(keyp);
@@ -284,7 +298,7 @@ tls13_HkdfExpandLabelGeneral(CK_MECHANISM_TYPE deriveMech, PK11SymKey *prk,
     derived = PK11_DeriveWithFlags(prk, deriveMech,
                                    &paramsi, algorithm,
                                    CKA_DERIVE, keySize,
-                                   CKF_SIGN | CKF_VERIFY);
+                                   flags);
     if (!derived) {
         return SECFailure;
     }
