@@ -104,9 +104,8 @@ static void ImportDataKey(ScopedPK11SymKey* to, const DataBuffer& key,
   SECItem key_item = {siBuffer, const_cast<uint8_t*>(key.data()),
                       static_cast<unsigned int>(GetHashLength(hash_type))};
 
-  PK11SymKey* inner =
-      PK11_ImportDataKey(slot, CKM_HKDF_DERIVE, PK11_OriginUnwrap,
-                         CKA_DERIVE, &key_item, NULL);
+  PK11SymKey* inner = PK11_ImportDataKey(
+      slot, CKM_HKDF_DERIVE, PK11_OriginUnwrap, CKA_DERIVE, &key_item, NULL);
   ASSERT_NE(nullptr, inner);
   to->reset(inner);
 }
@@ -501,7 +500,7 @@ TEST_P(TlsHkdfTest, HkdfExtractNonExtractableSalt) {
   ScopedPK11SymKey ikm2_data;
   ImportDataKey(&ikm2_data, kKey2, hash_type_, slot.get());
 
-  PK11SymKey *prk = nullptr;
+  PK11SymKey* prk = nullptr;
   SECStatus rv = tls13_HkdfExtract(non_extractable.get(), ikm2_data.get(),
                                    hash_type_, &prk);
   EXPECT_EQ(SECSuccess, rv);
@@ -520,12 +519,11 @@ TEST_P(TlsHkdfTest, HkdfExtractDestroyedIkm2) {
   ASSERT_NE(handle, static_cast<CK_OBJECT_HANDLE>(CK_INVALID_HANDLE));
   ASSERT_EQ(SECSuccess, PK11_DestroyObject(slot.get(), handle));
 
-  PK11SymKey *prk = nullptr;
+  PK11SymKey* prk = nullptr;
   SECStatus rv = tls13_HkdfExtract(nullptr, ikm2.get(), hash_type_, &prk);
   EXPECT_EQ(SECFailure, rv);
   EXPECT_EQ(nullptr, prk);
 }
-
 
 static const SSLHashType kHashTypes[] = {ssl_hash_sha256, ssl_hash_sha384};
 INSTANTIATE_TEST_SUITE_P(AllHashFuncs, TlsHkdfTest,
