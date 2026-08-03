@@ -1351,8 +1351,10 @@ const SEC_ASN1Template SEC_PKCS12CertAndCRLTemplate[] = {
 };
 
 const SEC_ASN1Template SEC_PKCS12CertAndCRLBagTemplate[] = {
+    { SEC_ASN1_SEQUENCE, 0, NULL, sizeof(SEC_PKCS12CertAndCRLBag) },
     { SEC_ASN1_SET_OF, offsetof(SEC_PKCS12CertAndCRLBag, certAndCRLs),
       SEC_PKCS12CertAndCRLTemplate },
+    { 0 }
 };
 
 const SEC_ASN1Template SEC_PKCS12CertAndCRLBagTemplate_OLD[] = {
@@ -1391,8 +1393,10 @@ const SEC_ASN1Template SEC_PKCS12SecretItemTemplate[] = {
 };
 
 const SEC_ASN1Template SEC_PKCS12SecretBagTemplate[] = {
+    { SEC_ASN1_SEQUENCE, 0, NULL, sizeof(SEC_PKCS12SecretBag) },
     { SEC_ASN1_SET_OF, offsetof(SEC_PKCS12SecretBag, secrets),
       SEC_PKCS12SecretItemTemplate },
+    { 0 }
 };
 
 const SEC_ASN1Template SEC_PKCS12MacDataTemplate[] = {
