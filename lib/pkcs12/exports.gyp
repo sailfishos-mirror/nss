@@ -15,6 +15,7 @@
             'p12.h',
             'p12plcy.h',
             'p12t.h',
+            'pkcs12.h',
             'pkcs12t.h'
           ],
           'destination': '<(nss_public_dist_dir)/<(module)'

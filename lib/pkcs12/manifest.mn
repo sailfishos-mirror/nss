@@ -7,6 +7,7 @@ CORE_DEPTH = ../..
 
 EXPORTS = \
 	pkcs12t.h \
+	pkcs12.h \
 	p12plcy.h \
 	p12.h \
 	p12t.h \
