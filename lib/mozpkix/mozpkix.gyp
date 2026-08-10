@@ -33,10 +33,6 @@
           ],
         }],
       ],
-      'variables': {
-        # This is purely for the use of the Mozilla build system.
-        'no_expand_libs': 1,
-      },
     },
     {
       'target_name': 'mozpkix-testlib',
