@@ -499,13 +499,22 @@ TEST_P(CryptohiMlDsaKeyTest, SignedDataRejectsAMismatchedKey) {
 
 // The *Direct entry points take the signature and hash algorithms already
 // split apart, which is a different mechanism lookup than sec_DecodeSigAlg.
-// For ML-DSA the parameter set is both halves, so that is the only pairing
-// that yields a mechanism and survives the context's hash check.
+// For ML-DSA the parameter set is both halves of the pair, so naming it as
+// the hash and leaving the hash unnamed both work; nothing else does.
 TEST_P(CryptohiMlDsaKeyTest, VerifyDataDirect) {
   EXPECT_EQ(SECSuccess,
             VFY_VerifyDataDirect(kMsg, sizeof(kMsg), pub_.get(), sig_.get(),
                                  oid_, oid_, nullptr, nullptr))
       << PORT_ErrorToString(PORT_GetError());
+
+  // An unnamed hash resolves to the parameter set, and is reported back as
+  // such through the out parameter.
+  SECOidTag hash = SEC_OID_UNKNOWN;
+  EXPECT_EQ(SECSuccess,
+            VFY_VerifyDataDirect(kMsg, sizeof(kMsg), pub_.get(), sig_.get(),
+                                 oid_, SEC_OID_UNKNOWN, &hash, nullptr))
+      << PORT_ErrorToString(PORT_GetError());
+  EXPECT_EQ(oid_, hash);
 
   // Any other hash is not a rational pairing, so there is no mechanism for it.
   EXPECT_EQ(SECFailure,

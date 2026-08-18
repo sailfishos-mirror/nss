@@ -768,6 +768,11 @@ vfy_CreateContext(const SECKEYPublicKey *key, const SECItem *sig,
         PORT_SetError(SEC_ERROR_PKCS7_KEYALG_MISMATCH);
         return NULL;
     }
+    /* for mldsa, the hash has to match the paramset anyway, so a caller of
+     * the *Direct entry points may leave it unnamed */
+    if ((type == mldsaKey) && (hashAlg == SEC_OID_UNKNOWN)) {
+        hashAlg = encAlg;
+    }
     if (NSS_OptionGet(NSS_KEY_SIZE_POLICY_FLAGS, &optFlags) != SECFailure) {
         if (optFlags & NSS_KEY_SIZE_POLICY_VERIFY_FLAG) {
             rv = SECKEY_EnforceKeySize(key->keyType,
