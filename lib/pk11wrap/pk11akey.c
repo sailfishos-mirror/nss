@@ -1361,14 +1361,13 @@ pk11_loadPrivKeyWithFlags(PK11SlotInfo *slot, SECKEYPrivateKey *privKey,
         return NULL;
     }
 
-    /* try loading the public key */
+    /* try loading the public key. PK11_ImportPublicKey leaves the new object
+     * attached to pubKey, which is what lets SECKEY_DestroyPublicKey clean it
+     * up: it destroys a session object and skips a permanent one. Detaching it
+     * here would strand a session object on the slot with nothing left to
+     * destroy it. */
     if (pubKey) {
         PK11_ImportPublicKey(slot, pubKey, token);
-        if (pubKey->pkcs11Slot) {
-            PK11_FreeSlot(pubKey->pkcs11Slot);
-            pubKey->pkcs11Slot = NULL;
-            pubKey->pkcs11ID = CK_INVALID_HANDLE;
-        }
     }
 
     /* build new key structure */
