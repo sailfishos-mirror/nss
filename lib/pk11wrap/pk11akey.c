@@ -1014,6 +1014,10 @@ PK11_ExtractPublicKey(PK11SlotInfo *slot, KeyType keyType, CK_OBJECT_HANDLE id)
             CK_NSS_KEM_PARAMETER_SET_TYPE *pPK11Params = kemParams->pValue;
             pubKey->u.kyber.params = seckey_GetKyberParamsByPkcs11ParamSet(
                 *pPK11Params);
+            if (pubKey->u.kyber.params == params_kyber_invalid) {
+                crv = CKR_OBJECT_HANDLE_INVALID;
+                break;
+            }
             crv = pk11_Attr2SecItem(arena, value, &pubKey->u.kyber.publicValue);
             break;
         case fortezzaKey:
