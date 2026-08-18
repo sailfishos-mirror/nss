@@ -12,6 +12,7 @@
 #include "keyhi.h"
 #include "ml_dsat.h"
 #include "nss_scoped_ptrs.h"
+#include "pk11priv.h"
 #include "pk11pub.h"
 #include "prerror.h"
 #include "secasn1.h"
@@ -59,6 +60,41 @@ static void DerTlv(std::vector<uint8_t>* out, uint8_t tag, const uint8_t* value,
     out->push_back(static_cast<uint8_t>(len));
   }
   out->insert(out->end(), value, value + len);
+}
+
+/* Wrap an already encoded ML-DSA private key CHOICE in a OneAsymmetricKey:
+ *
+ *   SEQUENCE {
+ *     INTEGER 0,
+ *     SEQUENCE { OBJECT IDENTIFIER id-ml-dsa-NN },
+ *     OCTET STRING { <choice> }
+ *   }
+ *
+ * The CHOICE is [0] for a seed, an OCTET STRING for an expanded key, or a
+ * SEQUENCE of both. See SECKEY_PQPrivateKey*Template and the tag dispatch in
+ * lib/pk11wrap/pk11pk12.c. */
+static std::vector<uint8_t> BuildMlDsaPkcs8(
+    SECOidTag oid, const std::vector<uint8_t>& choice) {
+  SECOidData* oidData = SECOID_FindOIDByTag(oid);
+  EXPECT_TRUE(oidData);
+  if (!oidData) {
+    return std::vector<uint8_t>();
+  }
+
+  std::vector<uint8_t> algorithm;
+  DerTlv(&algorithm, SEC_ASN1_OBJECT_ID, oidData->oid.data, oidData->oid.len);
+
+  std::vector<uint8_t> body;
+  const uint8_t version = 0;
+  DerTlv(&body, SEC_ASN1_INTEGER, &version, sizeof(version));
+  DerTlv(&body, SEC_ASN1_CONSTRUCTED | SEC_ASN1_SEQUENCE, algorithm.data(),
+         algorithm.size());
+  DerTlv(&body, SEC_ASN1_OCTET_STRING, choice.data(), choice.size());
+
+  std::vector<uint8_t> pkcs8;
+  DerTlv(&pkcs8, SEC_ASN1_CONSTRUCTED | SEC_ASN1_SEQUENCE, body.data(),
+         body.size());
+  return pkcs8;
 }
 
 class Pkcs11MlDsaWycheproofTest : public ::testing::Test {
@@ -157,42 +193,13 @@ class Pkcs11MlDsaWycheproofTest : public ::testing::Test {
     return BuildPkcs8(SEC_ASN1_OCTET_STRING, privateKey_);
   }
 
-  /* Wrap a raw signing key in a OneAsymmetricKey:
-   *
-   *   SEQUENCE {
-   *     INTEGER 0,
-   *     SEQUENCE { OBJECT IDENTIFIER id-ml-dsa-NN },
-   *     OCTET STRING { <key> }
-   *   }
-   *
-   * where <key> is the private key CHOICE: [0] for a seed, or an OCTET STRING
-   * for an expanded key. See SECKEY_PQPrivateKey*Template and the CHOICE
-   * dispatch in lib/pk11wrap/pk11pk12.c. */
+  /* Wrap a raw signing key -- a seed under [0], or an expanded key as an
+   * OCTET STRING -- in a OneAsymmetricKey. */
   std::vector<uint8_t> BuildPkcs8(uint8_t choiceTag,
                                   const std::vector<uint8_t>& key) {
-    SECOidData* oid = SECOID_FindOIDByTag(oid_);
-    EXPECT_TRUE(oid);
-    if (!oid) {
-      return std::vector<uint8_t>();
-    }
-
-    std::vector<uint8_t> algorithm;
-    DerTlv(&algorithm, SEC_ASN1_OBJECT_ID, oid->oid.data, oid->oid.len);
-
     std::vector<uint8_t> choice;
     DerTlv(&choice, choiceTag, key.data(), key.size());
-
-    std::vector<uint8_t> body;
-    const uint8_t version = 0;
-    DerTlv(&body, SEC_ASN1_INTEGER, &version, sizeof(version));
-    DerTlv(&body, SEC_ASN1_CONSTRUCTED | SEC_ASN1_SEQUENCE, algorithm.data(),
-           algorithm.size());
-    DerTlv(&body, SEC_ASN1_OCTET_STRING, choice.data(), choice.size());
-
-    std::vector<uint8_t> pkcs8;
-    DerTlv(&pkcs8, SEC_ASN1_CONSTRUCTED | SEC_ASN1_SEQUENCE, body.data(),
-           body.size());
-    return pkcs8;
+    return BuildMlDsaPkcs8(oid_, choice);
   }
 
   ScopedSECKEYPublicKey ImportPublicKey(const std::vector<uint8_t>& spki) {
@@ -384,5 +391,256 @@ TEST_F(Pkcs11MlDsaLifetimeTest, AbandonedSignOperationDoesNotLeak) {
 
   PK11_DestroyContext(ctx, PR_TRUE);
 }
+
+// The mechanism and key type tables. These are one-line mappings, but every
+// caller that has to get from one of these to another goes through them.
+// PK11_GetKeyMechanism and PK11_GetKeyGenWithSize have ML-DSA arms too, but
+// neither is exported from nss3, so they cannot be reached from here.
+TEST(Pkcs11MlDsaMechanismTest, KeyTypeAndMechanismMappings) {
+  EXPECT_EQ(static_cast<CK_KEY_TYPE>(CKK_ML_DSA),
+            PK11_GetKeyType(CKM_ML_DSA, 0));
+  EXPECT_EQ(static_cast<CK_KEY_TYPE>(CKK_ML_DSA),
+            PK11_GetKeyType(CKM_ML_DSA_KEY_PAIR_GEN, 0));
+  EXPECT_EQ(static_cast<CK_MECHANISM_TYPE>(CKM_ML_DSA),
+            PK11_MapSignKeyType(mldsaKey));
+}
+
+// Getting an ML-DSA key into and out of storage: softoken's PKCS#8 packaging
+// and unwrapping, and the permanent (token) object paths. The Wycheproof tests
+// above import PKCS#8 blobs that the vector files carry, always as session
+// objects, so none of this is reached from there.
+class Pkcs11MlDsaStorageTest
+    : public ::testing::TestWithParam<CK_ML_DSA_PARAMETER_SET_TYPE> {
+ protected:
+  void SetUp() override {
+    slot_.reset(PK11_GetInternalKeySlot());
+    ASSERT_TRUE(slot_);
+    ASSERT_EQ(SECSuccess, PK11_Authenticate(slot_.get(), PR_TRUE, nullptr))
+        << PORT_ErrorToString(PORT_GetError());
+
+    CK_ML_DSA_PARAMETER_SET_TYPE paramSet = GetParam();
+    SECKEYPublicKey* pub = nullptr;
+    priv_.reset(PK11_GenerateKeyPair(slot_.get(), CKM_ML_DSA_KEY_PAIR_GEN,
+                                     &paramSet, &pub, PR_FALSE, PR_FALSE,
+                                     nullptr));
+    pub_.reset(pub);
+    ASSERT_TRUE(priv_);
+    ASSERT_TRUE(pub_);
+
+    static const unsigned char pw[] = "pw";
+    SECItem pwItem = {siBuffer, const_cast<unsigned char*>(pw), sizeof(pw)};
+    password_.reset(SECITEM_DupItem(&pwItem));
+    ASSERT_TRUE(password_);
+
+    signCtx_.hedgeVariant = CKH_HEDGE_PREFERRED;
+    signCtx_.pContext = nullptr;
+    signCtx_.ulContextLen = 0;
+    param_.type = siBuffer;
+    param_.data = (unsigned char*)&signCtx_;
+    param_.len = sizeof(signCtx_);
+  }
+
+  // A key that came back out of storage has to still be the same key, so sign
+  // with it and verify against the public half of the pair it came from.
+  void ExpectPairs(SECKEYPrivateKey* priv, SECKEYPublicKey* pub) {
+    std::vector<unsigned char> sigbuf(MAX_ML_DSA_SIGNATURE_LEN);
+    SECItem sig = {siBuffer, sigbuf.data(),
+                   static_cast<unsigned int>(sigbuf.size())};
+    SECItem msg = {siBuffer, const_cast<unsigned char*>(kMsg), sizeof(kMsg)};
+    ASSERT_EQ(SECSuccess,
+              PK11_SignWithMechanism(priv, CKM_ML_DSA, &param_, &sig, &msg))
+        << PORT_ErrorToString(PORT_GetError());
+    EXPECT_EQ(SECSuccess, PK11_VerifyWithMechanism(pub, CKM_ML_DSA, &param_,
+                                                   &sig, &msg, nullptr))
+        << PORT_ErrorToString(PORT_GetError());
+  }
+
+  static SECOidTag OidTag(CK_ML_DSA_PARAMETER_SET_TYPE paramSet) {
+    switch (paramSet) {
+      case CKP_ML_DSA_44:
+        return SEC_OID_ML_DSA_44;
+      case CKP_ML_DSA_65:
+        return SEC_OID_ML_DSA_65;
+      case CKP_ML_DSA_87:
+        return SEC_OID_ML_DSA_87;
+      default:
+        ADD_FAILURE() << "unsupported parameter set";
+        return SEC_OID_UNKNOWN;
+    }
+  }
+
+  // The 'both' CHOICE: SEQUENCE { OCTET STRING seed, OCTET STRING key }.
+  std::vector<uint8_t> BuildBothPkcs8(const std::vector<uint8_t>& seed,
+                                      const std::vector<uint8_t>& key) {
+    std::vector<uint8_t> inner;
+    DerTlv(&inner, SEC_ASN1_OCTET_STRING, seed.data(), seed.size());
+    DerTlv(&inner, SEC_ASN1_OCTET_STRING, key.data(), key.size());
+
+    std::vector<uint8_t> choice;
+    DerTlv(&choice, SEC_ASN1_CONSTRUCTED | SEC_ASN1_SEQUENCE, inner.data(),
+           inner.size());
+    return BuildMlDsaPkcs8(OidTag(GetParam()), choice);
+  }
+
+  SECKEYPrivateKey* ImportPkcs8(const std::vector<uint8_t>& pkcs8) {
+    SECItem item = {siBuffer, const_cast<uint8_t*>(pkcs8.data()),
+                    static_cast<unsigned int>(pkcs8.size())};
+    SECKEYPrivateKey* key = nullptr;
+    if (PK11_ImportDERPrivateKeyInfoAndReturnKey(
+            slot_.get(), &item, nullptr, nullptr, PR_FALSE, PR_FALSE, KU_ALL,
+            &key, nullptr) != SECSuccess) {
+      return nullptr;
+    }
+    return key;
+  }
+
+  static const unsigned char kMsg[6];
+  ScopedPK11SlotInfo slot_;
+  ScopedSECKEYPrivateKey priv_;
+  ScopedSECKEYPublicKey pub_;
+  ScopedSECItem password_;
+  CK_SIGN_ADDITIONAL_CONTEXT signCtx_;
+  SECItem param_;
+};
+
+const unsigned char Pkcs11MlDsaStorageTest::kMsg[6] = {'m', 'l', '-',
+                                                       'd', 's', 'a'};
+
+// C_WrapKey on a private key packages it as a PKCS#8 first, and C_UnwrapKey
+// takes one apart again.
+TEST_P(Pkcs11MlDsaStorageTest, WrapAndUnwrap) {
+  ScopedPK11SymKey kek(
+      PK11_KeyGen(slot_.get(), CKM_AES_CBC, nullptr, 16, nullptr));
+  ASSERT_TRUE(kek);
+  ScopedSECItem wrapParam(PK11_ParamFromIV(CKM_NSS_AES_KEY_WRAP_PAD, nullptr));
+  ASSERT_TRUE(wrapParam);
+
+  // Room for the largest signing key plus its seed, PKCS#8 framing and padding.
+  ScopedSECItem wrapped(SECITEM_AllocItem(nullptr, nullptr, 8192));
+  ASSERT_TRUE(wrapped);
+  ASSERT_EQ(SECSuccess,
+            PK11_WrapPrivKey(slot_.get(), kek.get(), priv_.get(),
+                             CKM_NSS_AES_KEY_WRAP_PAD, wrapParam.get(),
+                             wrapped.get(), nullptr))
+      << PORT_ErrorToString(PORT_GetError());
+
+  ScopedSECKEYPrivateKey unwrapped(PK11_UnwrapPrivKeyByKeyType(
+      slot_.get(), kek.get(), CKM_NSS_AES_KEY_WRAP_PAD, wrapParam.get(),
+      wrapped.get(), nullptr, &pub_->u.mldsa.publicValue, PR_FALSE, PR_FALSE,
+      mldsaKey, KU_ALL, nullptr));
+  ASSERT_TRUE(unwrapped) << PORT_ErrorToString(PORT_GetError());
+  EXPECT_EQ(mldsaKey, unwrapped->keyType);
+  ExpectPairs(unwrapped.get(), pub_.get());
+}
+
+// Importing as a permanent object also creates the matching public key object,
+// which is what makes the key findable later.
+TEST_P(Pkcs11MlDsaStorageTest, ExportEncryptedAndImportAsTokenKey) {
+  ScopedSECKEYEncryptedPrivateKeyInfo epki(PK11_ExportEncryptedPrivKeyInfo(
+      slot_.get(), SEC_OID_AES_256_CBC, password_.get(), priv_.get(), 1,
+      nullptr));
+  ASSERT_TRUE(epki) << PORT_ErrorToString(PORT_GetError());
+
+  static const unsigned char nick[] = "ml-dsa token key";
+  SECItem nickname = {siBuffer, const_cast<unsigned char*>(nick), sizeof(nick)};
+  SECKEYPrivateKey* imported = nullptr;
+  ASSERT_EQ(SECSuccess,
+            PK11_ImportEncryptedPrivateKeyInfoAndReturnKey(
+                slot_.get(), epki.get(), password_.get(), &nickname,
+                &pub_->u.mldsa.publicValue, PR_TRUE /* isPerm */,
+                PR_TRUE /* isPrivate */, mldsaKey, KU_ALL, &imported, nullptr))
+      << PORT_ErrorToString(PORT_GetError());
+  ScopedSECKEYPrivateKey tokenKey(imported);
+  ASSERT_TRUE(tokenKey);
+  EXPECT_EQ(mldsaKey, tokenKey->keyType);
+  ExpectPairs(tokenKey.get(), pub_.get());
+
+  EXPECT_EQ(SECSuccess,
+            PK11_DeleteTokenPrivateKey(tokenKey.release(), PR_TRUE));
+}
+
+// Moving a key onto a slot reads it back out attribute by attribute, so the
+// attribute list for an ML-DSA private key has to be right.
+TEST_P(Pkcs11MlDsaStorageTest, LoadPrivKeyOntoASlot) {
+  ScopedSECKEYPrivateKey loaded(PK11_LoadPrivKey(
+      slot_.get(), priv_.get(), pub_.get(), PR_FALSE, PR_FALSE));
+  ASSERT_TRUE(loaded) << PORT_ErrorToString(PORT_GetError());
+  EXPECT_EQ(mldsaKey, loaded->keyType);
+  ExpectPairs(loaded.get(), pub_.get());
+}
+
+// Copying a token key to a session key is a C_CopyObject on the token side,
+// which reassembles the key from its stored attributes rather than copying an
+// in-memory object.
+TEST_P(Pkcs11MlDsaStorageTest, TokenKeyCopiesToASessionKey) {
+  CK_ML_DSA_PARAMETER_SET_TYPE paramSet = GetParam();
+  SECKEYPublicKey* pub = nullptr;
+  ScopedSECKEYPrivateKey tokenPriv(
+      PK11_GenerateKeyPair(slot_.get(), CKM_ML_DSA_KEY_PAIR_GEN, &paramSet,
+                           &pub, PR_TRUE /* token */, PR_FALSE, nullptr));
+  ScopedSECKEYPublicKey tokenPub(pub);
+  ASSERT_TRUE(tokenPriv) << PORT_ErrorToString(PORT_GetError());
+  ASSERT_TRUE(tokenPub);
+
+  ScopedSECKEYPrivateKey sessionPriv(
+      PK11_CopyTokenPrivKeyToSessionPrivKey(slot_.get(), tokenPriv.get()));
+  ASSERT_TRUE(sessionPriv) << PORT_ErrorToString(PORT_GetError());
+  EXPECT_EQ(mldsaKey, sessionPriv->keyType);
+  ExpectPairs(sessionPriv.get(), tokenPub.get());
+
+  EXPECT_EQ(SECSuccess,
+            PK11_DeleteTokenPrivateKey(tokenPriv.release(), PR_TRUE));
+  EXPECT_EQ(SECSuccess, PK11_DeleteTokenPublicKey(tokenPub.release()));
+}
+
+// RFC 9881 lets a PKCS#8 carry the seed and the expanded key together, which
+// is the form NSS itself writes. Nothing forces the two to agree, so softoken
+// re-derives the key from the seed and rejects the pair if they differ. If it
+// did not, a corrupted or hostile blob would be signed with under a seed that
+// does not produce it. The Wycheproof vectors cannot reach this: their PKCS#8
+// blobs are all seed-only, and the no-seed files carry no PKCS#8 at all.
+TEST_P(Pkcs11MlDsaStorageTest, BothEncodedKeyChecksSeedAgainstExpandedKey) {
+  ScopedSECItem seed(SECITEM_AllocItem(nullptr, nullptr, 0));
+  ScopedSECItem value(SECITEM_AllocItem(nullptr, nullptr, 0));
+  ASSERT_TRUE(seed);
+  ASSERT_TRUE(value);
+  ASSERT_EQ(SECSuccess, PK11_ReadRawAttribute(PK11_TypePrivKey, priv_.get(),
+                                              CKA_SEED, seed.get()))
+      << PORT_ErrorToString(PORT_GetError());
+  ASSERT_EQ(SECSuccess, PK11_ReadRawAttribute(PK11_TypePrivKey, priv_.get(),
+                                              CKA_VALUE, value.get()))
+      << PORT_ErrorToString(PORT_GetError());
+  ASSERT_EQ(static_cast<unsigned int>(ML_DSA_SEED_LEN), seed->len);
+  ASSERT_NE(0U, value->len);
+
+  std::vector<uint8_t> seedBytes(seed->data, seed->data + seed->len);
+  std::vector<uint8_t> keyBytes(value->data, value->data + value->len);
+
+  // The matching pair has to import and work, otherwise the rejections below
+  // would only be telling us the encoding is wrong.
+  ScopedSECKEYPrivateKey good(ImportPkcs8(BuildBothPkcs8(seedBytes, keyBytes)));
+  ASSERT_TRUE(good) << PORT_ErrorToString(PORT_GetError());
+  EXPECT_EQ(mldsaKey, good->keyType);
+  ExpectPairs(good.get(), pub_.get());
+
+  // A seed that expands to something else.
+  std::vector<uint8_t> badSeed = seedBytes;
+  badSeed[0] ^= 0x01;
+  EXPECT_FALSE(ImportPkcs8(BuildBothPkcs8(badSeed, keyBytes)));
+
+  // ...and the same disagreement reached from the other side.
+  std::vector<uint8_t> badKey = keyBytes;
+  badKey[0] ^= 0x01;
+  EXPECT_FALSE(ImportPkcs8(BuildBothPkcs8(seedBytes, badKey)));
+
+  // A truncated expanded key disagrees on length rather than content, which is
+  // the other half of the check.
+  std::vector<uint8_t> shortKey(keyBytes.begin(), keyBytes.end() - 1);
+  EXPECT_FALSE(ImportPkcs8(BuildBothPkcs8(seedBytes, shortKey)));
+}
+
+INSTANTIATE_TEST_SUITE_P(Pkcs11MlDsaStorageTest, Pkcs11MlDsaStorageTest,
+                         ::testing::Values(CKP_ML_DSA_44, CKP_ML_DSA_65,
+                                           CKP_ML_DSA_87));
 
 }  // namespace nss_test

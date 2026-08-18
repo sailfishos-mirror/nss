@@ -2,6 +2,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
+#include <algorithm>
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
@@ -138,9 +139,199 @@ TEST_P(MlDsaSelfTest, DeterministicIsStable) {
   EXPECT_EQ(0, memcmp(s1.data, s2.data, s1.len));
 }
 
+// The context buffers the whole message, starting at 1024 bytes and doubling.
+// Anything longer than that goes down the grow path, which the Wycheproof
+// vectors never reach. Growth is driven by the running total rather than by
+// any single update, so feed the same message both ways and require the two
+// signatures to agree.
+TEST_P(MlDsaSelfTest, LongMessageGrowsTheBuffer) {
+  CK_ML_DSA_PARAMETER_SET_TYPE param = GetParam();
+  MLDSAPrivateKey priv = {};
+  MLDSAPublicKey pub = {};
+  ASSERT_EQ(SECSuccess, MLDSA_NewKey(param, nullptr, &priv, &pub));
+
+  // Past 1024, and past the 2048 and 4096 doublings as well.
+  std::vector<uint8_t> m(5000);
+  for (size_t i = 0; i < m.size(); ++i) {
+    m[i] = static_cast<uint8_t>(i);
+  }
+  SECItem msg = {siBuffer, m.data(), (unsigned int)m.size()};
+  SECItem emptyCtx = {siBuffer, nullptr, 0};
+
+  std::vector<uint8_t> oneShotBuf(MAX_ML_DSA_SIGNATURE_LEN);
+  SECItem oneShot = {siBuffer, oneShotBuf.data(),
+                     (unsigned int)oneShotBuf.size()};
+  ASSERT_EQ(SECSuccess, do_sign(&priv, CKH_DETERMINISTIC_REQUIRED, &emptyCtx,
+                                &msg, nullptr, &oneShot));
+  EXPECT_EQ(sig_len(param), oneShot.len);
+  EXPECT_EQ(SECSuccess, do_verify(&pub, &emptyCtx, &msg, nullptr, &oneShot));
+
+  // The same message in 100-byte chunks, so the buffer grows a piece at a time.
+  MLDSAContext* ctx = nullptr;
+  ASSERT_EQ(SECSuccess,
+            MLDSA_SignInit(&priv, CKH_DETERMINISTIC_REQUIRED, &emptyCtx, &ctx));
+  for (size_t off = 0; off < m.size(); off += 100) {
+    unsigned int n = (unsigned int)std::min<size_t>(100, m.size() - off);
+    SECItem chunk = {siBuffer, m.data() + off, n};
+    ASSERT_EQ(SECSuccess, MLDSA_SignUpdate(ctx, &chunk));
+  }
+  std::vector<uint8_t> chunkedBuf(MAX_ML_DSA_SIGNATURE_LEN);
+  SECItem chunked = {siBuffer, chunkedBuf.data(),
+                     (unsigned int)chunkedBuf.size()};
+  ASSERT_EQ(SECSuccess, MLDSA_SignFinal(ctx, &chunked));
+  MLDSA_DestroyContext(ctx);
+
+  ASSERT_EQ(oneShot.len, chunked.len);
+  EXPECT_EQ(0, memcmp(oneShot.data, chunked.data, oneShot.len));
+  EXPECT_EQ(SECSuccess, do_verify(&pub, &emptyCtx, &msg, nullptr, &chunked));
+}
+
 INSTANTIATE_TEST_SUITE_P(MlDsaSelfTest, MlDsaSelfTest,
                          ::testing::Values(CKP_ML_DSA_44, CKP_ML_DSA_65,
                                            CKP_ML_DSA_87));
+
+// Argument checking and the error paths that the Wycheproof vectors cannot
+// reach, since those only ever supply well-formed calls.
+
+// A parameter set is a CK_ULONG; this is not one of the three defined values.
+static const CK_ML_DSA_PARAMETER_SET_TYPE kBogusParamSet = 0xffff;
+
+class MlDsaArgumentTest : public ::testing::Test {
+ protected:
+  void SetUp() override {
+    ASSERT_EQ(SECSuccess, MLDSA_NewKey(CKP_ML_DSA_44, nullptr, &priv_, &pub_));
+    msg_ = {siBuffer, msgbuf_, sizeof(msgbuf_)};
+    emptyCtx_ = {siBuffer, nullptr, 0};
+    sigbuf_.resize(MAX_ML_DSA_SIGNATURE_LEN);
+    sig_ = {siBuffer, sigbuf_.data(), (unsigned int)sigbuf_.size()};
+  }
+
+  MLDSAContext* SignContext() {
+    MLDSAContext* ctx = nullptr;
+    EXPECT_EQ(SECSuccess, MLDSA_SignInit(&priv_, CKH_DETERMINISTIC_REQUIRED,
+                                         &emptyCtx_, &ctx));
+    return ctx;
+  }
+
+  MLDSAContext* VerifyContext() {
+    MLDSAContext* ctx = nullptr;
+    EXPECT_EQ(SECSuccess, MLDSA_VerifyInit(&pub_, &emptyCtx_, &ctx));
+    return ctx;
+  }
+
+  MLDSAPrivateKey priv_ = {};
+  MLDSAPublicKey pub_ = {};
+  unsigned char msgbuf_[6] = {'m', 'l', '-', 'd', 's', 'a'};
+  SECItem msg_;
+  SECItem emptyCtx_;
+  std::vector<uint8_t> sigbuf_;
+  SECItem sig_;
+};
+
+TEST_F(MlDsaArgumentTest, NewKeyRejectsBadArguments) {
+  MLDSAPrivateKey priv = {};
+  MLDSAPublicKey pub = {};
+
+  EXPECT_EQ(SECFailure, MLDSA_NewKey(CKP_ML_DSA_44, nullptr, nullptr, &pub));
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+  EXPECT_EQ(SECFailure, MLDSA_NewKey(CKP_ML_DSA_44, nullptr, &priv, nullptr));
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+
+  EXPECT_EQ(SECFailure, MLDSA_NewKey(kBogusParamSet, nullptr, &priv, &pub));
+  EXPECT_EQ(SEC_ERROR_INVALID_ALGORITHM, PORT_GetError());
+}
+
+TEST_F(MlDsaArgumentTest, InitRejectsBadArguments) {
+  MLDSAContext* ctx = nullptr;
+
+  EXPECT_EQ(SECFailure, MLDSA_SignInit(nullptr, CKH_DETERMINISTIC_REQUIRED,
+                                       &emptyCtx_, &ctx));
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+  EXPECT_EQ(SECFailure, MLDSA_SignInit(&priv_, CKH_DETERMINISTIC_REQUIRED,
+                                       &emptyCtx_, nullptr));
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+
+  EXPECT_EQ(SECFailure, MLDSA_VerifyInit(nullptr, &emptyCtx_, &ctx));
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+  EXPECT_EQ(SECFailure, MLDSA_VerifyInit(&pub_, &emptyCtx_, nullptr));
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+}
+
+// Both directions reject an unknown parameter set up front, rather than let
+// the caller buffer a whole message against a key that can never be used.
+// Signing gets there by range-checking the signing key, verification by
+// checking the parameter set on its own.
+TEST_F(MlDsaArgumentTest, InitRejectsUnknownParameterSet) {
+  MLDSAPrivateKey priv = priv_;
+  priv.paramSet = kBogusParamSet;
+  MLDSAPublicKey pub = pub_;
+  pub.paramSet = kBogusParamSet;
+
+  MLDSAContext* ctx = nullptr;
+  EXPECT_EQ(SECFailure, MLDSA_SignInit(&priv, CKH_DETERMINISTIC_REQUIRED,
+                                       &emptyCtx_, &ctx));
+  EXPECT_EQ(SEC_ERROR_INVALID_ALGORITHM, PORT_GetError());
+  EXPECT_EQ(nullptr, ctx);
+
+  EXPECT_EQ(SECFailure, MLDSA_VerifyInit(&pub, &emptyCtx_, &ctx));
+  EXPECT_EQ(SEC_ERROR_INVALID_ALGORITHM, PORT_GetError());
+  EXPECT_EQ(nullptr, ctx);
+}
+
+// A context belongs to one direction only; the other direction's update and
+// final calls have to reject it.
+TEST_F(MlDsaArgumentTest, UpdateAndFinalRejectTheWrongDirection) {
+  MLDSAContext* signCtx = SignContext();
+  ASSERT_NE(nullptr, signCtx);
+  MLDSAContext* verifyCtx = VerifyContext();
+  ASSERT_NE(nullptr, verifyCtx);
+
+  EXPECT_EQ(SECFailure, MLDSA_SignUpdate(nullptr, &msg_));
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+  EXPECT_EQ(SECFailure, MLDSA_SignUpdate(verifyCtx, &msg_));
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+
+  EXPECT_EQ(SECFailure, MLDSA_VerifyUpdate(nullptr, &msg_));
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+  EXPECT_EQ(SECFailure, MLDSA_VerifyUpdate(signCtx, &msg_));
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+
+  EXPECT_EQ(SECFailure, MLDSA_SignFinal(nullptr, &sig_));
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+  EXPECT_EQ(SECFailure, MLDSA_SignFinal(signCtx, nullptr));
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+  EXPECT_EQ(SECFailure, MLDSA_SignFinal(verifyCtx, &sig_));
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+
+  EXPECT_EQ(SECFailure, MLDSA_VerifyFinal(nullptr, &sig_));
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+  EXPECT_EQ(SECFailure, MLDSA_VerifyFinal(verifyCtx, nullptr));
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+  EXPECT_EQ(SECFailure, MLDSA_VerifyFinal(signCtx, &sig_));
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+
+  MLDSA_DestroyContext(signCtx);
+  MLDSA_DestroyContext(verifyCtx);
+}
+
+TEST_F(MlDsaArgumentTest, SignFinalRejectsAShortSignatureBuffer) {
+  MLDSAContext* ctx = SignContext();
+  ASSERT_NE(nullptr, ctx);
+  ASSERT_EQ(SECSuccess, MLDSA_SignUpdate(ctx, &msg_));
+
+  SECItem tooSmall = {siBuffer, sigbuf_.data(),
+                      static_cast<unsigned int>(ML_DSA_44_SIGNATURE_LEN) - 1};
+  EXPECT_EQ(SECFailure, MLDSA_SignFinal(ctx, &tooSmall));
+  EXPECT_EQ(SEC_ERROR_OUTPUT_LEN, PORT_GetError());
+
+  // The context survives, so a correctly sized buffer still works.
+  EXPECT_EQ(SECSuccess, MLDSA_SignFinal(ctx, &sig_));
+  MLDSA_DestroyContext(ctx);
+}
+
+TEST_F(MlDsaArgumentTest, DestroyContextAcceptsNull) {
+  MLDSA_DestroyContext(nullptr);
+}
 
 // Key generation known-answer tests: deriving from the seed must reproduce the
 // FIPS-204 verification and signing keys, checked via their SHA3-256 digests.

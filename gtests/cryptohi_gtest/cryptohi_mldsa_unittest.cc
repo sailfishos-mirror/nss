@@ -8,12 +8,15 @@
 
 #include "gtest/gtest.h"
 
+#include "cert.h"
 #include "cryptohi.h"
+#include "hasht.h"
 #include "json_reader.h"
 #include "keyhi.h"
 #include "nss_scoped_ptrs.h"
 #include "pk11pub.h"
 #include "prerror.h"
+#include "secasn1.h"
 #include "secerr.h"
 #include "secitem.h"
 #include "secoid.h"
@@ -326,5 +329,206 @@ TEST_F(CryptohiMlDsaParamsTest, PresentParametersRejected) {
 ML_DSA_WYCHEPROOF_TESTS(MlDsa44, 44, SEC_OID_ML_DSA_44)
 ML_DSA_WYCHEPROOF_TESTS(MlDsa65, 65, SEC_OID_ML_DSA_65)
 ML_DSA_WYCHEPROOF_TESTS(MlDsa87, 87, SEC_OID_ML_DSA_87)
+
+// The rest of the cryptohi surface: key encoding, the algorithm-OID lookups,
+// and the certificate signing and verification entry points. The Wycheproof
+// tests above decode keys that the vector files hand them and call
+// SEC_SignData/VFY_VerifyData, so none of this is reached from there.
+class CryptohiMlDsaKeyTest : public ::testing::TestWithParam<SECOidTag> {
+ protected:
+  // SECKEY_GetMLDSAPkcs11ParamSetByOidTag is not exported from nss3, so map
+  // the OID here rather than link against it.
+  static CK_ML_DSA_PARAMETER_SET_TYPE Pkcs11ParamSet(SECOidTag oid) {
+    switch (oid) {
+      case SEC_OID_ML_DSA_44:
+        return CKP_ML_DSA_44;
+      case SEC_OID_ML_DSA_65:
+        return CKP_ML_DSA_65;
+      case SEC_OID_ML_DSA_87:
+        return CKP_ML_DSA_87;
+      default:
+        ADD_FAILURE() << "unsupported parameter set";
+        return CKP_ML_DSA_44;
+    }
+  }
+
+  void SetUp() override {
+    oid_ = GetParam();
+
+    ScopedPK11SlotInfo slot(PK11_GetInternalSlot());
+    ASSERT_TRUE(slot);
+    CK_ML_DSA_PARAMETER_SET_TYPE paramSet = Pkcs11ParamSet(oid_);
+    SECKEYPublicKey* pub = nullptr;
+    priv_.reset(PK11_GenerateKeyPair(slot.get(), CKM_ML_DSA_KEY_PAIR_GEN,
+                                     &paramSet, &pub, PR_FALSE, PR_FALSE,
+                                     nullptr));
+    pub_.reset(pub);
+    ASSERT_TRUE(priv_);
+    ASSERT_TRUE(pub_);
+    ASSERT_EQ(mldsaKey, pub_->keyType);
+    ASSERT_EQ(oid_, pub_->u.mldsa.paramSet);
+
+    sig_.reset(SECITEM_AllocItem(nullptr, nullptr, 0));
+    ASSERT_TRUE(sig_);
+    ASSERT_EQ(SECSuccess,
+              SEC_SignData(sig_.get(), kMsg, sizeof(kMsg), priv_.get(), oid_));
+  }
+
+  static const unsigned char kMsg[6];
+  // CERT_SignedDataTemplate holds what is signed as an ASN.1 ANY, so what goes
+  // into SEC_DerSignData has to be well formed DER -- a TBSCertificate in real
+  // use. This is an OCTET STRING wrapping kMsg.
+  static const unsigned char kDerMsg[8];
+
+  SECOidTag oid_;
+  ScopedSECKEYPrivateKey priv_;
+  ScopedSECKEYPublicKey pub_;
+  ScopedSECItem sig_;
+};
+
+const unsigned char CryptohiMlDsaKeyTest::kMsg[6] = {'m', 'l', '-',
+                                                     'd', 's', 'a'};
+const unsigned char CryptohiMlDsaKeyTest::kDerMsg[8] = {
+    SEC_ASN1_OCTET_STRING, 0x06, 'm', 'l', '-', 'd', 's', 'a'};
+
+// An ML-DSA public key has no DER structure of its own, so importing one is
+// just a length-driven parameter set lookup.
+TEST_P(CryptohiMlDsaKeyTest, ImportRawPublicKey) {
+  SECItem raw = pub_->u.mldsa.publicValue;
+  ScopedSECKEYPublicKey imported(SECKEY_ImportDERPublicKey(&raw, CKK_ML_DSA));
+  ASSERT_TRUE(imported) << PORT_ErrorToString(PORT_GetError());
+  EXPECT_EQ(mldsaKey, imported->keyType);
+  EXPECT_EQ(oid_, imported->u.mldsa.paramSet);
+  EXPECT_EQ(0, SECITEM_CompareItem(&raw, &imported->u.mldsa.publicValue));
+
+  // A length that matches no parameter set has to be rejected rather than
+  // guessed at.
+  SECItem truncated = {siBuffer, raw.data, raw.len - 1};
+  EXPECT_FALSE(SECKEY_ImportDERPublicKey(&truncated, CKK_ML_DSA));
+  EXPECT_EQ(SEC_ERROR_BAD_KEY, PORT_GetError());
+}
+
+TEST_P(CryptohiMlDsaKeyTest, SubjectPublicKeyInfoRoundTrip) {
+  ScopedSECItem der(SECKEY_EncodeDERSubjectPublicKeyInfo(pub_.get()));
+  ASSERT_TRUE(der) << PORT_ErrorToString(PORT_GetError());
+
+  ScopedCERTSubjectPublicKeyInfo spki(
+      SECKEY_DecodeDERSubjectPublicKeyInfo(der.get()));
+  ASSERT_TRUE(spki) << PORT_ErrorToString(PORT_GetError());
+  EXPECT_EQ(oid_, SECOID_GetAlgorithmTag(&spki->algorithm));
+  // RFC 9881: the parameters component must be absent.
+  EXPECT_EQ(0U, spki->algorithm.parameters.len);
+
+  ScopedSECKEYPublicKey decoded(SECKEY_ExtractPublicKey(spki.get()));
+  ASSERT_TRUE(decoded) << PORT_ErrorToString(PORT_GetError());
+  EXPECT_EQ(mldsaKey, decoded->keyType);
+  EXPECT_EQ(oid_, decoded->u.mldsa.paramSet);
+  EXPECT_EQ(0, SECITEM_CompareItem(&pub_->u.mldsa.publicValue,
+                                   &decoded->u.mldsa.publicValue));
+}
+
+// For ML-DSA the "hash" and the signature algorithm are the same OID, since
+// the parameter set already fixes the hash.
+TEST_P(CryptohiMlDsaKeyTest, SignatureAlgorithmOidTags) {
+  EXPECT_EQ(oid_, SEC_GetSignatureAlgorithmOidTag(mldsaKey, oid_));
+  EXPECT_EQ(SEC_OID_UNKNOWN,
+            SEC_GetSignatureAlgorithmOidTag(mldsaKey, SEC_OID_SHA256));
+
+  // Given a key, the parameter set is taken from the key and whatever hash the
+  // caller passed is ignored.
+  EXPECT_EQ(oid_, SEC_GetSignatureAlgorithmOidTagByKey(priv_.get(), nullptr,
+                                                       SEC_OID_UNKNOWN));
+  EXPECT_EQ(oid_, SEC_GetSignatureAlgorithmOidTagByKey(nullptr, pub_.get(),
+                                                       SEC_OID_SHA256));
+}
+
+// SEC_DerSignData with no algorithm named has to derive it from the key.
+TEST_P(CryptohiMlDsaKeyTest, DerSignDataDerivesTheParameterSet) {
+  ScopedPLArenaPool arena(PORT_NewArena(DER_DEFAULT_CHUNKSIZE));
+  ASSERT_TRUE(arena);
+
+  SECItem signedData = {siBuffer, nullptr, 0};
+  ASSERT_EQ(SECSuccess,
+            SEC_DerSignData(arena.get(), &signedData, kDerMsg, sizeof(kDerMsg),
+                            priv_.get(), SEC_OID_UNKNOWN))
+      << PORT_ErrorToString(PORT_GetError());
+
+  CERTSignedData sd = {};
+  ASSERT_EQ(
+      SECSuccess,
+      SEC_ASN1DecodeItem(arena.get(), &sd,
+                         SEC_ASN1_GET(CERT_SignedDataTemplate), &signedData));
+  EXPECT_EQ(oid_, SECOID_GetAlgorithmTag(&sd.signatureAlgorithm));
+  EXPECT_EQ(SECSuccess,
+            CERT_VerifySignedDataWithPublicKey(&sd, pub_.get(), nullptr))
+      << PORT_ErrorToString(PORT_GetError());
+}
+
+// CERT_VerifySignedDataWithPublicKey has to reject a key that does not match
+// the signature algorithm, both when the key is not ML-DSA at all and when it
+// is the wrong parameter set.
+TEST_P(CryptohiMlDsaKeyTest, SignedDataRejectsAMismatchedKey) {
+  ScopedPLArenaPool arena(PORT_NewArena(DER_DEFAULT_CHUNKSIZE));
+  ASSERT_TRUE(arena);
+
+  SECItem signedData = {siBuffer, nullptr, 0};
+  ASSERT_EQ(SECSuccess, SEC_DerSignData(arena.get(), &signedData, kDerMsg,
+                                        sizeof(kDerMsg), priv_.get(), oid_));
+  CERTSignedData sd = {};
+  ASSERT_EQ(
+      SECSuccess,
+      SEC_ASN1DecodeItem(arena.get(), &sd,
+                         SEC_ASN1_GET(CERT_SignedDataTemplate), &signedData));
+
+  // Same key material, relabelled as some other parameter set.
+  SECOidTag otherOid =
+      (oid_ == SEC_OID_ML_DSA_44) ? SEC_OID_ML_DSA_65 : SEC_OID_ML_DSA_44;
+  ScopedSECKEYPublicKey wrongParamSet(SECKEY_CopyPublicKey(pub_.get()));
+  ASSERT_TRUE(wrongParamSet);
+  wrongParamSet->u.mldsa.paramSet = otherOid;
+  EXPECT_EQ(SECFailure, CERT_VerifySignedDataWithPublicKey(
+                            &sd, wrongParamSet.get(), nullptr));
+
+  // Same key material, relabelled as a different algorithm entirely.
+  ScopedSECKEYPublicKey wrongKeyType(SECKEY_CopyPublicKey(pub_.get()));
+  ASSERT_TRUE(wrongKeyType);
+  wrongKeyType->keyType = ecKey;
+  EXPECT_EQ(SECFailure, CERT_VerifySignedDataWithPublicKey(
+                            &sd, wrongKeyType.get(), nullptr));
+}
+
+// The *Direct entry points take the signature and hash algorithms already
+// split apart, which is a different mechanism lookup than sec_DecodeSigAlg.
+// For ML-DSA the parameter set is both halves, so that is the only pairing
+// that yields a mechanism and survives the context's hash check.
+TEST_P(CryptohiMlDsaKeyTest, VerifyDataDirect) {
+  EXPECT_EQ(SECSuccess,
+            VFY_VerifyDataDirect(kMsg, sizeof(kMsg), pub_.get(), sig_.get(),
+                                 oid_, oid_, nullptr, nullptr))
+      << PORT_ErrorToString(PORT_GetError());
+
+  // Any other hash is not a rational pairing, so there is no mechanism for it.
+  EXPECT_EQ(SECFailure,
+            VFY_VerifyDataDirect(kMsg, sizeof(kMsg), pub_.get(), sig_.get(),
+                                 oid_, SEC_OID_SHA256, nullptr, nullptr));
+}
+
+// ML-DSA signs the message, not a digest of it, so there is nothing for the
+// digest entry point to do once it has a context.
+TEST_P(CryptohiMlDsaKeyTest, VerifyDigestDirectIsUnsupported) {
+  unsigned char digest[SHA256_LENGTH];
+  ASSERT_EQ(SECSuccess,
+            PK11_HashBuf(SEC_OID_SHA256, digest, kMsg, sizeof(kMsg)));
+  SECItem digestItem = {siBuffer, digest, sizeof(digest)};
+
+  EXPECT_EQ(SECFailure,
+            VFY_VerifyDigestDirect(&digestItem, pub_.get(), sig_.get(), oid_,
+                                   oid_, nullptr));
+  EXPECT_EQ(SEC_ERROR_UNSUPPORTED_KEYALG, PORT_GetError());
+}
+
+INSTANTIATE_TEST_SUITE_P(CryptohiMlDsaKeyTest, CryptohiMlDsaKeyTest,
+                         ::testing::Values(SEC_OID_ML_DSA_44, SEC_OID_ML_DSA_65,
+                                           SEC_OID_ML_DSA_87));
 
 }  // namespace nss_test
