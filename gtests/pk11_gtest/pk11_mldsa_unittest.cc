@@ -14,6 +14,7 @@
 #include "nss_scoped_ptrs.h"
 #include "pk11priv.h"
 #include "pk11pub.h"
+#include "pq_pkcs8.h"
 #include "prerror.h"
 #include "secasn1.h"
 #include "secerr.h"
@@ -42,59 +43,6 @@ static SECItem as_item(const std::vector<uint8_t>& v) {
   SECItem item = {siBuffer, const_cast<uint8_t*>(v.data()),
                   static_cast<unsigned int>(v.size())};
   return item;
-}
-
-// Append a DER tag and length, then the value.
-static void DerTlv(std::vector<uint8_t>* out, uint8_t tag, const uint8_t* value,
-                   size_t len) {
-  out->push_back(tag);
-  if (len < 0x80) {
-    out->push_back(static_cast<uint8_t>(len));
-  } else if (len < 0x100) {
-    out->push_back(0x81);
-    out->push_back(static_cast<uint8_t>(len));
-  } else {
-    ASSERT_LT(len, 0x10000u);
-    out->push_back(0x82);
-    out->push_back(static_cast<uint8_t>(len >> 8));
-    out->push_back(static_cast<uint8_t>(len));
-  }
-  out->insert(out->end(), value, value + len);
-}
-
-/* Wrap an already encoded ML-DSA private key CHOICE in a OneAsymmetricKey:
- *
- *   SEQUENCE {
- *     INTEGER 0,
- *     SEQUENCE { OBJECT IDENTIFIER id-ml-dsa-NN },
- *     OCTET STRING { <choice> }
- *   }
- *
- * The CHOICE is [0] for a seed, an OCTET STRING for an expanded key, or a
- * SEQUENCE of both. See SECKEY_PQPrivateKey*Template and the tag dispatch in
- * lib/pk11wrap/pk11pk12.c. */
-static std::vector<uint8_t> BuildMlDsaPkcs8(
-    SECOidTag oid, const std::vector<uint8_t>& choice) {
-  SECOidData* oidData = SECOID_FindOIDByTag(oid);
-  EXPECT_TRUE(oidData);
-  if (!oidData) {
-    return std::vector<uint8_t>();
-  }
-
-  std::vector<uint8_t> algorithm;
-  DerTlv(&algorithm, SEC_ASN1_OBJECT_ID, oidData->oid.data, oidData->oid.len);
-
-  std::vector<uint8_t> body;
-  const uint8_t version = 0;
-  DerTlv(&body, SEC_ASN1_INTEGER, &version, sizeof(version));
-  DerTlv(&body, SEC_ASN1_CONSTRUCTED | SEC_ASN1_SEQUENCE, algorithm.data(),
-         algorithm.size());
-  DerTlv(&body, SEC_ASN1_OCTET_STRING, choice.data(), choice.size());
-
-  std::vector<uint8_t> pkcs8;
-  DerTlv(&pkcs8, SEC_ASN1_CONSTRUCTED | SEC_ASN1_SEQUENCE, body.data(),
-         body.size());
-  return pkcs8;
 }
 
 class Pkcs11MlDsaWycheproofTest : public ::testing::Test {
@@ -188,18 +136,9 @@ class Pkcs11MlDsaWycheproofTest : public ::testing::Test {
       return privateKeyPkcs8_;
     }
     if (!privateSeed_.empty()) {
-      return BuildPkcs8(SEC_ASN1_CONTEXT_SPECIFIC | 0, privateSeed_);
+      return BuildPqPkcs8(oid_, PqSeedChoice(privateSeed_));
     }
-    return BuildPkcs8(SEC_ASN1_OCTET_STRING, privateKey_);
-  }
-
-  /* Wrap a raw signing key -- a seed under [0], or an expanded key as an
-   * OCTET STRING -- in a OneAsymmetricKey. */
-  std::vector<uint8_t> BuildPkcs8(uint8_t choiceTag,
-                                  const std::vector<uint8_t>& key) {
-    std::vector<uint8_t> choice;
-    DerTlv(&choice, choiceTag, key.data(), key.size());
-    return BuildMlDsaPkcs8(oid_, choice);
+    return BuildPqPkcs8(oid_, PqExpandedKeyChoice(privateKey_));
   }
 
   ScopedSECKEYPublicKey ImportPublicKey(const std::vector<uint8_t>& spki) {
@@ -469,17 +408,9 @@ class Pkcs11MlDsaStorageTest
     }
   }
 
-  // The 'both' CHOICE: SEQUENCE { OCTET STRING seed, OCTET STRING key }.
   std::vector<uint8_t> BuildBothPkcs8(const std::vector<uint8_t>& seed,
                                       const std::vector<uint8_t>& key) {
-    std::vector<uint8_t> inner;
-    DerTlv(&inner, SEC_ASN1_OCTET_STRING, seed.data(), seed.size());
-    DerTlv(&inner, SEC_ASN1_OCTET_STRING, key.data(), key.size());
-
-    std::vector<uint8_t> choice;
-    DerTlv(&choice, SEC_ASN1_CONSTRUCTED | SEC_ASN1_SEQUENCE, inner.data(),
-           inner.size());
-    return BuildMlDsaPkcs8(OidTag(GetParam()), choice);
+    return BuildPqPkcs8(OidTag(GetParam()), PqBothChoice(seed, key));
   }
 
   SECKEYPrivateKey* ImportPkcs8(const std::vector<uint8_t>& pkcs8) {
