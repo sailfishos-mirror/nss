@@ -606,9 +606,16 @@ sec_DecodeSigAlg(const SECKEYPublicKey *key, SECOidTag sigAlg,
         case SEC_OID_ML_DSA_44:
         case SEC_OID_ML_DSA_65:
         case SEC_OID_ML_DSA_87:
+            /* RFC 9881 requires the parameters component to be absent, so
+             * there is nothing to decode and nowhere to carry a signing
+             * context; a caller that needs a non-empty context has to supply
+             * it out of band. Reject anything present rather than ignore it. */
+            if (param != NULL && param->len != 0) {
+                PORT_SetError(SEC_ERROR_INVALID_ALGORITHM);
+                return SECFailure;
+            }
             comboRequired = PR_TRUE;
             *hashalg = sigAlg;
-            /* decode params to get the sign context and set (mechparamsp) */
             break;
         /* we don't implement MD4 hashes */
         case SEC_OID_PKCS1_MD4_WITH_RSA_ENCRYPTION:

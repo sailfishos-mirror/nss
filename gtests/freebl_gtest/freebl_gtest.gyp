@@ -36,6 +36,7 @@
         'ecl_unittest.cc',
         'ghash_unittest.cc',
         'kyber_unittest.cc',
+        'mldsa_unittest.cc',
         'mpi_unittest.cc',
         'prng_kat_unittest.cc',
         'rsa_unittest.cc',

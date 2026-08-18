@@ -637,7 +637,10 @@ VERIFIED_SRCS += Hacl_Curve25519_51.c
 # extraction in verified/.
 LIBCRUX_SRCS = combined_core.c libcrux_ct_ops.c libcrux_sha3_portable.c \
                libcrux_mlkem_core.c libcrux_mlkem_portable.c \
-               libcrux_mlkem768_portable.c libcrux_mlkem1024_portable.c
+               libcrux_mlkem768_portable.c libcrux_mlkem1024_portable.c \
+               libcrux_mldsa_core.c libcrux_mldsa_portable.c \
+               libcrux_mldsa44_portable.c libcrux_mldsa65_portable.c \
+               libcrux_mldsa87_portable.c
 CSRCS += $(LIBCRUX_SRCS)
 
 # Bug 1918767 / Bug 1918711 - by setting KRML_MUSTINLINE=inline here, we
@@ -684,13 +687,23 @@ vpath %.s mpi ecl
 vpath %.asm mpi ecl
 INCLUDES += -Impi -Iecl -Iverified -Iverified/internal -Iverified/karamel/include -Iverified/karamel/krmllib/dist/minimal -Ideprecated
 
-# The vendored libcrux objects and the freebl wrapper that uses them (kyber.c)
-# are compiled with the libcrux/ include dirs searched FIRST, so their
+# The vendored libcrux objects and the freebl wrappers that use them (kyber.c,
+# ml_dsa.c) are compiled with the libcrux/ include dirs searched FIRST, so their
 # krml/eurydice headers resolve to the libcrux copies rather than the HACL*
 # copies under verified/.
 LIBCRUX_OBJS = $(addprefix $(OBJDIR)/$(PROG_PREFIX),$(LIBCRUX_SRCS:.c=$(OBJ_SUFFIX)))
-$(LIBCRUX_OBJS) \
-$(OBJDIR)/$(PROG_PREFIX)kyber$(OBJ_SUFFIX): INCLUDES := -Ilibcrux -Ilibcrux/internal -Ilibcrux/karamel $(INCLUDES)
+LIBCRUX_USERS = $(LIBCRUX_OBJS) \
+                $(OBJDIR)/$(PROG_PREFIX)kyber$(OBJ_SUFFIX) \
+                $(OBJDIR)/$(PROG_PREFIX)ml_dsa$(OBJ_SUFFIX)
+$(LIBCRUX_USERS): INCLUDES := -Ilibcrux -Ilibcrux/internal -Ilibcrux/karamel $(INCLUDES)
+
+ifeq ($(OS_TARGET),WINNT)
+# C4146: unary minus applied to an unsigned type. eurydice_glue.h does this
+# deliberately in its wrapping_neg helpers, where the wrapped result is the
+# intended value. The extraction is kept byte-identical to upstream (CI diffs
+# it), so silence the warning here rather than patching the header.
+$(LIBCRUX_USERS): CFLAGS += -wd4146
+endif
 
 
 DEFINES += -DMP_API_COMPATIBLE

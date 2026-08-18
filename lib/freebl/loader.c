@@ -2967,3 +2967,12 @@ EC_DecompressPublicKey(const SECItem *publicCompressed, const ECParams *params, 
         return SECFailure;
     return (vector->p_EC_DecompressPublicKey)(publicCompressed, params, publicUncompressed);
 }
+
+/* ============== New for 3.0033 =============================== */
+void
+MLDSA_DestroyContext(MLDSAContext *ctx)
+{
+    if (!vector && PR_SUCCESS != freebl_RunLoaderOnce())
+        return;
+    (vector->p_MLDSA_DestroyContext)(ctx);
+}

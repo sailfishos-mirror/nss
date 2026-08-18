@@ -3052,6 +3052,12 @@ nsc_EDDSASignStub(void *ctx, unsigned char *sigBuf,
     return rv;
 }
 
+static void
+sftk_MLDSADestroyContext(void *info, PRBool freeit)
+{
+    MLDSA_DestroyContext((MLDSAContext *)info);
+}
+
 void
 sftk_MLDSASignUpdate(void *info, const unsigned char *data, unsigned int len)
 {
@@ -3345,29 +3351,25 @@ NSC_SignInit(CK_SESSION_HANDLE hSession,
             rv = MLDSA_SignInit(&privKey->u.mldsa, hedgeType, &signCtx, &ctptr);
             if (rv != SECSuccess) {
                 crv = sftk_MapCryptError(PORT_GetError());
-                if (privKey != key->objectInfo) {
-                    nsslowkey_DestroyPrivateKey(privKey);
-                }
                 break;
             }
             /* set up our cipher info. MLDSA is only a combined hash/sign
              * so the hash update is our sign update, the hash end is a null
              * function returning a zero length value, and the final gets our
-             * signature based on the context. Both the cipher context and the
-             * hash Info is the same. The MLDSA_SignFinal frees the context,
-             * so we don't have to */
+             * signature based on the context. cipherInfo and hashInfo are the
+             * same pointer, so only one of them may free it: destroy does,
+             * hashdestroy doesn't. Freeing from here rather than from
+             * MLDSA_SignFinal is what releases the context when the operation
+             * is abandoned instead of finished. */
             context->multi = PR_TRUE;
             context->cipherInfo = ctptr;
             context->hashInfo = ctptr;
             context->hashUpdate = sftk_MLDSASignUpdate;
             context->end = sftk_NullHashEnd;
             context->hashdestroy = sftk_Null;
-            context->destroy = sftk_Null;
+            context->destroy = sftk_MLDSADestroyContext;
             context->update = sftk_MLDSASignFinal;
             context->maxLen = sftk_MLDSAGetSigLen(privKey->u.mldsa.paramSet);
-            if (privKey != key->objectInfo) {
-                nsslowkey_DestroyPrivateKey(privKey);
-            }
             break;
         }
 
@@ -4223,16 +4225,18 @@ NSC_VerifyInit(CK_SESSION_HANDLE hSession,
             /* set up our cipher info. MLDSA is only a combined hash/sign
              * so the hash update is our sign update, the hash end is a null
              * function returning a zero length value, and the final gets our
-             * signature based on the context. Both the cipher context and the
-             * hash Info is the same. The MLDSA_VerifyFinal frees the context,
-             * so we don't have to */
+             * signature based on the context. cipherInfo and hashInfo are the
+             * same pointer, so only one of them may free it: destroy does,
+             * hashdestroy doesn't. Freeing from here rather than from
+             * MLDSA_VerifyFinal is what releases the context when the
+             * operation is abandoned instead of finished. */
             context->multi = PR_TRUE;
             context->cipherInfo = ctptr;
             context->hashInfo = ctptr;
             context->hashUpdate = sftk_MLDSAVerifyUpdate;
             context->end = sftk_NullHashEnd;
             context->hashdestroy = sftk_Null;
-            context->destroy = sftk_Null;
+            context->destroy = sftk_MLDSADestroyContext;
             context->verify = sftk_MLDSAVerifyFinal;
             context->maxLen = sftk_MLDSAGetSigLen(pubKey->u.mldsa.paramSet);
             break;

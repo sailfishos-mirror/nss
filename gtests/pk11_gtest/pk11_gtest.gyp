@@ -40,6 +40,7 @@
         'pk11_kem_unittest.cc',
         'pk11_key_unittest.cc',
         'pk11_keygen.cc',
+        'pk11_mldsa_unittest.cc',
         'pk11_module_unittest.cc',
         'pk11_uri_unittest.cc',
         'pk11_pbe_unittest.cc',
