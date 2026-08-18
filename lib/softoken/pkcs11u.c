@@ -1646,6 +1646,13 @@ static const CK_ATTRIBUTE_TYPE mldsaPubKeyAttrs[] = {
 };
 static const CK_ULONG mldsaPubKeyAttrsCount = PR_ARRAY_SIZE(mldsaPubKeyAttrs);
 
+/* the vendor ML-KEM key types carry CKA_NSS_PARAMETER_SET rather than
+ * CKA_PARAMETER_SET; list both and let the missing one be skipped */
+static const CK_ATTRIBUTE_TYPE mlkemPubKeyAttrs[] = {
+    CKA_PARAMETER_SET, CKA_NSS_PARAMETER_SET, CKA_VALUE
+};
+static const CK_ULONG mlkemPubKeyAttrsCount = PR_ARRAY_SIZE(mlkemPubKeyAttrs);
+
 static const CK_ATTRIBUTE_TYPE commonPrivKeyAttrs[] = {
     CKA_DECRYPT, CKA_SIGN, CKA_SIGN_RECOVER, CKA_UNWRAP, CKA_SUBJECT,
     CKA_SENSITIVE, CKA_EXTRACTABLE, CKA_NSS_DB, CKA_PUBLIC_KEY_INFO
@@ -1681,6 +1688,11 @@ static const CK_ATTRIBUTE_TYPE mldsaPrivKeyAttrs[] = {
     CKA_PARAMETER_SET, CKA_VALUE, CKA_SEED
 };
 static const CK_ULONG mldsaPrivKeyAttrsCount = PR_ARRAY_SIZE(mldsaPrivKeyAttrs);
+
+static const CK_ATTRIBUTE_TYPE mlkemPrivKeyAttrs[] = {
+    CKA_PARAMETER_SET, CKA_NSS_PARAMETER_SET, CKA_VALUE, CKA_SEED
+};
+static const CK_ULONG mlkemPrivKeyAttrsCount = PR_ARRAY_SIZE(mlkemPrivKeyAttrs);
 
 static const CK_ATTRIBUTE_TYPE certAttrs[] = {
     CKA_CERTIFICATE_TYPE, CKA_VALUE, CKA_SUBJECT, CKA_ISSUER, CKA_SERIAL_NUMBER
@@ -1795,6 +1807,14 @@ stfk_CopyTokenPrivateKey(SFTKObject *destObject, SFTKTokenObject *src_to)
             crv = stfk_CopyTokenAttributes(destObject, src_to, mldsaPrivKeyAttrs,
                                            mldsaPrivKeyAttrsCount);
             break;
+#ifndef NSS_DISABLE_KYBER
+        case CKK_NSS_KYBER:
+#endif
+        case CKK_NSS_ML_KEM:
+        case CKK_ML_KEM:
+            crv = stfk_CopyTokenAttributes(destObject, src_to, mlkemPrivKeyAttrs,
+                                           mlkemPrivKeyAttrsCount);
+            break;
         case CKK_DH:
             crv = stfk_CopyTokenAttributes(destObject, src_to, dhPrivKeyAttrs,
                                            dhPrivKeyAttrsCount);
@@ -1858,6 +1878,14 @@ stfk_CopyTokenPublicKey(SFTKObject *destObject, SFTKTokenObject *src_to)
         case CKK_ML_DSA:
             crv = stfk_CopyTokenAttributes(destObject, src_to, mldsaPubKeyAttrs,
                                            mldsaPubKeyAttrsCount);
+            break;
+#ifndef NSS_DISABLE_KYBER
+        case CKK_NSS_KYBER:
+#endif
+        case CKK_NSS_ML_KEM:
+        case CKK_ML_KEM:
+            crv = stfk_CopyTokenAttributes(destObject, src_to, mlkemPubKeyAttrs,
+                                           mlkemPubKeyAttrsCount);
             break;
         case CKK_DH:
             crv = stfk_CopyTokenAttributes(destObject, src_to, dhPubKeyAttrs,

@@ -285,8 +285,7 @@ class Pkcs11MlKemStorageTest
     ASSERT_TRUE(priv_) << PORT_ErrorToString(PORT_GetError());
     ASSERT_TRUE(pub_);
     ASSERT_EQ(kyberKey, pub_->keyType);
-    ASSERT_EQ(ExpectedPublicKeyLen(GetParam()),
-              pub_->u.kyber.publicValue.len);
+    ASSERT_EQ(ExpectedPublicKeyLen(GetParam()), pub_->u.kyber.publicValue.len);
 
     static const unsigned char pw[] = "pw";
     SECItem pwItem = {siBuffer, const_cast<unsigned char *>(pw), sizeof(pw)};
@@ -430,6 +429,40 @@ TEST_P(Pkcs11MlKemStorageTest, ExportEncryptedAndImportAsTokenKey) {
 
   EXPECT_EQ(SECSuccess,
             PK11_DeleteTokenPrivateKey(tokenKey.release(), PR_TRUE));
+}
+
+// Loading a key onto a slot reads its attributes back out and creates a fresh
+// object from them, which is the kyberKey branch of pk11_loadPrivKeyWithFlags.
+TEST_P(Pkcs11MlKemStorageTest, LoadPrivKeyOntoASlot) {
+  ScopedSECKEYPrivateKey loaded(PK11_LoadPrivKey(
+      slot_.get(), priv_.get(), pub_.get(), PR_FALSE, PR_FALSE));
+  ASSERT_TRUE(loaded) << PORT_ErrorToString(PORT_GetError());
+  EXPECT_EQ(kyberKey, loaded->keyType);
+  ExpectPairs(loaded.get(), pub_.get());
+}
+
+// Copying a token key to a session key is a C_CopyObject on the token side,
+// which reassembles the key from its stored attributes rather than copying an
+// in-memory object.
+TEST_P(Pkcs11MlKemStorageTest, TokenKeyCopiesToASessionKey) {
+  CK_ML_KEM_PARAMETER_SET_TYPE paramSet = GetParam();
+  SECKEYPublicKey *pub = nullptr;
+  ScopedSECKEYPrivateKey tokenPriv(
+      PK11_GenerateKeyPair(slot_.get(), CKM_ML_KEM_KEY_PAIR_GEN, &paramSet,
+                           &pub, PR_TRUE /* token */, PR_FALSE, nullptr));
+  ScopedSECKEYPublicKey tokenPub(pub);
+  ASSERT_TRUE(tokenPriv) << PORT_ErrorToString(PORT_GetError());
+  ASSERT_TRUE(tokenPub);
+
+  ScopedSECKEYPrivateKey sessionPriv(
+      PK11_CopyTokenPrivKeyToSessionPrivKey(slot_.get(), tokenPriv.get()));
+  ASSERT_TRUE(sessionPriv) << PORT_ErrorToString(PORT_GetError());
+  EXPECT_EQ(kyberKey, sessionPriv->keyType);
+  ExpectPairs(sessionPriv.get(), tokenPub.get());
+
+  EXPECT_EQ(SECSuccess,
+            PK11_DeleteTokenPrivateKey(tokenPriv.release(), PR_TRUE));
+  EXPECT_EQ(SECSuccess, PK11_DeleteTokenPublicKey(tokenPub.release()));
 }
 
 // RFC 9881's encoding lets a PKCS#8 carry the seed and the expanded key
