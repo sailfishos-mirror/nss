@@ -766,6 +766,7 @@ seckey_GetKyberParamsByPkcs11ParamSet(CK_ML_KEM_PARAMETER_SET_TYPE paramSet)
 #endif
         case CKP_ML_KEM_512:
             return params_ml_kem512;
+        case CKP_NSS_ML_KEM_768:
         case CKP_ML_KEM_768:
             return params_ml_kem768;
         case CKP_ML_KEM_1024:
@@ -803,6 +804,7 @@ seckey_GetMLKEMOidTagByPkcs11ParamSet(CK_ML_KEM_PARAMETER_SET_TYPE paramSet)
     switch (paramSet) {
         case CKP_ML_KEM_512:
             return SEC_OID_ML_KEM_512;
+        case CKP_NSS_ML_KEM_768:
         case CKP_ML_KEM_768:
             return SEC_OID_ML_KEM_768;
         case CKP_ML_KEM_1024:
