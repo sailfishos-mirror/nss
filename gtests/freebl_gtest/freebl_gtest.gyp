@@ -41,7 +41,8 @@
         'prng_kat_unittest.cc',
         'rsa_unittest.cc',
         'ed25519_unittest.cc',
-        '<(DEPTH)/gtests/common/gtests.cc'
+        '<(DEPTH)/gtests/common/gtests.cc',
+        '<(DEPTH)/gtests/common/json_reader.cc'
       ],
       'dependencies': [
         'freebl_gtest_deps',

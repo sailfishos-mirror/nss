@@ -36,6 +36,9 @@ class JsonReader {
   uint64_t ReadInt();
   // No input checking, no unicode, no escaping (not even \"), just read ASCII.
   std::string ReadString();
+  // Read an unquoted lowercase token, i.e. one of the JSON literals null, true
+  // and false.
+  std::string ReadLiteralName();
   std::string ReadLabel();
   std::vector<uint8_t> ReadHex();
   SECOidTag ReadHash();
@@ -45,9 +48,17 @@ class JsonReader {
   bool NextItem(uint8_t h = '{', uint8_t t = '}');
   bool NextItemArray() { return NextItem('[', ']'); }
   void SkipValue();
+  // Peek at the next value, ignoring any whitespace before it. Useful for
+  // fields that are sometimes null.
+  uint8_t PeekValue() {
+    SkipWhitespace();
+    return peek();
+  }
 
  private:
   void TopUp();
+  void SkipBoolean();
+  void SkipNull();
   void SkipWhitespace();
   // This only handles lowercase.
   uint8_t Hex(uint8_t c);

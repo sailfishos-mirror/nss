@@ -5,12 +5,14 @@
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
+#include <functional>
 #include <string>
 #include <vector>
 
 #include "gtest/gtest.h"
 
 #include "blapi.h"
+#include "json_reader.h"
 #include "secerr.h"
 #include "secitem.h"
 
@@ -50,7 +52,9 @@ static SECStatus do_sign(MLDSAPrivateKey* priv, CK_HEDGE_TYPE hedge,
   }
   if (part1) MLDSA_SignUpdate(mctx, part1);
   if (part2) MLDSA_SignUpdate(mctx, part2);
-  return MLDSA_SignFinal(mctx, sig);  // frees mctx
+  SECStatus rv = MLDSA_SignFinal(mctx, sig);
+  MLDSA_DestroyContext(mctx);
+  return rv;
 }
 
 static SECStatus do_verify(MLDSAPublicKey* pub, const SECItem* ctx,
@@ -62,7 +66,9 @@ static SECStatus do_verify(MLDSAPublicKey* pub, const SECItem* ctx,
   }
   if (part1) MLDSA_VerifyUpdate(mctx, part1);
   if (part2) MLDSA_VerifyUpdate(mctx, part2);
-  return MLDSA_VerifyFinal(mctx, sig);  // frees mctx
+  SECStatus rv = MLDSA_VerifyFinal(mctx, sig);
+  MLDSA_DestroyContext(mctx);
+  return rv;
 }
 
 class MlDsaSelfTest
@@ -76,7 +82,7 @@ TEST_P(MlDsaSelfTest, SignVerifyRoundTrip) {
   ASSERT_EQ(SECSuccess, MLDSA_NewKey(param, nullptr, &priv, &pub));
   EXPECT_EQ(param, priv.paramSet);
   EXPECT_EQ(param, pub.paramSet);
-  EXPECT_EQ(ML_DSA_SEED_LEN, priv.seedLen);
+  EXPECT_EQ(static_cast<unsigned int>(ML_DSA_SEED_LEN), priv.seedLen);
 
   uint8_t ctxbuf[] = {1, 2, 3};
   SECItem context = {siBuffer, ctxbuf, sizeof(ctxbuf)};
@@ -143,7 +149,7 @@ class MlDsaKeygenKatTest : public ::testing::TestWithParam<MlDsaKeygenKat> {};
 TEST_P(MlDsaKeygenKatTest, Keygen) {
   const MlDsaKeygenKat& kat = GetParam();
   std::vector<uint8_t> seed = from_hex(kat.seed);
-  ASSERT_EQ(ML_DSA_SEED_LEN, seed.size());
+  ASSERT_EQ(static_cast<size_t>(ML_DSA_SEED_LEN), seed.size());
 
   MLDSAPrivateKey priv = {};
   MLDSAPublicKey pub = {};
@@ -165,5 +171,213 @@ TEST_P(MlDsaKeygenKatTest, Keygen) {
 
 INSTANTIATE_TEST_SUITE_P(MlDsaKeygenKatTest, MlDsaKeygenKatTest,
                          ::testing::ValuesIn(kMlDsaKeygenKats));
+
+// Wycheproof ML-DSA vectors, read from gtests/common/wycheproof/source_vectors
+// at run time. These cover signature verification -- including malformed keys
+// and signatures that FIPS 204 requires to be rejected -- and deterministic
+// signature generation from both a seed and an expanded signing key.
+
+struct MlDsaTestVector {
+  uint64_t id;
+  bool valid;
+  std::vector<uint8_t> msg;
+  std::vector<uint8_t> ctx;
+  std::vector<uint8_t> sig;
+  bool has_msg = false;
+  bool has_rnd = false;
+};
+
+static SECItem as_item(const std::vector<uint8_t>& v) {
+  SECItem item = {siBuffer, const_cast<uint8_t*>(v.data()),
+                  static_cast<unsigned int>(v.size())};
+  return item;
+}
+
+class MlDsaWycheproofTest : public ::testing::Test {
+ protected:
+  typedef std::function<void(const MlDsaTestVector&)> Operation;
+
+  void Run(const std::string& file, CK_ML_DSA_PARAMETER_SET_TYPE paramSet,
+           const std::string& schema, Operation op) {
+    paramSet_ = paramSet;
+    op_ = op;
+    WycheproofHeader(file, ParameterSetName(paramSet), schema,
+                     [this](JsonReader& r) { RunGroup(r); });
+  }
+
+  void Verify(const MlDsaTestVector& t) {
+    MLDSAPublicKey pub = {};
+    if (publicKey_.size() > sizeof(pub.keyVal)) {
+      // Too long to hold in a key at all, so the vector must be a negative one.
+      EXPECT_FALSE(t.valid);
+      return;
+    }
+    pub.paramSet = paramSet_;
+    memcpy(pub.keyVal, publicKey_.data(), publicKey_.size());
+    pub.keyValLen = static_cast<unsigned int>(publicKey_.size());
+
+    SECItem msg = as_item(t.msg);
+    SECItem ctx = as_item(t.ctx);
+    SECItem sig = as_item(t.sig);
+
+    MLDSAContext* mctx = nullptr;
+    if (MLDSA_VerifyInit(&pub, &ctx, &mctx) != SECSuccess) {
+      EXPECT_FALSE(t.valid) << "VerifyInit failed for a valid vector";
+      return;
+    }
+    EXPECT_EQ(SECSuccess, MLDSA_VerifyUpdate(mctx, &msg));
+    SECStatus rv = MLDSA_VerifyFinal(mctx, &sig);
+    MLDSA_DestroyContext(mctx);
+    EXPECT_EQ(t.valid ? SECSuccess : SECFailure, rv);
+  }
+
+  void Sign(const MlDsaTestVector& t) {
+    // freebl has no API for either external-mu signing (a test case with a mu
+    // but no message) or hedged signing with caller-supplied randomness.
+    if (!t.has_msg || t.has_rnd) {
+      return;
+    }
+
+    MLDSAPrivateKey priv = {};
+    if (privateKey_.empty()) {
+      // The signing key is given as a seed. Derive it, and check the derived
+      // verification key against the group's while we are here.
+      SECItem seed = as_item(privateSeed_);
+      MLDSAPublicKey pub = {};
+      if (MLDSA_NewKey(paramSet_, &seed, &priv, &pub) != SECSuccess) {
+        EXPECT_FALSE(t.valid) << "key generation failed for a valid vector";
+        return;
+      }
+      if (!publicKey_.empty()) {
+        EXPECT_EQ(publicKey_,
+                  std::vector<uint8_t>(pub.keyVal, pub.keyVal + pub.keyValLen));
+      }
+    } else {
+      // The signing key is given expanded.
+      if (privateKey_.size() > sizeof(priv.keyVal)) {
+        EXPECT_FALSE(t.valid);
+        return;
+      }
+      priv.paramSet = paramSet_;
+      memcpy(priv.keyVal, privateKey_.data(), privateKey_.size());
+      priv.keyValLen = static_cast<unsigned int>(privateKey_.size());
+    }
+
+    SECItem msg = as_item(t.msg);
+    SECItem ctx = as_item(t.ctx);
+    std::vector<uint8_t> sigbuf(MAX_ML_DSA_SIGNATURE_LEN);
+    SECItem sig = {siBuffer, sigbuf.data(), (unsigned int)sigbuf.size()};
+
+    SECStatus rv =
+        do_sign(&priv, CKH_DETERMINISTIC_REQUIRED, &ctx, &msg, nullptr, &sig);
+    ASSERT_EQ(t.valid ? SECSuccess : SECFailure, rv);
+    if (!t.valid) {
+      return;
+    }
+    EXPECT_EQ(t.sig, std::vector<uint8_t>(sig.data, sig.data + sig.len));
+  }
+
+ private:
+  static std::string ParameterSetName(CK_ML_DSA_PARAMETER_SET_TYPE paramSet) {
+    switch (paramSet) {
+      case CKP_ML_DSA_44:
+        return "ML-DSA-44";
+      case CKP_ML_DSA_65:
+        return "ML-DSA-65";
+      case CKP_ML_DSA_87:
+        return "ML-DSA-87";
+    }
+    ADD_FAILURE() << "unsupported parameter set";
+    return "";
+  }
+
+  static void ReadTestAttr(MlDsaTestVector& t, const std::string& n,
+                           JsonReader& r) {
+    if (n == "msg") {
+      t.msg = r.ReadHex();
+      t.has_msg = true;
+    } else if (n == "ctx") {
+      t.ctx = r.ReadHex();
+    } else if (n == "sig") {
+      t.sig = r.ReadHex();
+    } else if (n == "rnd") {
+      r.SkipValue();
+      t.has_rnd = true;
+    } else if (n == "mu") {
+      r.SkipValue();
+    } else {
+      FAIL() << "unsupported test case field: " << n;
+    }
+  }
+
+  void RunGroup(JsonReader& r) {
+    std::vector<MlDsaTestVector> tests;
+    publicKey_.clear();
+    privateKey_.clear();
+    privateSeed_.clear();
+
+    while (r.NextItem()) {
+      std::string n = r.ReadLabel();
+      if (n == "") {
+        break;
+      }
+      if (n == "publicKey") {
+        // Null for groups whose signing key has no matching public key.
+        publicKey_ = ReadOptionalHex(r);
+      } else if (n == "privateKey") {
+        privateKey_ = r.ReadHex();
+      } else if (n == "privateSeed") {
+        privateSeed_ = r.ReadHex();
+      } else if (n == "type" || n == "source" || n == "publicKeyDer" ||
+                 n == "privateKeyPkcs8") {
+        // publicKeyDer and privateKeyPkcs8 hold the same keys in SPKI and
+        // PKCS#8 form; these tests drive freebl, which takes the raw keys.
+        r.SkipValue();
+      } else if (n == "tests") {
+        WycheproofReadTests(r, &tests, ReadTestAttr, false);
+      } else {
+        FAIL() << "unknown group label: " << n;
+      }
+    }
+
+    for (auto& t : tests) {
+      SCOPED_TRACE(testing::Message() << "tcId " << t.id);
+      op_(t);
+    }
+  }
+
+  static std::vector<uint8_t> ReadOptionalHex(JsonReader& r) {
+    if (r.PeekValue() == 'n') {  // null
+      r.SkipValue();
+      return std::vector<uint8_t>();
+    }
+    return r.ReadHex();
+  }
+
+  CK_ML_DSA_PARAMETER_SET_TYPE paramSet_;
+  Operation op_;
+  std::vector<uint8_t> publicKey_;
+  std::vector<uint8_t> privateKey_;
+  std::vector<uint8_t> privateSeed_;
+};
+
+#define ML_DSA_WYCHEPROOF_TESTS(name, bits, paramSet)                         \
+  TEST_F(MlDsaWycheproofTest, name##Verify) {                                 \
+    Run("mldsa_" #bits "_verify", paramSet, "mldsa_verify_schema.json",       \
+        [this](const MlDsaTestVector& t) { Verify(t); });                     \
+  }                                                                           \
+  TEST_F(MlDsaWycheproofTest, name##SignSeed) {                               \
+    Run("mldsa_" #bits "_sign_seed", paramSet, "mldsa_sign_seed_schema.json", \
+        [this](const MlDsaTestVector& t) { Sign(t); });                       \
+  }                                                                           \
+  TEST_F(MlDsaWycheproofTest, name##SignNoSeed) {                             \
+    Run("mldsa_" #bits "_sign_noseed", paramSet,                              \
+        "mldsa_sign_noseed_schema.json",                                      \
+        [this](const MlDsaTestVector& t) { Sign(t); });                       \
+  }
+
+ML_DSA_WYCHEPROOF_TESTS(MlDsa44, 44, CKP_ML_DSA_44)
+ML_DSA_WYCHEPROOF_TESTS(MlDsa65, 65, CKP_ML_DSA_65)
+ML_DSA_WYCHEPROOF_TESTS(MlDsa87, 87, CKP_ML_DSA_87)
 
 }  // namespace nss_test

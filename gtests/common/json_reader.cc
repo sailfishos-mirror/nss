@@ -37,8 +37,21 @@ std::string JsonReader::ReadString() {
   std::string s;
   uint8_t c = take();
   while (c != '"') {
-    s.push_back(c);
+    s.push_back(static_cast<char>(c));
     c = take();
+  }
+  return s;
+}
+
+std::string JsonReader::ReadLiteralName() {
+  SkipWhitespace();
+
+  std::string s;
+  uint8_t c = peek();
+  while (c >= 'a' && c <= 'z') {
+    s.push_back(static_cast<char>(c));
+    next();
+    c = peek();
   }
   return s;
 }
@@ -132,43 +145,47 @@ bool JsonReader::NextItem(uint8_t h, uint8_t t) {
   return false;
 }
 
+void JsonReader::SkipBoolean() {
+  std::string s = ReadLiteralName();
+  EXPECT_TRUE(s == "true" || s == "false") << "Not a bool: '" << s << "'";
+}
+
+void JsonReader::SkipNull() { EXPECT_EQ("null", ReadLiteralName()); }
+
 void JsonReader::SkipValue() {
   SkipWhitespace();
 
-  uint8_t c = take();
+  uint8_t c = peek();
   if (c == '"') {
-    do {
-      c = take();
-    } while (c != '"');
-
-  } else if (c >= '0' && c <= '9') {
-    c = peek();
-    while (c >= '0' && c <= '9') {
-      next();
-      c = peek();
+    next();
+    while (take() != '"') {
     }
 
-  } else if (c == '[') {
+  } else if (c >= '0' && c <= '9') {
     do {
-      SkipWhitespace();
-      if (peek() != ']') {
-        SkipValue();
-      }
-    } while (NextItemArray());
+      next();
+      c = peek();
+    } while (c >= '0' && c <= '9');
+
+  } else if (c == '[') {
+    while (NextItemArray()) {
+      SkipValue();
+    }
 
   } else if (c == '{') {
-    do {
-      SkipWhitespace();
-      if (peek() == '}') {
-        continue;
-      }
-
+    while (NextItem()) {
       std::string n = ReadLabel();
       if (n == "") {
         break;
       }
       SkipValue();
-    } while (NextItem());
+    }
+
+  } else if (c == 't' || c == 'f') {
+    SkipBoolean();
+
+  } else if (c == 'n') {
+    SkipNull();
 
   } else {
     ADD_FAILURE() << "No idea how to skip '" << c << "'";
@@ -239,7 +256,10 @@ void WycheproofHeader(const std::string& name, const std::string& algorithm,
         if (note == "") {
           break;
         }
-        std::cout << "    " << note << ": " << r.ReadString() << std::endl;
+        // Older files map a note to a description string; newer ones map it to
+        // an object holding a bugType and a description.
+        std::cout << "    " << note << std::endl;
+        r.SkipValue();
       }
     } else if (n == "schema") {
       ASSERT_EQ(schema, r.ReadString());
