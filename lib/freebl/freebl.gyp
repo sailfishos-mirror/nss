@@ -315,6 +315,93 @@
         '<(DEPTH)/exports.gyp:nss_exports'
       ]
     },
+    # The vendored libcrux ML-KEM + ML-DSA combined extraction (lib/freebl/libcrux/)
+    # is built with an isolated include scope: the verified/ dirs are removed so
+    # libcrux's krml/eurydice headers can't collide with the HACL* extraction that
+    # still lives in verified/. The libcrux .c are self-contained (no PORT_/RNG_),
+    # so a single mode-agnostic library serves every freebl variant. The freebl
+    # wrappers that DO call PORT_/RNG_ (kyber.c, ml_dsa.c) live in the 'pqcwrap'
+    # targets, which mirror the FREEBL_NO_DEPEND split of the freebl libs that
+    # link them.
+    {
+      'target_name': 'libcrux',
+      'type': 'static_library',
+      'sources': [
+        'libcrux/combined_core.c',
+        'libcrux/libcrux_ct_ops.c',
+        'libcrux/libcrux_sha3_portable.c',
+        'libcrux/libcrux_mlkem_core.c',
+        'libcrux/libcrux_mlkem_portable.c',
+        'libcrux/libcrux_mlkem768_portable.c',
+        'libcrux/libcrux_mlkem1024_portable.c',
+      ],
+      'dependencies': [
+        '<(DEPTH)/exports.gyp:nss_exports',
+      ],
+      'include_dirs!': [
+        'verified',
+        'verified/internal',
+        'verified/karamel/include',
+        'verified/karamel/krmllib/dist/minimal',
+      ],
+      'include_dirs': [
+        'libcrux',
+        'libcrux/internal',
+        'libcrux/karamel',
+      ],
+    },
+    {
+      'target_name': 'pqcwrap',
+      'type': 'static_library',
+      'sources': [
+        'kyber.c',
+      ],
+      'dependencies': [
+        '<(DEPTH)/exports.gyp:nss_exports',
+        'libcrux',
+      ],
+      'include_dirs!': [
+        'verified',
+        'verified/internal',
+        'verified/karamel/include',
+        'verified/karamel/krmllib/dist/minimal',
+      ],
+      'include_dirs': [
+        'libcrux',
+        'libcrux/internal',
+        'libcrux/karamel',
+      ],
+    },
+    {
+      'target_name': 'pqcwrap_static',
+      'type': 'static_library',
+      'sources': [
+        'kyber.c',
+      ],
+      'dependencies': [
+        '<(DEPTH)/exports.gyp:nss_exports',
+        'libcrux',
+      ],
+      'include_dirs!': [
+        'verified',
+        'verified/internal',
+        'verified/karamel/include',
+        'verified/karamel/krmllib/dist/minimal',
+      ],
+      'include_dirs': [
+        'libcrux',
+        'libcrux/internal',
+        'libcrux/karamel',
+      ],
+      'conditions': [
+        [ 'OS=="linux"', {
+          'defines!': [
+            'FREEBL_NO_DEPEND',
+            'FREEBL_LOWHASH',
+          ],
+        }],
+      ],
+    },
     # Build a static freebl library so we can statically link it into
     # the binary. This way we don't have to dlopen() the shared lib
     # but can directly call freebl functions.
@@ -328,6 +415,8 @@
         '<(DEPTH)/exports.gyp:nss_exports',
         'hw-acc-crypto-avx',
         'hw-acc-crypto-avx2',
+        'libcrux',
+        'pqcwrap_static',
         'gcm.gyp:gcm'
       ],
       'conditions': [
@@ -385,6 +474,8 @@
         '<(DEPTH)/exports.gyp:nss_exports',
         'hw-acc-crypto-avx',
         'hw-acc-crypto-avx2',
+        'libcrux',
+        'pqcwrap',
         'gcm.gyp:gcm-nodepend',
       ],
       'conditions': [
@@ -466,6 +557,8 @@
         '<(DEPTH)/exports.gyp:nss_exports',
         'hw-acc-crypto-avx',
         'hw-acc-crypto-avx2',
+        'libcrux',
+        'pqcwrap',
       ],
     },
     {
@@ -483,6 +576,8 @@
         '<(DEPTH)/exports.gyp:nss_exports',
         'hw-acc-crypto-avx',
         'hw-acc-crypto-avx2',
+        'libcrux',
+        'pqcwrap',
         'gcm.gyp:gcm',
       ],
       'asflags_mozilla': [
@@ -529,7 +624,6 @@
       'verified/karamel/include',
       'verified/karamel/krmllib/dist/minimal',
       'deprecated',
-      'verified/eurydice',
     ],
     'defines': [
       'SHLIB_SUFFIX=\"<(dll_suffix)\"',

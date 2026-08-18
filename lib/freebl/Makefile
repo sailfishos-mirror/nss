@@ -627,9 +627,18 @@ ifndef NSS_DISABLE_KYBER
 KYBER_PQCRYSTALS = kyber-pqcrystals-ref.c
 endif
 
-VERIFIED_SRCS += Hacl_Hash_SHA3.c Hacl_P256.c Hacl_P384.c Hacl_P521.c libcrux_sha3_portable.c libcrux_mlkem768_portable.c libcrux_mlkem1024_portable.c libcrux_mlkem_portable.c libcrux_core.c
+VERIFIED_SRCS += Hacl_Hash_SHA3.c Hacl_P256.c Hacl_P384.c Hacl_P521.c
 VERIFIED_SRCS += Hacl_Ed25519.c
 VERIFIED_SRCS += Hacl_Curve25519_51.c
+
+# Vendored libcrux ML-KEM + ML-DSA combined extraction (see lib/freebl/libcrux/).
+# These share one SHA-3/combined_core and are compiled with an isolated include
+# scope (see below) so their krml/eurydice headers don't collide with the HACL*
+# extraction in verified/.
+LIBCRUX_SRCS = combined_core.c libcrux_ct_ops.c libcrux_sha3_portable.c \
+               libcrux_mlkem_core.c libcrux_mlkem_portable.c \
+               libcrux_mlkem768_portable.c libcrux_mlkem1024_portable.c
+CSRCS += $(LIBCRUX_SRCS)
 
 # Bug 1918767 / Bug 1918711 - by setting KRML_MUSTINLINE=inline here, we
 # avoid it being defined to `inline __forceinline` (for msvc) or `inline
@@ -669,11 +678,19 @@ rijndael_tables:
 	$(OBJDIR)/make_rijndael_tab
 
 vpath %.h mpi ecl verified deprecated
-vpath %.c mpi ecl verified deprecated
+vpath %.c mpi ecl verified deprecated libcrux
 vpath %.S mpi ecl
 vpath %.s mpi ecl
 vpath %.asm mpi ecl
-INCLUDES += -Impi -Iecl -Iverified -Iverified/internal -Iverified/karamel/include -Iverified/karamel/krmllib/dist/minimal -Iverified/eurydice -Ideprecated
+INCLUDES += -Impi -Iecl -Iverified -Iverified/internal -Iverified/karamel/include -Iverified/karamel/krmllib/dist/minimal -Ideprecated
+
+# The vendored libcrux objects and the freebl wrapper that uses them (kyber.c)
+# are compiled with the libcrux/ include dirs searched FIRST, so their
+# krml/eurydice headers resolve to the libcrux copies rather than the HACL*
+# copies under verified/.
+LIBCRUX_OBJS = $(addprefix $(OBJDIR)/$(PROG_PREFIX),$(LIBCRUX_SRCS:.c=$(OBJ_SUFFIX)))
+$(LIBCRUX_OBJS) \
+$(OBJDIR)/$(PROG_PREFIX)kyber$(OBJ_SUFFIX): INCLUDES := -Ilibcrux -Ilibcrux/internal -Ilibcrux/karamel $(INCLUDES)
 
 
 DEFINES += -DMP_API_COMPATIBLE
