@@ -1241,17 +1241,23 @@ PK11_ImportCert(PK11SlotInfo *slot, CERTCertificate *cert,
         goto loser;
     }
 
-    if (c->object.cryptoContext) {
-        /* Delete the temp instance */
-        NSSCryptoContext *cc = c->object.cryptoContext;
+    nssPKIObject_Lock(&c->object);
+    NSSCryptoContext *cc = c->object.cryptoContext;
+    nssPKIObject_Unlock(&c->object);
+    if (cc) {
         nssCertificateStore_Lock(cc->certStore, &lockTrace);
-        nssCertificateStore_RemoveCertLOCKED(cc->certStore, c);
+        nssPKIObject_Lock(&c->object);
+        if (c->object.cryptoContext == cc) {
+            /* Delete the temp instance */
+            nssCertificateStore_RemoveCertLOCKED(cc->certStore, c);
+            c->object.cryptoContext = NULL;
+            CERT_LockCertTempPerm(cert);
+            cert->istemp = PR_FALSE;
+            cert->isperm = PR_TRUE;
+            CERT_UnlockCertTempPerm(cert);
+        }
+        nssPKIObject_Unlock(&c->object);
         nssCertificateStore_Unlock(cc->certStore, &lockTrace, &unlockTrace);
-        c->object.cryptoContext = NULL;
-        CERT_LockCertTempPerm(cert);
-        cert->istemp = PR_FALSE;
-        cert->isperm = PR_TRUE;
-        CERT_UnlockCertTempPerm(cert);
     }
 
     /* add the new instance to the cert, force an update of the

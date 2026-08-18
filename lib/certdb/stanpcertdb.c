@@ -260,7 +260,9 @@ __CERT_AddTempCertToPerm(CERTCertificate *cert, char *nickname,
         return SECFailure;
     }
 
+    nssPKIObject_Lock(&c->object);
     context = c->object.cryptoContext;
+    nssPKIObject_Unlock(&c->object);
     if (!context) {
         PORT_SetError(SEC_ERROR_ADDING_CERT);
         return SECFailure; /* wasn't a temp cert */
@@ -278,9 +280,13 @@ __CERT_AddTempCertToPerm(CERTCertificate *cert, char *nickname,
     } /* else: old stanNick is identical to new nickname */
     /* Delete the temp instance */
     nssCertificateStore_Lock(context->certStore, &lockTrace);
-    nssCertificateStore_RemoveCertLOCKED(context->certStore, c);
+    nssPKIObject_Lock(&c->object);
+    if (c->object.cryptoContext == context) {
+        nssCertificateStore_RemoveCertLOCKED(context->certStore, c);
+        c->object.cryptoContext = NULL;
+    }
+    nssPKIObject_Unlock(&c->object);
     nssCertificateStore_Unlock(context->certStore, &lockTrace, &unlockTrace);
-    c->object.cryptoContext = NULL;
 
     /* if the id has not been set explicitly yet, create one from the public
      * key. */
@@ -866,9 +872,13 @@ certdb_SaveSingleProfile(CERTCertificate *cert, const char *emailAddr,
     PRBool freeOldProfile = PR_FALSE;
 
     c = STAN_GetNSSCertificate(cert);
-    if (!c)
+    if (!c) {
         return SECFailure;
+    }
+
+    nssPKIObject_Lock(&c->object);
     cc = c->object.cryptoContext;
+    nssPKIObject_Unlock(&c->object);
     if (cc != NULL) {
         stanProfile = nssCryptoContext_FindSMIMEProfileForCertificate(cc, c);
         if (stanProfile) {
@@ -1039,9 +1049,13 @@ CERT_FindSMimeProfile(CERTCertificate *cert)
         return NULL;
     }
     c = STAN_GetNSSCertificate(cert);
-    if (!c)
+    if (!c) {
         return NULL;
+    }
+
+    nssPKIObject_Lock(&c->object);
     cc = c->object.cryptoContext;
+    nssPKIObject_Unlock(&c->object);
     if (cc != NULL) {
         nssSMIMEProfile *stanProfile;
         stanProfile = nssCryptoContext_FindSMIMEProfileForCertificate(cc, c);
@@ -1058,12 +1072,12 @@ CERT_FindSMimeProfile(CERTCertificate *cert)
             }
             nssSMIMEProfile_Destroy(stanProfile);
         }
-        return rvItem;
-    }
-    rvItem =
-        PK11_FindSMimeProfile(&slot, cert->emailAddr, &cert->derSubject, NULL);
-    if (slot) {
-        PK11_FreeSlot(slot);
+    } else {
+        rvItem =
+            PK11_FindSMimeProfile(&slot, cert->emailAddr, &cert->derSubject, NULL);
+        if (slot) {
+            PK11_FreeSlot(slot);
+        }
     }
     return rvItem;
 }
