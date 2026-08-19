@@ -1198,6 +1198,9 @@ struct sslSocketStr {
      */
     /* True when the current session is a stateless resume. */
     PRBool statelessResume;
+    /* Like ss->ssl3.hs, this is handshake state: it is written by the
+     * extension handlers and senders, and is protected by
+     * ssl3HandshakeLock. */
     TLSExtensionData xtnData;
 
     /* Whether we are doing stream or datagram mode */

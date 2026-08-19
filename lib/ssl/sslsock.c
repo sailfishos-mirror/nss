@@ -2613,9 +2613,15 @@ SSL_ReconfigFD(PRFileDesc *model, PRFileDesc *fd)
 
     /* Reset handshake PSKs on the target socket, re-populating from
      * the (newly copied) external PSK if present.  Pass |ss| (not
-     * |sm|) so that selectedPsk is cleared on the correct socket. */
+     * |sm|) so that selectedPsk is cleared on the correct socket.
+     * ss->ssl3.hs.psks and ss->xtnData are handshake state, so take the
+     * handshake locks, as SSLExp_{Add,Remove}ExternalPsk do. */
+    ssl_Get1stHandshakeLock(ss);
+    ssl_GetSSL3HandshakeLock(ss);
     ss->xtnData.selectedPsk = NULL;
     rv = tls13_ResetHandshakePsks(ss, &ss->ssl3.hs.psks);
+    ssl_ReleaseSSL3HandshakeLock(ss);
+    ssl_Release1stHandshakeLock(ss);
     if (rv != SECSuccess) {
         return NULL;
     }
