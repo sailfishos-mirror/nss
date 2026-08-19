@@ -862,14 +862,13 @@ certdb_SaveSingleProfile(CERTCertificate *cert, const char *emailAddr,
     PRTime newtime;
     SECStatus rv = SECFailure;
     PRBool saveit;
-    SECItem oldprof, oldproftime;
-    SECItem *oldProfile = NULL;
+    SECItem oldproftime;
     SECItem *oldProfileTime = NULL;
+    PRBool freeOldProfileTime = PR_FALSE;
     PK11SlotInfo *slot = NULL;
     NSSCertificate *c;
     NSSCryptoContext *cc;
     nssSMIMEProfile *stanProfile = NULL;
-    PRBool freeOldProfile = PR_FALSE;
 
     c = STAN_GetNSSCertificate(cert);
     if (!c) {
@@ -882,16 +881,20 @@ certdb_SaveSingleProfile(CERTCertificate *cert, const char *emailAddr,
     if (cc != NULL) {
         stanProfile = nssCryptoContext_FindSMIMEProfileForCertificate(cc, c);
         if (stanProfile) {
-            PORT_Assert(stanProfile->profileData);
-            SECITEM_FROM_NSSITEM(&oldprof, stanProfile->profileData);
-            oldProfile = &oldprof;
+            nssPKIObject_Lock(&stanProfile->object);
+            PORT_Assert(stanProfile->profileTime);
             SECITEM_FROM_NSSITEM(&oldproftime, stanProfile->profileTime);
             oldProfileTime = &oldproftime;
+            nssPKIObject_Unlock(&stanProfile->object);
         }
     } else {
-        oldProfile = PK11_FindSMimeProfile(&slot, (char *)emailAddr,
-                                           &cert->derSubject, &oldProfileTime);
-        freeOldProfile = PR_TRUE;
+        /* PK11_FindSMimeProfile returns the profile data in addition to the
+         * profile time. We do not need the data below. */
+        SECItem *oldProfile = PK11_FindSMimeProfile(
+            &slot, (char *)emailAddr, &cert->derSubject, &oldProfileTime);
+
+        SECITEM_FreeItem(oldProfile, PR_TRUE);
+        freeOldProfileTime = PR_TRUE;
     }
 
     saveit = PR_FALSE;
@@ -940,10 +943,12 @@ certdb_SaveSingleProfile(CERTCertificate *cert, const char *emailAddr,
                  * overwrite the data
                  */
                 NSSArena *arena = stanProfile->object.arena;
+                nssPKIObject_Lock(&stanProfile->object);
                 stanProfile->profileTime = nssItem_Create(
                     arena, NULL, profileTime->len, profileTime->data);
                 stanProfile->profileData = nssItem_Create(
                     arena, NULL, emailProfile->len, emailProfile->data);
+                nssPKIObject_Unlock(&stanProfile->object);
             } else if (profileTime && emailProfile) {
                 PRStatus nssrv;
                 NSSItem profTime, profData;
@@ -965,10 +970,7 @@ certdb_SaveSingleProfile(CERTCertificate *cert, const char *emailAddr,
     }
 
 loser:
-    if (oldProfile && freeOldProfile) {
-        SECITEM_FreeItem(oldProfile, PR_TRUE);
-    }
-    if (oldProfileTime && freeOldProfile) {
+    if (freeOldProfileTime) {
         SECITEM_FreeItem(oldProfileTime, PR_TRUE);
     }
     if (stanProfile) {
@@ -1060,16 +1062,13 @@ CERT_FindSMimeProfile(CERTCertificate *cert)
         nssSMIMEProfile *stanProfile;
         stanProfile = nssCryptoContext_FindSMIMEProfileForCertificate(cc, c);
         if (stanProfile) {
+            nssPKIObject_Lock(&stanProfile->object);
             if (stanProfile->profileData) {
-                rvItem =
-                    SECITEM_AllocItem(NULL, NULL,
-                                      stanProfile->profileData->size);
-                if (rvItem) {
-                    PORT_Memcpy(rvItem->data,
-                                stanProfile->profileData->data,
-                                stanProfile->profileData->size);
-                }
+                SECItem profile = { siBuffer, NULL, 0 };
+                SECITEM_FROM_NSSITEM(&profile, stanProfile->profileData);
+                rvItem = SECITEM_DupItem(&profile);
             }
+            nssPKIObject_Unlock(&stanProfile->object);
             nssSMIMEProfile_Destroy(stanProfile);
         }
     } else {
