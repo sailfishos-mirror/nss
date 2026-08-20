@@ -624,7 +624,9 @@ void TlsAgent::EnableGroupsByKeyExchange(SSLKEAType kea) {
 
 void TlsAgent::EnableGroupsByAuthType(SSLAuthType authType) {
   if (authType == ssl_auth_ecdh_rsa || authType == ssl_auth_ecdh_ecdsa ||
-      authType == ssl_auth_ecdsa || authType == ssl_auth_tls13_any) {
+      authType == ssl_auth_ecdsa || authType == ssl_auth_tls13_any ||
+      authType == ssl_auth_mldsa44 || authType == ssl_auth_mldsa65 ||
+      authType == ssl_auth_mldsa87) {
     ConfigNamedGroups(kECDHEGroups);
   }
 }

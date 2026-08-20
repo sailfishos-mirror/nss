@@ -21,7 +21,9 @@ namespace nss_test {
 const std::string kEcdsaDelegatorId = TlsAgent::kDelegatorEcdsa256;
 const std::string kRsaeDelegatorId = TlsAgent::kDelegatorRsae2048;
 const std::string kPssDelegatorId = TlsAgent::kDelegatorRsaPss2048;
+const std::string kMlDsa44DelegatorId = TlsAgent::kDelegatorMlDsa44;
 const std::string kMlDsa65DelegatorId = TlsAgent::kDelegatorMlDsa65;
+const std::string kMlDsa87DelegatorId = TlsAgent::kDelegatorMlDsa87;
 const std::string kDCId = TlsAgent::kServerEcdsa256;
 const SSLSignatureScheme kDCScheme = ssl_sig_ecdsa_secp256r1_sha256;
 const PRUint32 kDCValidFor = 60 * 60 * 24 * 7 /* 1 week (seconds) */;
@@ -231,6 +233,29 @@ TEST_P(TlsConnectTls13, DCConnectEcdsaP256RsaPss) {
   EXPECT_EQ(ssl_sig_ecdsa_secp256r1_sha256, client_->info().signatureScheme);
 }
 
+// Connected with ML-DSA-44, using an ML-DSA-44 SKI and ML-DSA-44 delegation
+// cert.
+TEST_P(TlsConnectTls13, DCConnectMlDsa44MlDsa44) {
+  Reset(kMlDsa44DelegatorId);
+
+  static const SSLSignatureScheme kSchemes[] = {ssl_sig_ecdsa_secp256r1_sha256,
+                                                ssl_sig_mldsa44};
+  client_->SetSignatureSchemes(kSchemes, PR_ARRAY_SIZE(kSchemes));
+  server_->SetSignatureSchemes(kSchemes, PR_ARRAY_SIZE(kSchemes));
+
+  client_->EnableDelegatedCredentials();
+  server_->AddDelegatedCredential(TlsAgent::kServerMlDsa44, ssl_sig_mldsa44,
+                                  kDCValidFor, now());
+
+  auto cfilter = MakeTlsFilter<TlsExtensionCapture>(
+      client_, ssl_delegated_credentials_xtn);
+  Connect();
+
+  EXPECT_TRUE(cfilter->captured());
+  CheckPeerDelegCred(client_, true, ML_DSA_44_PUBLICKEY_LEN * 8);
+  EXPECT_EQ(ssl_sig_mldsa44, client_->info().signatureScheme);
+}
+
 // Connected with ML-DSA-65, using an ML-DSA-65 SKI and ML-DSA-65 delegation
 // cert.
 TEST_P(TlsConnectTls13, DCConnectMlDsa65MlDsa65) {
@@ -252,6 +277,29 @@ TEST_P(TlsConnectTls13, DCConnectMlDsa65MlDsa65) {
   EXPECT_TRUE(cfilter->captured());
   CheckPeerDelegCred(client_, true, ML_DSA_65_PUBLICKEY_LEN * 8);
   EXPECT_EQ(ssl_sig_mldsa65, client_->info().signatureScheme);
+}
+
+// Connected with ML-DSA-87, using an ML-DSA-87 SKI and ML-DSA-87 delegation
+// cert.
+TEST_P(TlsConnectTls13, DCConnectMlDsa87MlDsa87) {
+  Reset(kMlDsa87DelegatorId);
+
+  static const SSLSignatureScheme kSchemes[] = {ssl_sig_ecdsa_secp256r1_sha256,
+                                                ssl_sig_mldsa87};
+  client_->SetSignatureSchemes(kSchemes, PR_ARRAY_SIZE(kSchemes));
+  server_->SetSignatureSchemes(kSchemes, PR_ARRAY_SIZE(kSchemes));
+
+  client_->EnableDelegatedCredentials();
+  server_->AddDelegatedCredential(TlsAgent::kServerMlDsa87, ssl_sig_mldsa87,
+                                  kDCValidFor, now());
+
+  auto cfilter = MakeTlsFilter<TlsExtensionCapture>(
+      client_, ssl_delegated_credentials_xtn);
+  Connect();
+
+  EXPECT_TRUE(cfilter->captured());
+  CheckPeerDelegCred(client_, true, ML_DSA_87_PUBLICKEY_LEN * 8);
+  EXPECT_EQ(ssl_sig_mldsa87, client_->info().signatureScheme);
 }
 
 // Connected with ECDSA-P256 using a ML-DSA-65 delegation cert.
