@@ -2462,13 +2462,11 @@ PK11_FindCertFromDERCertItem(PK11SlotInfo *slot, const SECItem *inDerCert,
     NSSITEM_FROM_SECITEM(&derCert, inDerCert);
     rv = pk11_AuthenticateUnfriendly(slot, PR_TRUE, wincx);
     if (rv != SECSuccess) {
-        PK11_FreeSlot(slot);
         return NULL;
     }
 
     tok = PK11Slot_GetNSSToken(slot);
     if (!tok) {
-        PK11_FreeSlot(slot);
         return NULL;
     }
     co = nssToken_FindCertificateByEncodedCertificate(tok, NULL, &derCert,
