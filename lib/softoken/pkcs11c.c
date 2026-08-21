@@ -105,25 +105,25 @@ sftk_NullHashEnd(void *info, unsigned char *data, unsigned int *lenp,
 #endif
 
 /* Wrappers to avoid undefined behavior calling functions through a pointer of incorrect type. */
-#define SFTKHashWrap(ctxtype, mmm)                                                        \
-    static void                                                                           \
-        SFTKHash_##mmm##_Update(void *vctx, const unsigned char *input, unsigned int len) \
-    {                                                                                     \
-        ctxtype *ctx = vctx;                                                              \
-        mmm##_Update(ctx, input, len);                                                    \
-    }                                                                                     \
-    static void                                                                           \
-        SFTKHash_##mmm##_End(void *vctx, unsigned char *digest,                           \
-                             unsigned int *len, unsigned int maxLen)                      \
-    {                                                                                     \
-        ctxtype *ctx = vctx;                                                              \
-        mmm##_End(ctx, digest, len, maxLen);                                              \
-    }                                                                                     \
-    static void                                                                           \
-        SFTKHash_##mmm##_DestroyContext(void *vctx, PRBool freeit)                        \
-    {                                                                                     \
-        ctxtype *ctx = vctx;                                                              \
-        mmm##_DestroyContext(ctx, freeit);                                                \
+#define SFTKHashWrap(ctxtype, mmm)                                                    \
+    static void                                                                       \
+    SFTKHash_##mmm##_Update(void *vctx, const unsigned char *input, unsigned int len) \
+    {                                                                                 \
+        ctxtype *ctx = vctx;                                                          \
+        mmm##_Update(ctx, input, len);                                                \
+    }                                                                                 \
+    static void                                                                       \
+    SFTKHash_##mmm##_End(void *vctx, unsigned char *digest,                           \
+                         unsigned int *len, unsigned int maxLen)                      \
+    {                                                                                 \
+        ctxtype *ctx = vctx;                                                          \
+        mmm##_End(ctx, digest, len, maxLen);                                          \
+    }                                                                                 \
+    static void                                                                       \
+    SFTKHash_##mmm##_DestroyContext(void *vctx, PRBool freeit)                        \
+    {                                                                                 \
+        ctxtype *ctx = vctx;                                                          \
+        mmm##_DestroyContext(ctx, freeit);                                            \
     }
 
 SFTKHashWrap(MD2Context, MD2);
@@ -153,15 +153,15 @@ SFTKHash_MD5_Begin(void *vctx)
     MD5_Begin(ctx);
 }
 
-#define SFTKCipherWrap(ctxtype, mmm)                                         \
-    static SECStatus                                                         \
-        SFTKCipher_##mmm(void *vctx, unsigned char *output,                  \
-                         unsigned int *outputLen, unsigned int maxOutputLen, \
-                         const unsigned char *input, unsigned int inputLen)  \
-    {                                                                        \
-        ctxtype *ctx = vctx;                                                 \
-        return mmm(ctx, output, outputLen, maxOutputLen,                     \
-                   input, inputLen);                                         \
+#define SFTKCipherWrap(ctxtype, mmm)                                     \
+    static SECStatus                                                     \
+    SFTKCipher_##mmm(void *vctx, unsigned char *output,                  \
+                     unsigned int *outputLen, unsigned int maxOutputLen, \
+                     const unsigned char *input, unsigned int inputLen)  \
+    {                                                                    \
+        ctxtype *ctx = vctx;                                             \
+        return mmm(ctx, output, outputLen, maxOutputLen,                 \
+                   input, inputLen);                                     \
     }
 
 SFTKCipherWrap(AESKeyWrapContext, AESKeyWrap_EncryptKWP);
@@ -2281,7 +2281,7 @@ NSC_DigestFinal(CK_SESSION_HANDLE hSession, CK_BYTE_PTR pDigest,
  */
 #define DOSUB(mmm)                                              \
     static CK_RV                                                \
-        sftk_doSub##mmm(SFTKSessionContext *context)            \
+    sftk_doSub##mmm(SFTKSessionContext *context)                \
     {                                                           \
         mmm##Context *mmm##_ctx = mmm##_NewContext();           \
         context->hashInfo = (void *)mmm##_ctx;                  \
@@ -10177,7 +10177,7 @@ NSC_DeriveKey(CK_SESSION_HANDLE hSession,
         case CKM_NSS_HKDF_SHA512:
             hashMech = CKM_SHA512;
             goto hkdf;
-        hkdf : {
+        hkdf: {
             const CK_NSS_HKDFParams *params =
                 (const CK_NSS_HKDFParams *)pMechanism->pParameter;
             CK_HKDF_PARAMS hkdfParams;

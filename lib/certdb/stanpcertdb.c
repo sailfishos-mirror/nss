@@ -146,7 +146,10 @@ extern const NSSError NSS_ERROR_PKCS11;
 
 /* Look at the stan error stack and map it to NSS 3 errors */
 #define STAN_MAP_ERROR(x, y) \
-    else if (error == (x)) { secError = y; }
+    else if (error == (x))   \
+    {                        \
+        secError = y;        \
+    }
 
 /*
  * map Stan errors into NSS errors
@@ -221,7 +224,10 @@ CERT_MapStanError()
     STAN_MAP_ERROR(NSS_ERROR_INVALID_ASN1ENCODER, SEC_ERROR_INVALID_ARGS)
     STAN_MAP_ERROR(NSS_ERROR_INVALID_ASN1DECODER, SEC_ERROR_INVALID_ARGS)
     STAN_MAP_ERROR(NSS_ERROR_UNKNOWN_ATTRIBUTE, SEC_ERROR_INVALID_ARGS)
-    else { secError = SEC_ERROR_LIBRARY_FAILURE; }
+    else
+    {
+        secError = SEC_ERROR_LIBRARY_FAILURE;
+    }
     PORT_SetError(secError);
 }
 

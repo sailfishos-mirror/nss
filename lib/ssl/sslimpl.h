@@ -91,7 +91,7 @@ extern int Debug;
 #define SSL_DBG(b)
 #endif
 
-#define LSB(x) ((unsigned char)((x)&0xff))
+#define LSB(x) ((unsigned char)((x) & 0xff))
 #define MSB(x) ((unsigned char)(((unsigned)(x)) >> 8))
 
 #define CONST_CAST(T, X) ((T *)(X))

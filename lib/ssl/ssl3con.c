@@ -353,7 +353,8 @@ static const ssl3CipherSuiteDef cipher_suite_defs[] = {
 static const CK_MECHANISM_TYPE auth_alg_defs[] = {
     CKM_INVALID_MECHANISM, /* ssl_auth_null */
     CKM_RSA_PKCS,          /* ssl_auth_rsa_decrypt */
-    CKM_DSA, /* ? _SHA1 */ /* ssl_auth_dsa */
+    CKM_DSA,
+    /* ? _SHA1 */          /* ssl_auth_dsa */
     CKM_INVALID_MECHANISM, /* ssl_auth_kea (unused) */
     CKM_ECDSA,             /* ssl_auth_ecdsa */
     CKM_ECDH1_DERIVE,      /* ssl_auth_ecdh_rsa */
@@ -8959,7 +8960,7 @@ ssl3_ServerCallSNICallback(sslSocket *ss)
     int ret = 0;
 
 #ifdef SSL_SNI_ALLOW_NAME_CHANGE_2HS
-#error("No longer allowed to set SSL_SNI_ALLOW_NAME_CHANGE_2HS")
+#error ("No longer allowed to set SSL_SNI_ALLOW_NAME_CHANGE_2HS")
 #endif
     if (!ssl3_ExtensionNegotiated(ss, ssl_server_name_xtn)) {
         if (ss->firstHsDone) {
@@ -13242,7 +13243,7 @@ ssl3_HandleHandshake(sslSocket *ss, sslBuffer *origBuf)
     origBuf->len = 0; /* So ssl3_GatherAppDataRecord will keep looping. */
     return SECSuccess;
 
-loser : {
+loser: {
     /* Make sure to remove any data that was consumed. */
     unsigned int consumed = origBuf->len - buf.len;
     PORT_Assert(consumed == buf.buf - origBuf->buf);

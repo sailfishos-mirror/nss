@@ -28,7 +28,7 @@ struct KemTestParams {
   CK_MECHANISM_TYPE keyGenMech;
   CK_MECHANISM_TYPE encapsMech;
   CK_NSS_KEM_PARAMETER_SET_TYPE paramSet;
-  const char *name;
+  const char* name;
   // Expected SECKEY_*StrengthInBits, or 0 where cryptohi has no mapping for
   // the parameter set. These are key sizes in bits, not security levels.
   unsigned int pubStrengthBits;
@@ -58,11 +58,11 @@ static const KemTestParams kKemTestParams[] = {
 class Pkcs11KEMTest : public ::testing::Test,
                       public ::testing::WithParamInterface<KemTestParams> {
  protected:
-  PK11SymKey *Encapsulate(const ScopedSECKEYPublicKey &pub,
+  PK11SymKey* Encapsulate(const ScopedSECKEYPublicKey& pub,
                           CK_MECHANISM_TYPE target, PK11AttrFlags attrFlags,
-                          CK_FLAGS opFlags, ScopedSECItem *ciphertext) {
-    PK11SymKey *sharedSecretRawPtr;
-    SECItem *ciphertextRawPtr;
+                          CK_FLAGS opFlags, ScopedSECItem* ciphertext) {
+    PK11SymKey* sharedSecretRawPtr;
+    SECItem* ciphertextRawPtr;
 
     EXPECT_EQ(SECSuccess,
               PK11_Encapsulate(pub.get(), target, attrFlags, opFlags,
@@ -73,11 +73,11 @@ class Pkcs11KEMTest : public ::testing::Test,
     return sharedSecretRawPtr;
   }
 
-  PK11SymKey *Decapsulate(const ScopedSECKEYPrivateKey &priv,
-                          const ScopedSECItem &ciphertext,
+  PK11SymKey* Decapsulate(const ScopedSECKEYPrivateKey& priv,
+                          const ScopedSECItem& ciphertext,
                           CK_MECHANISM_TYPE target, PK11AttrFlags attrFlags,
                           CK_FLAGS opFlags) {
-    PK11SymKey *sharedSecretRawPtr;
+    PK11SymKey* sharedSecretRawPtr;
 
     EXPECT_EQ(SECSuccess,
               PK11_Decapsulate(priv.get(), ciphertext.get(), target, attrFlags,
@@ -86,20 +86,20 @@ class Pkcs11KEMTest : public ::testing::Test,
     return sharedSecretRawPtr;
   }
 
-  SECItem *getRawKeyData(const ScopedPK11SymKey &key) {
+  SECItem* getRawKeyData(const ScopedPK11SymKey& key) {
     SECStatus rv = PK11_ExtractKeyValue(key.get());
     EXPECT_EQ(SECSuccess, rv);
 
-    SECItem *keyData = PK11_GetKeyData(key.get());
+    SECItem* keyData = PK11_GetKeyData(key.get());
     EXPECT_NE(nullptr, keyData);
     EXPECT_NE(nullptr, keyData->data);
 
     return keyData;
   }
 
-  void checkSymKeyAttributeValue(const ScopedPK11SymKey &key,
+  void checkSymKeyAttributeValue(const ScopedPK11SymKey& key,
                                  CK_ATTRIBUTE_TYPE attr,
-                                 uint8_t *expectedValue) {
+                                 uint8_t* expectedValue) {
     SECItem attrValue;
 
     EXPECT_EQ(SECSuccess, PK11_ReadRawAttribute(PK11_TypeSymKey, key.get(),
@@ -158,8 +158,8 @@ TEST_P(Pkcs11KEMTest, KemConsistencyTest) {
   checkSymKeyAttributeValue(sharedSecret2, CKA_MODIFIABLE, &ckFalse);
   checkSymKeyAttributeValue(sharedSecret2, CKA_ENCRYPT, &ckTrue);
 
-  SECItem *item1 = getRawKeyData(sharedSecret);
-  SECItem *item2 = getRawKeyData(sharedSecret2);
+  SECItem* item1 = getRawKeyData(sharedSecret);
+  SECItem* item2 = getRawKeyData(sharedSecret2);
   NSS_DECLASSIFY(item1->data, item1->len);
   NSS_DECLASSIFY(item2->data, item2->len);
   EXPECT_EQ(0, SECITEM_CompareItem(item1, item2));
@@ -177,7 +177,7 @@ TEST_P(Pkcs11KEMTest, KemWrongObjectTypeTest) {
   ASSERT_NE(nullptr, pub);
 
   // Both keys are on the same slot; use its default session for both checks.
-  PK11SlotInfo *slot = priv->pkcs11Slot;
+  PK11SlotInfo* slot = priv->pkcs11Slot;
   ASSERT_NE(nullptr, slot);
 
   CK_MECHANISM mech = {encapsMech(), nullptr, 0};
@@ -217,7 +217,7 @@ TEST_P(Pkcs11KEMTest, KemRejectsWrongCiphertextLength) {
   ASSERT_NE(nullptr, ciphertext);
   ASSERT_LT(0U, ciphertext->len);
 
-  PK11SlotInfo *slot = priv->pkcs11Slot;
+  PK11SlotInfo* slot = priv->pkcs11Slot;
   ASSERT_NE(nullptr, slot);
   CK_MECHANISM mech = {encapsMech(), nullptr, 0};
   CK_ATTRIBUTE tmpl[1] = {};
@@ -259,7 +259,7 @@ TEST_P(Pkcs11KEMTest, KeyStrengthInBits) {
 
 INSTANTIATE_TEST_SUITE_P(Pkcs11KEMTest, Pkcs11KEMTest,
                          ::testing::ValuesIn(kKemTestParams),
-                         [](const ::testing::TestParamInfo<KemTestParams> &i) {
+                         [](const ::testing::TestParamInfo<KemTestParams>& i) {
                            return std::string(i.param.name);
                          });
 
@@ -277,7 +277,7 @@ class Pkcs11MlKemStorageTest
         << PORT_ErrorToString(PORT_GetError());
 
     CK_ML_KEM_PARAMETER_SET_TYPE paramSet = GetParam();
-    SECKEYPublicKey *pub = nullptr;
+    SECKEYPublicKey* pub = nullptr;
     priv_.reset(PK11_GenerateKeyPair(slot_.get(), CKM_ML_KEM_KEY_PAIR_GEN,
                                      &paramSet, &pub, PR_FALSE, PR_FALSE,
                                      nullptr));
@@ -288,7 +288,7 @@ class Pkcs11MlKemStorageTest
     ASSERT_EQ(ExpectedPublicKeyLen(GetParam()), pub_->u.kyber.publicValue.len);
 
     static const unsigned char pw[] = "pw";
-    SECItem pwItem = {siBuffer, const_cast<unsigned char *>(pw), sizeof(pw)};
+    SECItem pwItem = {siBuffer, const_cast<unsigned char*>(pw), sizeof(pw)};
     password_.reset(SECITEM_DupItem(&pwItem));
     ASSERT_TRUE(password_);
   }
@@ -324,9 +324,9 @@ class Pkcs11MlKemStorageTest
   // A key that came back out of storage has to still be the same key:
   // encapsulate to the public half of the pair it came from and check that it
   // decapsulates to the same shared secret.
-  void ExpectPairs(SECKEYPrivateKey *priv, SECKEYPublicKey *pub) {
-    PK11SymKey *encRaw = nullptr;
-    SECItem *ctRaw = nullptr;
+  void ExpectPairs(SECKEYPrivateKey* priv, SECKEYPublicKey* pub) {
+    PK11SymKey* encRaw = nullptr;
+    SECItem* ctRaw = nullptr;
     ASSERT_EQ(SECSuccess, PK11_Encapsulate(
                               pub, CKM_HKDF_DERIVE,
                               PK11_ATTR_SESSION | PK11_ATTR_PUBLIC |
@@ -338,7 +338,7 @@ class Pkcs11MlKemStorageTest
     ASSERT_TRUE(encSecret);
     ASSERT_TRUE(ciphertext);
 
-    PK11SymKey *decRaw = nullptr;
+    PK11SymKey* decRaw = nullptr;
     ASSERT_EQ(SECSuccess, PK11_Decapsulate(
                               priv, ciphertext.get(), CKM_HKDF_DERIVE,
                               PK11_ATTR_SESSION | PK11_ATTR_PUBLIC |
@@ -350,8 +350,8 @@ class Pkcs11MlKemStorageTest
 
     ASSERT_EQ(SECSuccess, PK11_ExtractKeyValue(encSecret.get()));
     ASSERT_EQ(SECSuccess, PK11_ExtractKeyValue(decSecret.get()));
-    SECItem *a = PK11_GetKeyData(encSecret.get());
-    SECItem *b = PK11_GetKeyData(decSecret.get());
+    SECItem* a = PK11_GetKeyData(encSecret.get());
+    SECItem* b = PK11_GetKeyData(decSecret.get());
     ASSERT_TRUE(a);
     ASSERT_TRUE(b);
     NSS_DECLASSIFY(a->data, a->len);
@@ -359,10 +359,10 @@ class Pkcs11MlKemStorageTest
     EXPECT_EQ(0, SECITEM_CompareItem(a, b));
   }
 
-  SECKEYPrivateKey *ImportPkcs8(const std::vector<uint8_t> &pkcs8) {
-    SECItem item = {siBuffer, const_cast<uint8_t *>(pkcs8.data()),
+  SECKEYPrivateKey* ImportPkcs8(const std::vector<uint8_t>& pkcs8) {
+    SECItem item = {siBuffer, const_cast<uint8_t*>(pkcs8.data()),
                     static_cast<unsigned int>(pkcs8.size())};
-    SECKEYPrivateKey *key = nullptr;
+    SECKEYPrivateKey* key = nullptr;
     if (PK11_ImportDERPrivateKeyInfoAndReturnKey(
             slot_.get(), &item, nullptr, nullptr, PR_FALSE, PR_FALSE, KU_ALL,
             &key, nullptr) != SECSuccess) {
@@ -413,9 +413,8 @@ TEST_P(Pkcs11MlKemStorageTest, ExportEncryptedAndImportAsTokenKey) {
   ASSERT_TRUE(epki) << PORT_ErrorToString(PORT_GetError());
 
   static const unsigned char nick[] = "ml-kem token key";
-  SECItem nickname = {siBuffer, const_cast<unsigned char *>(nick),
-                      sizeof(nick)};
-  SECKEYPrivateKey *imported = nullptr;
+  SECItem nickname = {siBuffer, const_cast<unsigned char*>(nick), sizeof(nick)};
+  SECKEYPrivateKey* imported = nullptr;
   ASSERT_EQ(SECSuccess,
             PK11_ImportEncryptedPrivateKeyInfoAndReturnKey(
                 slot_.get(), epki.get(), password_.get(), &nickname,
@@ -446,7 +445,7 @@ TEST_P(Pkcs11MlKemStorageTest, LoadPrivKeyOntoASlot) {
 // in-memory object.
 TEST_P(Pkcs11MlKemStorageTest, TokenKeyCopiesToASessionKey) {
   CK_ML_KEM_PARAMETER_SET_TYPE paramSet = GetParam();
-  SECKEYPublicKey *pub = nullptr;
+  SECKEYPublicKey* pub = nullptr;
   ScopedSECKEYPrivateKey tokenPriv(
       PK11_GenerateKeyPair(slot_.get(), CKM_ML_KEM_KEY_PAIR_GEN, &paramSet,
                            &pub, PR_TRUE /* token */, PR_FALSE, nullptr));

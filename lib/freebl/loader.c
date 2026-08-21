@@ -22,7 +22,7 @@ static const char *NameOfThisSharedLib =
 
 static PRLibrary *blLib = NULL;
 
-#define LSB(x) ((x)&0xff)
+#define LSB(x) ((x) & 0xff)
 #define MSB(x) ((x) >> 8)
 
 static const FREEBLVector *vector;

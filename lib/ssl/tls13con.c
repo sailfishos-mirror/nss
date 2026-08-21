@@ -5192,7 +5192,7 @@ tls13_SetupAeadIv(PRBool isDTLS, SSL3ProtocolVersion v, unsigned char *ivOut, un
             ivOut[offset] = ivOut[offset + 1] = 0;
         }
         ivOut[offset] ^= (unsigned char)(epoch >> BPB) & 0xff;
-        ivOut[offset + 1] ^= (unsigned char)(epoch)&0xff;
+        ivOut[offset + 1] ^= (unsigned char)(epoch) & 0xff;
         offset += 2;
     }
 

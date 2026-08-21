@@ -2600,9 +2600,8 @@ PK11_FortezzaHasKEA(CERTCertificate *cert)
 /*
  * Find a kea cert on this slot that matches the domain of it's peer
  */
-static CERTCertificate
-    *
-    pk11_GetKEAMate(PK11SlotInfo *slot, CERTCertificate *peer)
+static CERTCertificate *
+pk11_GetKEAMate(PK11SlotInfo *slot, CERTCertificate *peer)
 {
     int i;
     CERTCertificate *returnedCert = NULL;
