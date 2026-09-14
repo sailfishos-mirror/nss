@@ -40,6 +40,13 @@ NSS_CMSDecoder_Start(PLArenaPool *poolp,
                      NSSCMSGetDecryptKeyCallback decrypt_key_cb, void *decrypt_key_cb_arg);
 
 /*
+ * NSS_CMSDecoder_SetMaxInputSize - set the maximum number of bytes that may
+ * be fed to the decoder. Set to 0 to indicate there is no limit.
+ */
+extern SECStatus
+NSS_CMSDecoder_SetMaxInputSize(NSSCMSDecoderContext *p7dcx, unsigned long max_input_size);
+
+/*
  * NSS_CMSDecoder_Update - feed DER-encoded data to decoder
  */
 extern SECStatus

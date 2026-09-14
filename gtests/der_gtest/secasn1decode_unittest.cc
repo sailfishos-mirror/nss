@@ -11,12 +11,17 @@
 #include <cstdint>
 #include <vector>
 
+#include "der_encode.h"
 #include "nss.h"
 #include "prerror.h"
 #include "secasn1.h"
 #include "secasn1t.h"
 #include "secerr.h"
 #include "secport.h"
+
+using nss_test::Bytes;
+using nss_test::OctetStr;
+using nss_test::Seq;
 
 class SECASN1DecodeTest : public ::testing::Test {};
 
@@ -182,4 +187,148 @@ TEST_F(SECASN1DecodeTest, ElementSizeLimitEnforcedAcrossChunks) {
   ASSERT_EQ(rv, SECFailure);
   ASSERT_EQ(PR_GetError(), SEC_ERROR_BAD_DER);
   ASSERT_EQ(SECSuccess, SEC_ASN1DecoderFinish(ctx));
+}
+
+// Template for a SEQUENCE OF SEQUENCE (each inner SEQUENCE holds one ANY).
+struct TestGroupItem {
+  SECItem value;
+};
+
+static const SEC_ASN1Template kTestGroupItemTemplate[] = {
+    {SEC_ASN1_SEQUENCE, 0, NULL, sizeof(TestGroupItem)},
+    {SEC_ASN1_ANY, offsetof(TestGroupItem, value)},
+    {0}};
+
+static const SEC_ASN1Template kTestGroupTemplate[] = {
+    {SEC_ASN1_SEQUENCE_OF, 0, kTestGroupItemTemplate}, {0}};
+
+// |count| concatenated group elements, each SEQUENCE { OCTET STRING (1 byte) }.
+static Bytes MakeGroupBody(size_t count) {
+  Bytes body;
+  for (size_t i = 0; i < count; i++) {
+    Bytes element = Seq(OctetStr({static_cast<uint8_t>(i + 1)}));
+    body.insert(body.end(), element.begin(), element.end());
+  }
+  return body;
+}
+
+// SEQUENCE OF |count| group elements.
+static Bytes MakeGroupInput(size_t count) { return Seq(MakeGroupBody(count)); }
+
+TEST_F(SECASN1DecodeTest, ElementCountLimitRejected) {
+  ScopedPLArenaPool pool(PORT_NewArena(4096));
+  TestGroupItem* dest = nullptr;
+  SEC_ASN1DecoderContext* ctx =
+      SEC_ASN1DecoderStart(pool.get(), &dest, kTestGroupTemplate);
+  ASSERT_TRUE(ctx);
+  SEC_ASN1DecoderSetMaximumNumberOfElements(ctx, 2);
+  Bytes input = MakeGroupInput(3);
+  SECStatus rv = SEC_ASN1DecoderUpdate(
+      ctx, reinterpret_cast<const char*>(input.data()), input.size());
+  ASSERT_EQ(rv, SECFailure);
+  ASSERT_EQ(PR_GetError(), SEC_ERROR_BAD_DER);
+  ASSERT_EQ(SECSuccess, SEC_ASN1DecoderFinish(ctx));
+}
+
+TEST_F(SECASN1DecodeTest, ElementCountLimitAccepted) {
+  ScopedPLArenaPool pool(PORT_NewArena(4096));
+  TestGroupItem* dest = nullptr;
+  SEC_ASN1DecoderContext* ctx =
+      SEC_ASN1DecoderStart(pool.get(), &dest, kTestGroupTemplate);
+  ASSERT_TRUE(ctx);
+  SEC_ASN1DecoderSetMaximumNumberOfElements(ctx, 3);
+  Bytes input = MakeGroupInput(3);
+  SECStatus rv = SEC_ASN1DecoderUpdate(
+      ctx, reinterpret_cast<const char*>(input.data()), input.size());
+  ASSERT_EQ(rv, SECSuccess);
+  ASSERT_EQ(SECSuccess, SEC_ASN1DecoderFinish(ctx));
+}
+
+TEST_F(SECASN1DecodeTest, ZeroElementCountLimitDisablesCheck) {
+  ScopedPLArenaPool pool(PORT_NewArena(4096));
+  TestGroupItem* dest = nullptr;
+  SEC_ASN1DecoderContext* ctx =
+      SEC_ASN1DecoderStart(pool.get(), &dest, kTestGroupTemplate);
+  ASSERT_TRUE(ctx);
+  SEC_ASN1DecoderSetMaximumNumberOfElements(ctx, 0);
+  Bytes input = MakeGroupInput(5);
+  SECStatus rv = SEC_ASN1DecoderUpdate(
+      ctx, reinterpret_cast<const char*>(input.data()), input.size());
+  ASSERT_EQ(rv, SECSuccess);
+  ASSERT_EQ(SECSuccess, SEC_ASN1DecoderFinish(ctx));
+}
+
+TEST_F(SECASN1DecodeTest, StreamingDecoderRejectsInputExceedingMaxInputSize) {
+  // clang-format off
+  static const uint8_t kInput[] = {
+      0x30, 0x06,
+      0x04, 0x04,
+      0x01, 0x02, 0x03, 0x04,
+  };
+  // clang-format on
+  static const SEC_ASN1Template kSeqTemplate[] = {
+      {SEC_ASN1_SEQUENCE, 0, NULL, sizeof(SECItem)},
+      {SEC_ASN1_OCTET_STRING, 0},
+      {0}};
+  ScopedPLArenaPool pool(PORT_NewArena(1024));
+  SECItem dest = {siBuffer, nullptr, 0};
+  SEC_ASN1DecoderContext* ctx =
+      SEC_ASN1DecoderStart(pool.get(), &dest, kSeqTemplate);
+  ASSERT_TRUE(ctx);
+  SEC_ASN1DecoderSetMaximumInputSize(ctx, 4);
+  SECStatus rv =
+      SEC_ASN1DecoderUpdate(ctx, reinterpret_cast<const char*>(kInput), 4);
+  EXPECT_EQ(rv, SECSuccess);
+  rv = SEC_ASN1DecoderUpdate(ctx, reinterpret_cast<const char*>(kInput + 4), 4);
+  EXPECT_EQ(rv, SECFailure);
+  EXPECT_EQ(SEC_ERROR_BAD_DER, PR_GetError());
+  SEC_ASN1DecoderFinish(ctx);
+}
+
+TEST_F(SECASN1DecodeTest, StreamingDecoderAcceptsInputWithinMaxInputSize) {
+  // clang-format off
+  static const uint8_t kInput[] = {
+      0x30, 0x06,
+      0x04, 0x04,
+      0x01, 0x02, 0x03, 0x04,
+  };
+  // clang-format on
+  static const SEC_ASN1Template kSeqTemplate[] = {
+      {SEC_ASN1_SEQUENCE, 0, NULL, sizeof(SECItem)},
+      {SEC_ASN1_OCTET_STRING, 0},
+      {0}};
+  ScopedPLArenaPool pool(PORT_NewArena(1024));
+  SECItem dest = {siBuffer, nullptr, 0};
+  SEC_ASN1DecoderContext* ctx =
+      SEC_ASN1DecoderStart(pool.get(), &dest, kSeqTemplate);
+  ASSERT_TRUE(ctx);
+  SEC_ASN1DecoderSetMaximumInputSize(ctx, sizeof(kInput));
+  SECStatus rv = SEC_ASN1DecoderUpdate(
+      ctx, reinterpret_cast<const char*>(kInput), sizeof(kInput));
+  EXPECT_EQ(rv, SECSuccess);
+  EXPECT_EQ(SECSuccess, SEC_ASN1DecoderFinish(ctx));
+}
+
+TEST_F(SECASN1DecodeTest, StreamingDecoderInputSizeLimitCanBeDisabled) {
+  // clang-format off
+  static const uint8_t kInput[] = {
+      0x30, 0x06,
+      0x04, 0x04,
+      0x01, 0x02, 0x03, 0x04,
+  };
+  // clang-format on
+  static const SEC_ASN1Template kSeqTemplate[] = {
+      {SEC_ASN1_SEQUENCE, 0, NULL, sizeof(SECItem)},
+      {SEC_ASN1_OCTET_STRING, 0},
+      {0}};
+  ScopedPLArenaPool pool(PORT_NewArena(1024));
+  SECItem dest = {siBuffer, nullptr, 0};
+  SEC_ASN1DecoderContext* ctx =
+      SEC_ASN1DecoderStart(pool.get(), &dest, kSeqTemplate);
+  ASSERT_TRUE(ctx);
+  SEC_ASN1DecoderSetMaximumInputSize(ctx, 0);
+  SECStatus rv = SEC_ASN1DecoderUpdate(
+      ctx, reinterpret_cast<const char*>(kInput), sizeof(kInput));
+  EXPECT_EQ(rv, SECSuccess);
+  EXPECT_EQ(SECSuccess, SEC_ASN1DecoderFinish(ctx));
 }

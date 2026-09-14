@@ -64,6 +64,12 @@ extern SECStatus
 SEC_PKCS7DecoderUpdate(SEC_PKCS7DecoderContext *p7dcx,
                        const char *buf, unsigned long len);
 
+/* Sets the maximum number of bytes that may be fed to the decoder.
+ * Set to 0 to indicate there is no limit. */
+extern SECStatus
+SEC_PKCS7DecoderSetMaxInputSize(SEC_PKCS7DecoderContext *p7dcx,
+                                unsigned long max_input_size);
+
 extern SEC_PKCS7ContentInfo *
 SEC_PKCS7DecoderFinish(SEC_PKCS7DecoderContext *p7dcx);
 

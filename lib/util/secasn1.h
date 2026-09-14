@@ -66,6 +66,12 @@ extern void SEC_ASN1DecoderClearNotifyProc(SEC_ASN1DecoderContext *cx);
 extern void SEC_ASN1DecoderSetMaximumElementSize(SEC_ASN1DecoderContext *cx,
                                                  unsigned long max_size);
 
+extern void SEC_ASN1DecoderSetMaximumNumberOfElements(
+    SEC_ASN1DecoderContext *cx, unsigned long max_elements);
+
+extern void SEC_ASN1DecoderSetMaximumInputSize(SEC_ASN1DecoderContext *cx,
+                                               unsigned long max_input_size);
+
 extern SECStatus SEC_ASN1Decode(PLArenaPool *pool, void *dest,
                                 const SEC_ASN1Template *t,
                                 const char *buf, long len);
