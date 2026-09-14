@@ -1309,7 +1309,7 @@ sec_asn1d_prepare_for_contents(sec_asn1d_state *state)
 
                 if (state->top->max_element_size > 0 &&
                     alloc_len > state->top->max_element_size) {
-                    PORT_SetError(SEC_ERROR_OUTPUT_LEN);
+                    PORT_SetError(SEC_ERROR_BAD_DER);
                     state->top->status = decodeError;
                     return;
                 }
@@ -1424,7 +1424,7 @@ sec_asn1d_prepare_for_contents(sec_asn1d_state *state)
                     item->len = 0;
                     if (state->top->max_element_size > 0 &&
                         state->contents_length > state->top->max_element_size) {
-                        PORT_SetError(SEC_ERROR_OUTPUT_LEN);
+                        PORT_SetError(SEC_ERROR_BAD_DER);
                         state->top->status = decodeError;
                         return;
                     }
@@ -2269,7 +2269,7 @@ sec_asn1d_concat_substrings(sec_asn1d_state *state)
 
         if (state->top->max_element_size > 0 &&
             alloc_len > state->top->max_element_size) {
-            PORT_SetError(SEC_ERROR_OUTPUT_LEN);
+            PORT_SetError(SEC_ERROR_BAD_DER);
             state->top->status = decodeError;
             return;
         }
@@ -3045,6 +3045,7 @@ SEC_ASN1DecoderStart(PLArenaPool *their_pool, void *dest,
     }
 
     cx->status = needBytes;
+    cx->max_element_size = SEC_ASN1D_MAX_INPUT_SIZE;
 
     if (sec_asn1d_push_state(cx, theTemplate, dest, PR_FALSE) == NULL || sec_asn1d_init_state_based_on_template(cx->current) == NULL) {
         /*
@@ -3119,6 +3120,11 @@ SEC_ASN1Decode(PLArenaPool *poolp, void *dest,
 {
     SEC_ASN1DecoderContext *dcx;
     SECStatus urv, frv;
+
+    if (len < 0 || (unsigned long)len > SEC_ASN1D_MAX_INPUT_SIZE) {
+        PORT_SetError(SEC_ERROR_BAD_DER);
+        return SECFailure;
+    }
 
     dcx = SEC_ASN1DecoderStart(poolp, dest, theTemplate);
     if (dcx == NULL)
