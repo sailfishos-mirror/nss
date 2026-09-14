@@ -304,7 +304,7 @@ struct sec_DecoderContext_struct {
      * size of the top-level element.
      */
     unsigned long max_element_size;
-    unsigned long max_elements; /* max items in any one group (0 = unlimited) */
+    unsigned long max_elements;   /* max items in any one group (0 = unlimited) */
     unsigned long max_input_size; /* max total bytes fed (0 = unlimited) */
     unsigned long total_consumed;
     unsigned int update_depth;
