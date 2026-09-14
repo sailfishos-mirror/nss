@@ -85,6 +85,11 @@ extern SECStatus SEC_QuickDERDecodeItem(PLArenaPool *arena, void *dest,
                                         const SEC_ASN1Template *templateEntry,
                                         const SECItem *src);
 
+extern SECStatus SEC_QuickDERDecodeItemWithLimits(
+    PLArenaPool *arena, void *dest, const SEC_ASN1Template *templateEntry,
+    const SECItem *src, unsigned long max_input_size,
+    unsigned long max_elements);
+
 /*
 ** Encoding.
 */

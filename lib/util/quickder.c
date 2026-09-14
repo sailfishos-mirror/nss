@@ -839,6 +839,44 @@ SEC_QuickDERDecodeItem(PLArenaPool* arena, void* dest,
         rv = SECFailure;
     }
 
+    if (SECSuccess == rv && src->len > SEC_ASN1D_MAX_INPUT_SIZE) {
+        PORT_SetError(SEC_ERROR_BAD_DER);
+        rv = SECFailure;
+    }
+
+    if (SECSuccess == rv) {
+        newsrc = *src;
+        rv = DecodeItem(dest, templateEntry, &newsrc, arena, PR_TRUE);
+        if (SECSuccess == rv && newsrc.len) {
+            rv = SECFailure;
+            PORT_SetError(SEC_ERROR_EXTRA_INPUT);
+        }
+    }
+
+    return rv;
+}
+
+SECStatus
+SEC_QuickDERDecodeItemWithLimits(PLArenaPool* arena, void* dest,
+                                 const SEC_ASN1Template* templateEntry,
+                                 const SECItem* src,
+                                 unsigned long max_input_size,
+                                 unsigned long max_elements)
+{
+    SECStatus rv = SECSuccess;
+    SECItem newsrc;
+
+    if (!arena || !templateEntry || !src) {
+        PORT_SetError(SEC_ERROR_INVALID_ARGS);
+        rv = SECFailure;
+    }
+
+    if (SECSuccess == rv && max_input_size > 0 &&
+        src->len > max_input_size) {
+        PORT_SetError(SEC_ERROR_BAD_DER);
+        rv = SECFailure;
+    }
+
     if (SECSuccess == rv) {
         newsrc = *src;
         rv = DecodeItem(dest, templateEntry, &newsrc, arena, PR_TRUE);
