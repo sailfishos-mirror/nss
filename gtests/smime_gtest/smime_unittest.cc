@@ -21,6 +21,7 @@
 #include "plarena.h"
 #include "scoped_ptrs_smime.h"
 #include "secasn1.h"
+#include "secerr.h"
 #include "secoid.h"
 #include "secpkcs7.h"
 #include "smime.h"
@@ -429,6 +430,18 @@ TEST_F(SMimeTest, ShallowNestingNotRejected) {
   ScopedNSSCMSMessage msg(NSS_CMSMessage_CreateFromDER(
       &item, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr));
   EXPECT_NE(nullptr, msg.get());
+}
+
+TEST_F(SMimeTest, CreateFromDERRejectsOversizeMessage) {
+  // The one-shot API must not raise the default input limit just because the
+  // caller supplied a larger buffer. The buffer is never read.
+  uint8_t dummy = 0;
+  SECItem item = {siBuffer, &dummy,
+                  static_cast<unsigned int>(SEC_ASN1D_MAX_INPUT_SIZE) + 1};
+  ScopedNSSCMSMessage msg(NSS_CMSMessage_CreateFromDER(
+      &item, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr));
+  EXPECT_EQ(nullptr, msg.get());
+  EXPECT_EQ(SEC_ERROR_BAD_DER, PORT_GetError());
 }
 
 TEST_F(SMimeTest, CmsDecoderInputSizeLimitEnforced) {

@@ -66,6 +66,10 @@ NSS_CMSDecoder_Finish(NSSCMSDecoderContext *p7dcx);
 
 /*
  * NSS_CMSMessage_CreateFromDER - decode a CMS message from DER encoded data
+ *
+ * Messages larger than SEC_ASN1D_MAX_INPUT_SIZE are rejected; use the
+ * streaming NSS_CMSDecoder_* API with NSS_CMSDecoder_SetMaxInputSize to
+ * decode larger inputs.
  */
 extern NSSCMSMessage *
 NSS_CMSMessage_CreateFromDER(SECItem *DERmessage,

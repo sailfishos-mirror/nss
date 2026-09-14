@@ -860,6 +860,15 @@ NSS_CMSMessage_CreateFromDER(SECItem *DERmessage,
 {
     NSSCMSDecoderContext *p7dcx;
 
+    /* The limits below are tied to the message length so that they can only
+     * tighten the decoder defaults. Callers that need to decode more than
+     * the default input size must use the streaming API and opt out
+     * explicitly with NSS_CMSDecoder_SetMaxInputSize. */
+    if (DERmessage->len > SEC_ASN1D_MAX_INPUT_SIZE) {
+        PORT_SetError(SEC_ERROR_BAD_DER);
+        return NULL;
+    }
+
     /* first arg(poolp) == NULL => create our own pool */
     p7dcx = NSS_CMSDecoder_Start(NULL, cb, cb_arg, pwfn, pwfn_arg,
                                  decrypt_key_cb, decrypt_key_cb_arg);
