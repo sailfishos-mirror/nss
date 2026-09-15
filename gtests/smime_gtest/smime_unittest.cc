@@ -527,4 +527,75 @@ TEST_F(SMimeTest, Pkcs12DecoderInputSizeLimitDisabled) {
   SEC_PKCS12DecoderFinish(dcx);
 }
 
+TEST_F(SMimeTest, Pkcs7DecoderElementLenLimitEnforced) {
+  Bytes der =
+      Seq(Cat({NssOid(SEC_OID_PKCS7_DATA), Ctx0(OctetStr(Bytes(16, 0xAA)))}));
+  SEC_PKCS7DecoderContext* dcx = SEC_PKCS7DecoderStart(
+      nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+  ASSERT_NE(nullptr, dcx);
+  ASSERT_EQ(SECSuccess, SEC_PKCS7DecoderSetMaxElementLen(dcx, 8));
+  EXPECT_EQ(SECFailure,
+            SEC_PKCS7DecoderUpdate(
+                dcx, reinterpret_cast<const char*>(der.data()), der.size()));
+  EXPECT_EQ(nullptr, SEC_PKCS7DecoderFinish(dcx));
+}
+
+TEST_F(SMimeTest, Pkcs7DecoderElementLenLimitDisabled) {
+  Bytes der =
+      Seq(Cat({NssOid(SEC_OID_PKCS7_DATA), Ctx0(OctetStr(Bytes(16, 0xAA)))}));
+  SEC_PKCS7DecoderContext* dcx = SEC_PKCS7DecoderStart(
+      nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+  ASSERT_NE(nullptr, dcx);
+  ASSERT_EQ(SECSuccess, SEC_PKCS7DecoderSetMaxElementLen(dcx, 0));
+  EXPECT_EQ(SECSuccess,
+            SEC_PKCS7DecoderUpdate(
+                dcx, reinterpret_cast<const char*>(der.data()), der.size()));
+  SEC_PKCS7ContentInfo* cinfo = SEC_PKCS7DecoderFinish(dcx);
+  EXPECT_NE(nullptr, cinfo);
+  if (cinfo) {
+    SEC_PKCS7DestroyContentInfo(cinfo);
+  }
+}
+
+// Bug 2047359: a PFX prefix whose *nested* PKCS#7 ContentInfo declares an
+// oversized element.  The outer PFX decoder never allocates the authSafe
+// (it is an indefinite-length ANY that gets filtered, not stored), so the
+// limit only has any effect if it reaches the nested PKCS#7 decoder.
+//
+// SEQUENCE (len 4095) { INTEGER 3, SEQUENCE (indefinite) { OID (len 64) ...
+static const uint8_t kPfxNestedOversizedElement[] = {
+    0x30, 0x82, 0x0f, 0xff, 0x02, 0x01, 0x03, 0x30, 0x80, 0x06, 0x81, 0x40};
+static const unsigned long kNestedElementLen = 0x40;
+
+// A second update is what surfaces the nested failure: the nested decoder
+// runs under a filter proc, so it flags the error on the PKCS12 context
+// rather than failing the update that fed it.
+TEST_F(SMimeTest, Pkcs12DecoderElementLenLimitReachesNestedDecoder) {
+  SEC_PKCS12DecoderContext* dcx = SEC_PKCS12DecoderStart(
+      nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+  ASSERT_NE(nullptr, dcx);
+  ASSERT_EQ(SECSuccess,
+            SEC_PKCS12DecoderSetMaxElementLen(dcx, kNestedElementLen / 2));
+  SEC_PKCS12DecoderUpdate(
+      dcx, const_cast<unsigned char*>(kPfxNestedOversizedElement),
+      sizeof(kPfxNestedOversizedElement));
+  unsigned char more[] = {0x2a};
+  EXPECT_EQ(SECFailure, SEC_PKCS12DecoderUpdate(dcx, more, sizeof(more)));
+  SEC_PKCS12DecoderFinish(dcx);
+}
+
+TEST_F(SMimeTest, Pkcs12DecoderElementLenLimitAllowsFittingElement) {
+  SEC_PKCS12DecoderContext* dcx = SEC_PKCS12DecoderStart(
+      nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+  ASSERT_NE(nullptr, dcx);
+  ASSERT_EQ(SECSuccess,
+            SEC_PKCS12DecoderSetMaxElementLen(dcx, kNestedElementLen * 2));
+  SEC_PKCS12DecoderUpdate(
+      dcx, const_cast<unsigned char*>(kPfxNestedOversizedElement),
+      sizeof(kPfxNestedOversizedElement));
+  unsigned char more[] = {0x2a};
+  EXPECT_EQ(SECSuccess, SEC_PKCS12DecoderUpdate(dcx, more, sizeof(more)));
+  SEC_PKCS12DecoderFinish(dcx);
+}
+
 }  // namespace nss_test

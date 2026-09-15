@@ -309,6 +309,8 @@ SEC_PKCS12IntegrityHashAllowed;
 NSS_CMSDecoder_SetMaxInputSize;
 SEC_PKCS7DecoderSetMaxInputSize;
 SEC_PKCS12DecoderSetMaxInputSize;
+SEC_PKCS7DecoderSetMaxElementLen;
+SEC_PKCS12DecoderSetMaxElementLen;
 ;+    local:
 ;+       *;
 ;+};

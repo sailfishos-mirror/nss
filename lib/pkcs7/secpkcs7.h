@@ -70,6 +70,12 @@ extern SECStatus
 SEC_PKCS7DecoderSetMaxInputSize(SEC_PKCS7DecoderContext *p7dcx,
                                 unsigned long max_input_size);
 
+/* Sets the maximum size of any single element the decoder will allocate.
+ * Set to 0 to indicate there is no limit. */
+extern SECStatus
+SEC_PKCS7DecoderSetMaxElementLen(SEC_PKCS7DecoderContext *p7dcx,
+                                 unsigned long max_element_len);
+
 extern SEC_PKCS7ContentInfo *
 SEC_PKCS7DecoderFinish(SEC_PKCS7DecoderContext *p7dcx);
 
