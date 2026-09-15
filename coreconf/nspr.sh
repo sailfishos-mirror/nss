@@ -75,6 +75,11 @@ nspr_build()
     fi
     if [ "$target_arch" = "x64" ]; then
         extra_params+=(--enable-64bit)
+    elif [ "$target_arch" = "arm64" ] || [ "$target_arch" = "aarch64" ]; then
+        extra_params+=(--enable-64bit)
+        if [ "$msvc" = 1 ]; then
+            extra_params+=(--host=aarch64-pc-mingw32)
+        fi
     fi
 
     if [[ -n "$CC" && -n "$build_tools_cc" && "$CC" != "$build_tools_cc" ]]; then

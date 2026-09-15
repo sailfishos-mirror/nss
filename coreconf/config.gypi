@@ -594,6 +594,19 @@
                   },
                 },
               }],
+              [ 'target_arch=="arm64"', {
+                'msvs_configuration_platform': 'ARM64',
+                'msvs_settings': {
+                  'VCCLCompilerTool': {
+                    'PreprocessorDefinitions': [
+                      'WIN64',
+                      '_ARM64_',
+                      '__ARM_FEATURE_CRYPTO',
+                    ],
+                    'AdditionalOptions': [ '/EHsc' ],
+                  },
+                },
+              }],
             ],
           }],
           [ 'disable_dbm==1', {
