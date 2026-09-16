@@ -81,10 +81,11 @@ pk11_getKeyFromList(PK11SlotInfo *slot, PRBool needSession)
         PORT_Assert(symKey->session != CK_INVALID_HANDLE);
         if (symKey->session != CK_INVALID_HANDLE)
             return symKey;
-        PK11_FreeSymKey(symKey);
-        /* if we are here, we need a session, but couldn't get one, it's
-         * unlikely we pk11_GetNewSession will succeed if we call it a second
-         * time. */
+        /* We haven't set this key's reference count yet, so release the
+         * struct directly rather than through PK11_FreeSymKey, which would
+         * drive the count negative and abort. It's unlikely pk11_GetNewSession
+         * will succeed if we call it a second time. */
+        PORT_Free(symKey);
         return NULL;
     }
 
@@ -98,7 +99,7 @@ pk11_getKeyFromList(PK11SlotInfo *slot, PRBool needSession)
         symKey->session = pk11_GetNewSession(slot, &symKey->sessionOwner);
         PORT_Assert(symKey->session != CK_INVALID_HANDLE);
         if (symKey->session == CK_INVALID_HANDLE) {
-            PK11_FreeSymKey(symKey);
+            PORT_Free(symKey);
             symKey = NULL;
         }
     } else {
