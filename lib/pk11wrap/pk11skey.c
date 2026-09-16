@@ -67,6 +67,10 @@ pk11_getKeyFromList(PK11SlotInfo *slot, PRBool needSession)
     }
     PR_Unlock(slot->freeListLock);
     if (symKey) {
+        /* A key on the free list has been fully released; anything else
+         * means it is still in use somewhere and must not be recycled. */
+        PORT_ReleaseAssert(symKey->refCount == 0);
+        PORT_ReleaseAssert(symKey->slot == NULL);
         symKey->next = NULL;
         if (!needSession) {
             return symKey;
