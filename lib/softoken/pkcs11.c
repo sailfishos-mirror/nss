@@ -4962,7 +4962,7 @@ NSC_CloseSession(CK_SESSION_HANDLE hSession)
         sftkqueue_delete(session, hSession, slot->head, slot->sessHashSize);
         /* Drop the bucket's reference. We still hold the reference taken
          * by sftk_SessionFromHandle, so refCount cannot reach 0 here. */
-        PORT_Assert(session->refCount > 1);
+        PORT_ReleaseAssert(session->refCount > 1);
         session->refCount--;
     }
     PR_Unlock(lock);

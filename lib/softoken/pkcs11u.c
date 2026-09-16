@@ -819,7 +819,7 @@ sftk_forceAttribute(SFTKObject *object, CK_ATTRIBUTE_TYPE type,
                         attribute->attrib.ulValueLen);
         }
         if (attribute->freeData) {
-            PORT_Assert(attribute->attrib.pValue != att_val);
+            PORT_ReleaseAssert(attribute->attrib.pValue != att_val);
             PORT_Free(attribute->attrib.pValue);
         }
         attribute->freeData = PR_FALSE;
@@ -2361,7 +2361,7 @@ sftk_ClearSession(SFTKSession *session)
 static void
 sftk_DestroySession(SFTKSession *session)
 {
-    PORT_Assert(session->refCount == 0);
+    PORT_ReleaseAssert(session->refCount == 0);
     sftk_ClearSession(session);
     PORT_Free(session);
 }
@@ -2406,7 +2406,7 @@ sftk_FreeSession(SFTKSession *session)
     PRLock *lock = SFTK_SESSION_LOCK(slot, session->handle);
 
     PR_Lock(lock);
-    PORT_Assert(session->refCount > 0);
+    PORT_ReleaseAssert(session->refCount > 0);
     if (session->refCount == 1)
         destroy = PR_TRUE;
     session->refCount--;
