@@ -716,7 +716,8 @@ CERTSignedCrl*
 SEC_DupCrl(CERTSignedCrl* acrl)
 {
     if (acrl) {
-        PR_ATOMIC_INCREMENT(&acrl->referenceCount);
+        PRInt32 refCount = PR_ATOMIC_INCREMENT(&acrl->referenceCount);
+        PORT_ReleaseAssert(refCount > 1);
         return acrl;
     }
     return NULL;
@@ -726,7 +727,9 @@ SECStatus
 SEC_DestroyCrl(CERTSignedCrl* crl)
 {
     if (crl) {
-        if (PR_ATOMIC_DECREMENT(&crl->referenceCount) < 1) {
+        PRInt32 refCount = PR_ATOMIC_DECREMENT(&crl->referenceCount);
+        PORT_ReleaseAssert(refCount >= 0);
+        if (refCount == 0) {
             if (crl->slot) {
                 PK11_FreeSlot(crl->slot);
             }
