@@ -208,19 +208,21 @@ tasks:
                 fuzz: [false]
                 tsan: [false]
 
-    # Schedule tests that need certificates.
+    # chains.sh builds its own PKI from scratch and reads nothing from cert.sh.
     chains:
         description: Chains tests
         from-deps:
-            kinds: [certs]
+            kinds: [build]
             with-attributes:
                 dbm: [false]
+                cc: [false]
+                modular: [false]
                 make-fips: [false]
                 # Only old make builds have -Ddisable_libpkix=0 and can run chain tests.
                 make: [true]
         worker:
             env:
-                TC_PARENT_TASK_ID: {task-reference: "<certs>"}
+                TC_PARENT_TASK_ID: {task-reference: "<build>"}
                 NSS_TESTS: chains
             max-run-time:
                 by-platform:
@@ -229,66 +231,85 @@ tasks:
         treeherder:
             symbol: Chains
 
+    # ec.sh, lowhash.sh, sdr.sh and policy.sh use no cert.sh output either;
+    # sdr.sh creates its own profile DB.
     ec:
         description: EC tests
         from-deps:
-            kinds: [certs]
+            kinds: [build]
             with-attributes:
+                nspr: [false]
                 dbm: [false]
+                cc: [false]
+                modular: [false]
                 make-fips: [false]
+                fuzz: [false]
                 tsan: [false]
         treeherder:
             symbol: EC
         worker:
             env:
-                TC_PARENT_TASK_ID: {task-reference: "<certs>"}
+                TC_PARENT_TASK_ID: {task-reference: "<build>"}
                 NSS_TESTS: ec
 
     lowhash:
         description: Lowhash tests
         from-deps:
-            kinds: [certs]
+            kinds: [build]
             with-attributes:
+                nspr: [false]
                 dbm: [false]
+                cc: [false]
+                modular: [false]
                 make-fips: [false]
+                fuzz: [false]
                 tsan: [false]
         treeherder:
             symbol: Lowhash
         worker:
             env:
-                TC_PARENT_TASK_ID: {task-reference: "<certs>"}
+                TC_PARENT_TASK_ID: {task-reference: "<build>"}
                 NSS_TESTS: lowhash
 
     sdr:
         description: SDR tests
         from-deps:
-            kinds: [certs]
+            kinds: [build]
             with-attributes:
+                nspr: [false]
                 dbm: [false]
+                cc: [false]
+                modular: [false]
                 make-fips: [false]
+                fuzz: [false]
                 tsan: [false]
         treeherder:
             symbol: SDR
         worker:
             env:
-                TC_PARENT_TASK_ID: {task-reference: "<certs>"}
+                TC_PARENT_TASK_ID: {task-reference: "<build>"}
                 NSS_TESTS: sdr
 
     policy:
         description: Policy tests
         from-deps:
-            kinds: [certs]
+            kinds: [build]
             with-attributes:
+                nspr: [false]
                 dbm: [false]
+                cc: [false]
+                modular: [false]
                 make-fips: [false]
+                fuzz: [false]
                 tsan: [false]
         treeherder:
             symbol: Policy
         worker:
             env:
-                TC_PARENT_TASK_ID: {task-reference: "<certs>"}
+                TC_PARENT_TASK_ID: {task-reference: "<build>"}
                 NSS_TESTS: policy
 
+    # Tests that do need cert.sh output.
     db:
         description: DB tests
         from-deps:
