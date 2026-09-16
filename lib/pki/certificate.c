@@ -155,7 +155,9 @@ nssCertificate_Destroy(
     // necessary even though the refcounting is atomic. Go figure.
 
     // Return early if this isn't the last reference.
-    if (PR_ATOMIC_DECREMENT(&c->object.refCount) != 0) {
+    PRInt32 refCount = PR_ATOMIC_DECREMENT(&c->object.refCount);
+    PORT_ReleaseAssert(refCount >= 0);
+    if (refCount != 0) {
         nssPKIObject_Unlock(&c->object);
         if (cc) {
             nssCertificateStore_Unlock(cc->certStore, &lockTrace, &unlockTrace);

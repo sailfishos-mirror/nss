@@ -29,7 +29,9 @@ nssToken_Destroy(
     NSSToken *tok)
 {
     if (tok) {
-        if (PR_ATOMIC_DECREMENT(&tok->base.refCount) == 0) {
+        PRInt32 refCount = PR_ATOMIC_DECREMENT(&tok->base.refCount);
+        PORT_ReleaseAssert(refCount >= 0);
+        if (refCount == 0) {
             PK11_FreeSlot(tok->pk11slot);
             PR_DestroyLock(tok->base.lock);
             nssTokenObjectCache_Destroy(tok->cache);
@@ -51,7 +53,8 @@ NSS_IMPLEMENT NSSToken *
 nssToken_AddRef(
     NSSToken *tok)
 {
-    PR_ATOMIC_INCREMENT(&tok->base.refCount);
+    PRInt32 refCount = PR_ATOMIC_INCREMENT(&tok->base.refCount);
+    PORT_ReleaseAssert(refCount > 1);
     return tok;
 }
 
