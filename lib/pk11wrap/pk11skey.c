@@ -183,12 +183,19 @@ PK11_FreeSymKey(PK11SymKey *symKey)
 {
     PK11SlotInfo *slot;
     PRBool freeit = PR_TRUE;
+    PRInt32 newRefCount;
 
     if (!symKey) {
         return;
     }
 
-    if (PR_ATOMIC_DECREMENT(&symKey->refCount) == 0) {
+    newRefCount = PR_ATOMIC_DECREMENT(&symKey->refCount);
+    /* A negative count means this key was already freed (its struct may be
+     * on the slot's free list awaiting reuse). Abort, like an allocator that
+     * detects a double free, before the corrupted struct can be handed out
+     * to a new key. */
+    PORT_ReleaseAssert(newRefCount >= 0);
+    if (newRefCount == 0) {
         PK11SymKey *parent = symKey->parent;
 
         symKey->parent = NULL;
@@ -249,7 +256,10 @@ PK11_FreeSymKey(PK11SymKey *symKey)
 PK11SymKey *
 PK11_ReferenceSymKey(PK11SymKey *symKey)
 {
-    PR_ATOMIC_INCREMENT(&symKey->refCount);
+    PRInt32 newRefCount = PR_ATOMIC_INCREMENT(&symKey->refCount);
+    /* A count of one after incrementing means the key was already freed;
+     * abort before the new reference is used to operate on freed memory. */
+    PORT_ReleaseAssert(newRefCount > 1);
     return symKey;
 }
 

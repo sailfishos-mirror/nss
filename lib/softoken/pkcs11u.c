@@ -1180,14 +1180,13 @@ sftk_GetObjectFromList(PRBool *hasLocks, PRBool optimizeSpace,
         }
         PR_Unlock(list->lock);
         if (object) {
-            // As a safeguard against misuse of the library, ensure we don't
-            // hand out live objects that somehow land in the free list.
-            PORT_Assert(object->refCount == 0);
-            if (object->refCount == 0) {
-                object->next = object->prev = NULL;
-                *hasLocks = PR_TRUE;
-                return object;
-            }
+            /* A live object on the free list means it was destroyed
+             * twice; some other thread still holds a pointer to it and
+             * will corrupt it if it is handed out again. */
+            PORT_ReleaseAssert(object->refCount == 0);
+            object->next = object->prev = NULL;
+            *hasLocks = PR_TRUE;
+            return object;
         }
     }
     size = isSessionObject ? sizeof(SFTKSessionObject) + hashSize * sizeof(SFTKAttribute *) : sizeof(SFTKTokenObject);
@@ -1369,11 +1368,19 @@ sftk_DestroySessionObjectData(SFTKSessionObject *so)
     for (i = 0; i < MAX_OBJS_ATTRS; i++) {
         unsigned char *value = so->attrList[i].attrib.pValue;
         if (value) {
+            /* An attribute value lives in the attribute's inline space
+             * unless the attribute owns a heap allocation for it. Anything
+             * else means this object was already destroyed and its memory
+             * reused; abort rather than zeroize through a wild pointer. */
+            PORT_ReleaseAssert(so->attrList[i].freeData ||
+                               (value == so->attrList[i].space &&
+                                so->attrList[i].attrib.ulValueLen <= ATTR_SPACE));
             PORT_Memset(value, 0, so->attrList[i].attrib.ulValueLen);
             if (so->attrList[i].freeData) {
                 PORT_Free(value);
             }
             so->attrList[i].attrib.pValue = NULL;
+            so->attrList[i].attrib.ulValueLen = 0;
             so->attrList[i].freeData = PR_FALSE;
         }
     }
@@ -1421,7 +1428,9 @@ void
 sftk_ReferenceObject(SFTKObject *object)
 {
     PR_Lock(object->refLock);
-    PORT_Assert(object->refCount > 0);
+    /* A zero count means this object has already been destroyed; abort
+     * before the new reference is used to operate on freed memory. */
+    PORT_ReleaseAssert(object->refCount > 0);
     object->refCount++;
     PR_Unlock(object->refLock);
 }
@@ -1468,6 +1477,10 @@ sftk_FreeObject(SFTKObject *object)
     CK_RV crv;
 
     PR_Lock(object->refLock);
+    /* A zero count means this object has already been destroyed. Abort,
+     * like an allocator that detects a double free, rather than tear the
+     * object down a second time. */
+    PORT_ReleaseAssert(object->refCount > 0);
     if (object->refCount == 1)
         destroy = PR_TRUE;
     object->refCount--;
