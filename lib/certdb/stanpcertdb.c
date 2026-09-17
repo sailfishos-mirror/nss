@@ -473,8 +473,7 @@ CERT_NewTempCertificate(CERTCertDBHandle *handle, SECItem *derCert,
     CERT_UnlockCertTempPerm(cc);
     return cc;
 loser:
-    /* Perhaps this should be nssCertificate_Destroy(c) */
-    nssPKIObject_Destroy(&c->object);
+    nssCertificate_Destroy(c);
     return NULL;
 }
 
