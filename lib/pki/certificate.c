@@ -650,22 +650,6 @@ NSSCertificate_VerifyRecover(
     return NULL;
 }
 
-NSS_IMPLEMENT NSSItem *
-NSSCertificate_WrapSymmetricKey(
-    NSSCertificate *c,
-    NSSAlgorithmAndParameters *apOpt,
-    NSSSymmetricKey *keyToWrap,
-    NSSTime *timeOpt,
-    NSSUsage *usage,
-    NSSPolicies *policiesOpt,
-    NSSCallback *uhh,
-    NSSItem *rvOpt,
-    NSSArena *arenaOpt)
-{
-    nss_SetError(NSS_ERROR_NOT_FOUND);
-    return NULL;
-}
-
 NSS_IMPLEMENT NSSCryptoContext *
 NSSCertificate_CreateCryptoContext(
     NSSCertificate *c,
@@ -673,51 +657,6 @@ NSSCertificate_CreateCryptoContext(
     NSSTime *timeOpt,
     NSSUsage *usage,
     NSSPolicies *policiesOpt,
-    NSSCallback *uhh)
-{
-    nss_SetError(NSS_ERROR_NOT_FOUND);
-    return NULL;
-}
-
-NSS_IMPLEMENT NSSPublicKey *
-NSSCertificate_GetPublicKey(
-    NSSCertificate *c)
-{
-#if 0
-    CK_ATTRIBUTE pubktemplate[] = {
-    { CKA_CLASS,   NULL, 0 },
-    { CKA_ID,      NULL, 0 },
-    { CKA_SUBJECT, NULL, 0 }
-    };
-    PRStatus nssrv;
-    CK_ULONG count = sizeof(pubktemplate) / sizeof(pubktemplate[0]);
-    NSS_CK_SET_ATTRIBUTE_ITEM(pubktemplate, 0, &g_ck_class_pubkey);
-    if (c->id.size > 0) {
-    /* CKA_ID */
-    NSS_CK_ITEM_TO_ATTRIBUTE(&c->id, &pubktemplate[1]);
-    } else {
-    /* failure, yes? */
-    return (NSSPublicKey *)NULL;
-    }
-    if (c->subject.size > 0) {
-    /* CKA_SUBJECT */
-    NSS_CK_ITEM_TO_ATTRIBUTE(&c->subject, &pubktemplate[2]);
-    } else {
-    /* failure, yes? */
-    return (NSSPublicKey *)NULL;
-    }
-    /* Try the cert's token first */
-    if (c->token) {
-    nssrv = nssToken_FindObjectByTemplate(c->token, pubktemplate, count);
-    }
-#endif
-    /* Try all other key tokens */
-    return (NSSPublicKey *)NULL;
-}
-
-NSS_IMPLEMENT NSSPrivateKey *
-NSSCertificate_FindPrivateKey(
-    NSSCertificate *c,
     NSSCallback *uhh)
 {
     nss_SetError(NSS_ERROR_NOT_FOUND);
@@ -763,93 +702,6 @@ nssCertificate_SubjectListSort(
     } else {
         return dc1->isNewerThan(dc1, dc2) ? -1 : 1;
     }
-}
-
-NSS_IMPLEMENT PRBool
-NSSUserCertificate_IsStillPresent(
-    NSSUserCertificate *uc,
-    PRStatus *statusOpt)
-{
-    nss_SetError(NSS_ERROR_NOT_FOUND);
-    return PR_FALSE;
-}
-
-NSS_IMPLEMENT NSSItem *
-NSSUserCertificate_Decrypt(
-    NSSUserCertificate *uc,
-    NSSAlgorithmAndParameters *apOpt,
-    NSSItem *data,
-    NSSTime *timeOpt,
-    NSSUsage *usage,
-    NSSPolicies *policiesOpt,
-    NSSCallback *uhh,
-    NSSItem *rvOpt,
-    NSSArena *arenaOpt)
-{
-    nss_SetError(NSS_ERROR_NOT_FOUND);
-    return NULL;
-}
-
-NSS_IMPLEMENT NSSItem *
-NSSUserCertificate_Sign(
-    NSSUserCertificate *uc,
-    NSSAlgorithmAndParameters *apOpt,
-    NSSItem *data,
-    NSSTime *timeOpt,
-    NSSUsage *usage,
-    NSSPolicies *policiesOpt,
-    NSSCallback *uhh,
-    NSSItem *rvOpt,
-    NSSArena *arenaOpt)
-{
-    nss_SetError(NSS_ERROR_NOT_FOUND);
-    return NULL;
-}
-
-NSS_IMPLEMENT NSSItem *
-NSSUserCertificate_SignRecover(
-    NSSUserCertificate *uc,
-    NSSAlgorithmAndParameters *apOpt,
-    NSSItem *data,
-    NSSTime *timeOpt,
-    NSSUsage *usage,
-    NSSPolicies *policiesOpt,
-    NSSCallback *uhh,
-    NSSItem *rvOpt,
-    NSSArena *arenaOpt)
-{
-    nss_SetError(NSS_ERROR_NOT_FOUND);
-    return NULL;
-}
-
-NSS_IMPLEMENT NSSSymmetricKey *
-NSSUserCertificate_UnwrapSymmetricKey(
-    NSSUserCertificate *uc,
-    NSSAlgorithmAndParameters *apOpt,
-    NSSItem *wrappedKey,
-    NSSTime *timeOpt,
-    NSSUsage *usage,
-    NSSPolicies *policiesOpt,
-    NSSCallback *uhh,
-    NSSItem *rvOpt,
-    NSSArena *arenaOpt)
-{
-    nss_SetError(NSS_ERROR_NOT_FOUND);
-    return NULL;
-}
-
-NSS_IMPLEMENT NSSSymmetricKey *
-NSSUserCertificate_DeriveSymmetricKey(
-    NSSUserCertificate *uc, /* provides private key */
-    NSSCertificate *c,      /* provides public key */
-    NSSAlgorithmAndParameters *apOpt,
-    NSSOID *target,
-    PRUint32 keySizeOpt, /* zero for best allowed */
-    NSSOperations operations,
-    NSSCallback *uhh)
-{
-    nss_SetError(NSS_ERROR_NOT_FOUND);
-    return NULL;
 }
 
 NSS_IMPLEMENT nssSMIMEProfile *

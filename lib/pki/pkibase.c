@@ -560,17 +560,12 @@ nssCRLArray_Destroy(
 typedef enum {
     pkiObjectType_Certificate = 0,
     pkiObjectType_CRL = 1,
-    pkiObjectType_PrivateKey = 2,
-    pkiObjectType_PublicKey = 3
 } pkiObjectType;
 
 /* Each object is defined by a set of items that uniquely identify it.
  * Here are the uid sets:
  *
  * NSSCertificate ==>  { issuer, serial }
- * NSSPrivateKey
- *         (RSA) ==> { modulus, public exponent }
- *
  */
 #define MAX_ITEMS_FOR_UID 2
 
@@ -900,14 +895,6 @@ nssPKIObjectCollection_Traverse(
             case pkiObjectType_CRL:
                 (void)(*callback->func.crl)((NSSCRL *)node->object,
                                             callback->arg);
-                break;
-            case pkiObjectType_PrivateKey:
-                (void)(*callback->func.pvkey)((NSSPrivateKey *)node->object,
-                                              callback->arg);
-                break;
-            case pkiObjectType_PublicKey:
-                (void)(*callback->func.pbkey)((NSSPublicKey *)node->object,
-                                              callback->arg);
                 break;
         }
         link = PR_NEXT_LINK(link);

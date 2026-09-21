@@ -226,33 +226,6 @@ STAN_Shutdown()
     return status;
 }
 
-/* this function should not be a hack; it will be needed in 4.0 (rename) */
-NSS_IMPLEMENT NSSItem *
-STAN_GetCertIdentifierFromDER(NSSArena *arenaOpt, NSSDER *der)
-{
-    NSSItem *rvKey;
-    SECItem secDER;
-    SECItem secKey = { 0 };
-    SECStatus secrv;
-    PLArenaPool *arena;
-
-    SECITEM_FROM_NSSITEM(&secDER, der);
-
-    /* nss3 call uses nss3 arena's */
-    arena = PORT_NewArena(256);
-    if (!arena) {
-        return NULL;
-    }
-    secrv = CERT_KeyFromDERCert(arena, &secDER, &secKey);
-    if (secrv != SECSuccess) {
-        PORT_FreeArena(arena, PR_FALSE);
-        return NULL;
-    }
-    rvKey = nssItem_Create(arenaOpt, NULL, secKey.len, (void *)secKey.data);
-    PORT_FreeArena(arena, PR_FALSE);
-    return rvKey;
-}
-
 NSS_IMPLEMENT PRStatus
 nssPKIX509_GetIssuerAndSerialFromDER(NSSDER *der,
                                      NSSDER *issuer, NSSDER *serial)
