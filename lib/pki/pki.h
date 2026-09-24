@@ -17,6 +17,8 @@
 #include "pkit.h"
 #endif /* PKIT_H */
 
+#include "certt.h"
+
 PR_BEGIN_EXTERN_C
 
 NSS_EXTERN NSSCallback *
@@ -35,7 +37,9 @@ nssTrustDomain_FindCertificatesBySubject(
 NSS_EXTERN NSSTrust *
 nssTrustDomain_FindTrustForCertificate(
     NSSTrustDomain *td,
-    NSSCertificate *c);
+    NSSDER *encoding,
+    NSSDER *issuer,
+    NSSDER *serial);
 
 NSS_EXTERN NSSCertificate *
 nssCertificate_AddRef(NSSCertificate *c);
@@ -103,6 +107,9 @@ nssTrust_AddRef(NSSTrust *trust);
 
 NSS_EXTERN PRStatus
 nssTrust_Destroy(NSSTrust *trust);
+
+NSS_EXTERN void
+nssTrust_ToCERTCertTrust(NSSTrust *trust, CERTCertTrust *certTrust);
 
 NSS_EXTERN nssSMIMEProfile *
 nssSMIMEProfile_AddRef(nssSMIMEProfile *profile);

@@ -781,6 +781,9 @@ extern char *CERT_GetCertUid(const CERTName *name);
 extern SECStatus CERT_GetCertTrust(const CERTCertificate *cert,
                                    CERTCertTrust *trust);
 
+extern SECStatus CERT_GetDERCertTrust(SECItem *derCert,
+                                      CERTCertTrust *trust);
+
 extern SECStatus CERT_ChangeCertTrust(CERTCertDBHandle *handle,
                                       CERTCertificate *cert,
                                       CERTCertTrust *trust);

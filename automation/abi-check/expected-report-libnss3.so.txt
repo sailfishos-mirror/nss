@@ -1,0 +1,5 @@
+
+1 Added function:
+
+  [A] 'function SECStatus CERT_GetDERCertTrust(SECItem*, CERTCertTrust*)'    {CERT_GetDERCertTrust@@NSS_3.131}
+
