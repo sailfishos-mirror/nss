@@ -1614,7 +1614,7 @@ PK11_GenerateKeyPairWithOpFlags(PK11SlotInfo *slot, CK_MECHANISM_TYPE type,
         case CKM_RSA_PKCS_KEY_PAIR_GEN:
         case CKM_RSA_X9_31_KEY_PAIR_GEN:
             rsaParams = (PK11RSAGenParams *)param;
-            if (rsaParams->pe == 0) {
+            if (rsaParams->pe == 0 || rsaParams->pe > PR_UINT32_MAX) {
                 PORT_SetError(SEC_ERROR_INVALID_ARGS);
                 return NULL;
             }

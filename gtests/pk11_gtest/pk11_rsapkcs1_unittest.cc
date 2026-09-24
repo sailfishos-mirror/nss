@@ -317,6 +317,24 @@ TEST(RsaPkcs1Test, RequireNullParameter) {
 #endif
 }
 
+// Bug 2068388: public exponents wider than 32 bits must be rejected.
+TEST(RsaPkcs1Test, KeyGenPublicExponentTooLarge) {
+  if (sizeof(unsigned long) <= 4) {
+    GTEST_SKIP() << "unsigned long cannot hold an exponent above 32 bits";
+  }
+  PK11RSAGenParams rsa_params = {1024,
+                                 static_cast<unsigned long>(PR_UINT32_MAX) + 1};
+  ScopedPK11SlotInfo slot(PK11_GetInternalSlot());
+  ASSERT_TRUE(slot);
+  SECKEYPublicKey* pub = nullptr;
+  ScopedSECKEYPrivateKey priv(
+      PK11_GenerateKeyPair(slot.get(), CKM_RSA_PKCS_KEY_PAIR_GEN, &rsa_params,
+                           &pub, false, false, nullptr));
+  EXPECT_FALSE(priv);
+  EXPECT_FALSE(pub);
+  EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+}
+
 TEST_F(Pkcs11RsaPkcs1WycheproofTest, Pkcs11RsaPkcs1WycheproofTest) {
   WycheproofHeader("rsa_signature", "RSASSA-PKCS1-v1_5",
                    "rsassa_pkcs1_verify_schema.json",
