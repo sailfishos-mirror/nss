@@ -4,6 +4,8 @@
 #include "nss.h"
 #include "pk11pub.h"
 #include "secmod.h"
+#include "secasn1.h"
+#include "secder.h"
 #include "secerr.h"
 
 #include "nss_scoped_ptrs.h"
@@ -98,6 +100,239 @@ TEST_F(SoftokenTest, CheckDefaultPbkdf2Iterations) {
   EXPECT_EQ(SQLITE_OK, sqlite3_finalize(statement));
   sqlite3_free(query_str);
   sqlite3_close(sql_db);
+}
+
+// Local structs and templates for decoding the PBES2/PBKDF2 blob stored in
+// key4.db's password metaData entry.  SECOID_AlgorithmIDTemplate (from
+// libnssutil3) handles the AlgorithmIdentifier level; only the two inner
+// parameter SEQUENCEs need test-local definitions.  The softoken templates
+// for these live in libsoftokn3 which is not directly linked.
+//
+// The AlgorithmIdentifier sub-template must be referenced through
+// SEC_ASN1_MKSUB/SEC_ASN1_SUB rather than by name: Windows cannot link a
+// direct reference to template data in another DLL.  Both macros are no-ops
+// on other platforms.
+SEC_ASN1_MKSUB(SECOID_AlgorithmIDTemplate)
+
+// EncryptedData ::= SEQUENCE { algorithm AlgorithmIdentifier,
+//                              encryptedData OCTET STRING }
+struct LocalEncData {
+  SECAlgorithmID algorithm;
+  SECItem encryptedData;
+};
+static const SEC_ASN1Template kLocalEncDataTemplate[] = {
+    {SEC_ASN1_SEQUENCE, 0, nullptr, sizeof(LocalEncData)},
+    {SEC_ASN1_INLINE | SEC_ASN1_XTRN, offsetof(LocalEncData, algorithm),
+     SEC_ASN1_SUB(SECOID_AlgorithmIDTemplate)},
+    {SEC_ASN1_OCTET_STRING, offsetof(LocalEncData, encryptedData)},
+    {0}};
+
+// PBES2-params ::= SEQUENCE { keyDerivationFunc AlgorithmIdentifier,
+//                              encryptionScheme  AlgorithmIdentifier }
+struct LocalPBES2Params {
+  SECAlgorithmID kdf;
+  SECAlgorithmID cipher;
+};
+static const SEC_ASN1Template kLocalPBES2ParamsTemplate[] = {
+    {SEC_ASN1_SEQUENCE, 0, nullptr, sizeof(LocalPBES2Params)},
+    {SEC_ASN1_INLINE | SEC_ASN1_XTRN, offsetof(LocalPBES2Params, kdf),
+     SEC_ASN1_SUB(SECOID_AlgorithmIDTemplate)},
+    {SEC_ASN1_INLINE | SEC_ASN1_XTRN, offsetof(LocalPBES2Params, cipher),
+     SEC_ASN1_SUB(SECOID_AlgorithmIDTemplate)},
+    {0}};
+
+// PBKDF2-params ::= SEQUENCE { salt OCTET STRING, iterationCount INTEGER, ... }
+// SEC_ASN1_SKIP_REST ignores the trailing keyLength and prf fields.
+struct LocalPBKDF2Params {
+  SECItem salt;
+  SECItem iteration;
+};
+static const SEC_ASN1Template kLocalPBKDF2ParamsTemplate[] = {
+    {SEC_ASN1_SEQUENCE, 0, nullptr, sizeof(LocalPBKDF2Params)},
+    {SEC_ASN1_OCTET_STRING, offsetof(LocalPBKDF2Params, salt)},
+    {SEC_ASN1_INTEGER, offsetof(LocalPBKDF2Params, iteration)},
+    {SEC_ASN1_SKIP_REST},
+    {0}};
+
+// Returns the PBKDF2 iteration count stored in the password metaData entry of
+// key4.db, or -1 on any parse or database error.
+static int ReadMetaDataIterationCount(const std::string& db_path) {
+  sqlite3* sql_db = nullptr;
+  if (sqlite3_open(db_path.c_str(), &sql_db) != SQLITE_OK) {
+    return -1;
+  }
+
+  sqlite3_stmt* statement = nullptr;
+  int result = -1;
+
+  if (sqlite3_prepare_v2(sql_db,
+                         "SELECT item2 FROM metaData WHERE id='password';", -1,
+                         &statement, nullptr) == SQLITE_OK &&
+      sqlite3_step(statement) == SQLITE_ROW) {
+    unsigned int len =
+        static_cast<unsigned int>(sqlite3_column_bytes(statement, 0));
+    const unsigned char* data = reinterpret_cast<const unsigned char*>(
+        sqlite3_column_blob(statement, 0));
+
+    if (data && len > 0) {
+      SECItem item2 = {siBuffer, const_cast<unsigned char*>(data), len};
+      PLArenaPool* arena = PORT_NewArena(DER_DEFAULT_CHUNKSIZE);
+      if (arena) {
+        LocalEncData encData;
+        PORT_Memset(&encData, 0, sizeof(encData));
+        LocalPBES2Params pbes2;
+        PORT_Memset(&pbes2, 0, sizeof(pbes2));
+        LocalPBKDF2Params pbkdf2;
+        PORT_Memset(&pbkdf2, 0, sizeof(pbkdf2));
+
+        if (SEC_QuickDERDecodeItem(arena, &encData, kLocalEncDataTemplate,
+                                   &item2) == SECSuccess &&
+            SEC_QuickDERDecodeItem(arena, &pbes2, kLocalPBES2ParamsTemplate,
+                                   &encData.algorithm.parameters) ==
+                SECSuccess &&
+            SEC_QuickDERDecodeItem(arena, &pbkdf2, kLocalPBKDF2ParamsTemplate,
+                                   &pbes2.kdf.parameters) == SECSuccess) {
+          result = static_cast<int>(DER_GetInteger(&pbkdf2.iteration));
+        }
+        PORT_FreeArena(arena, PR_FALSE);
+      }
+    }
+  }
+
+  sqlite3_finalize(statement);
+  sqlite3_close(sql_db);
+  return result;
+}
+
+// PR_SetEnv strings (must have static storage). Use PR_SetEnv rather than
+// setenv/unsetenv, which don't exist on Windows. An empty value reads as unset
+// (getPBEIterationCount only honors a non-empty value; see sftkpwd.c).
+static const char kMaxIterationCountLow[] = "NSS_MAX_MP_PBE_ITERATION_COUNT=10";
+static const char kMaxIterationCountUnset[] = "NSS_MAX_MP_PBE_ITERATION_COUNT=";
+
+// Verify that logging in with a non-empty password upgrades the stored KDF
+// iteration count when it is below the current minimum. This exercises the
+// silent upgrade path added for bug 1719827.
+TEST_F(SoftokenTest, UpgradeKDFOnLogin) {
+  ScopedPK11SlotInfo slot(PK11_GetInternalKeySlot());
+  ASSERT_TRUE(slot);
+
+  // Initialize with an artificially low iteration count.
+  ASSERT_EQ(PR_SUCCESS, PR_SetEnv(kMaxIterationCountLow));
+  EXPECT_EQ(SECSuccess, PK11_InitPin(slot.get(), nullptr, "password"));
+  ASSERT_EQ(PR_SUCCESS, PR_SetEnv(kMaxIterationCountUnset));
+
+  std::string key_db = mNSSDBDir.GetPath() + "/key4.db";
+  EXPECT_EQ(10, ReadMetaDataIterationCount(key_db));
+
+  // Log out and back in; login should trigger the silent KDF upgrade.
+  ASSERT_EQ(SECSuccess, PK11_Logout(slot.get()));
+  ASSERT_EQ(SECSuccess, PK11_CheckUserPassword(slot.get(), "password"));
+
+  EXPECT_EQ(10000, ReadMetaDataIterationCount(key_db));
+}
+
+// Verify that the KDF iteration count is NOT upgraded for the empty password,
+// where iter=1 is intentional.
+TEST_F(SoftokenTest, NoUpgradeKDFWithEmptyPassword) {
+  ScopedPK11SlotInfo slot(PK11_GetInternalKeySlot());
+  ASSERT_TRUE(slot);
+
+  EXPECT_EQ(SECSuccess, PK11_InitPin(slot.get(), nullptr, ""));
+
+  std::string key_db = mNSSDBDir.GetPath() + "/key4.db";
+  EXPECT_EQ(1, ReadMetaDataIterationCount(key_db));
+
+  // Login again; the upgrade must not fire for an empty password.
+  ASSERT_EQ(SECSuccess, PK11_CheckUserPassword(slot.get(), ""));
+  EXPECT_EQ(1, ReadMetaDataIterationCount(key_db));
+}
+
+// Verify that symmetric token keys stored in the database are still
+// accessible after a KDF upgrade re-encrypts them with the new parameters.
+TEST_F(SoftokenTest, UpgradeKDFPreservesKeys) {
+  ScopedPK11SlotInfo slot(PK11_GetInternalKeySlot());
+  ASSERT_TRUE(slot);
+
+  ASSERT_EQ(PR_SUCCESS, PR_SetEnv(kMaxIterationCountLow));
+  EXPECT_EQ(SECSuccess, PK11_InitPin(slot.get(), nullptr, "password"));
+
+  // Store a persistent symmetric key with a known ID.
+  int aesKeySize = PK11_GetBestKeyLength(slot.get(), CKM_AES_CBC);
+  unsigned char keyIdData[] = {0xAB, 0xCD, 0xEF, 0x01};
+  SECItem keyId = {siBuffer, keyIdData, sizeof(keyIdData)};
+  {
+    ScopedPK11SymKey key(PK11_TokenKeyGen(slot.get(), CKM_AES_CBC, nullptr,
+                                          aesKeySize, &keyId, PR_TRUE,
+                                          nullptr));
+    ASSERT_NE(nullptr, key.get());
+  }
+
+  ASSERT_EQ(PR_SUCCESS, PR_SetEnv(kMaxIterationCountUnset));
+
+  // Log out and back in, triggering the KDF upgrade.
+  ASSERT_EQ(SECSuccess, PK11_Logout(slot.get()));
+  ASSERT_EQ(SECSuccess, PK11_CheckUserPassword(slot.get(), "password"));
+
+  std::string key_db = mNSSDBDir.GetPath() + "/key4.db";
+  EXPECT_EQ(10000, ReadMetaDataIterationCount(key_db));
+
+  // The stored key must still be findable after the upgrade.
+  ScopedPK11SymKey found(
+      PK11_FindFixedKey(slot.get(), CKM_AES_CBC, &keyId, nullptr));
+  EXPECT_NE(nullptr, found.get());
+}
+
+// Change the password while a KDF upgrade is still pending.
+//
+// sftkdb_reencryptDatabase verifies the old password from inside its own SDB
+// transaction, which runs sftkdb_finishPasswordCheck. The silent upgrade must
+// not fire there: re-entering sftkdb_reencryptDatabase would call sdb_Begin on
+// a database that already has an open transaction, and sqlite would block on
+// the lock the outer transaction is holding. The password change itself brings
+// the iteration count up to the minimum, so nothing is lost by skipping it.
+TEST_F(SoftokenTest, ChangePasswordWithKDFUpgradePending) {
+  ScopedPK11SlotInfo slot(PK11_GetInternalKeySlot());
+  ASSERT_TRUE(slot);
+
+  // Initialize with an artificially low iteration count and stay logged in.
+  ASSERT_EQ(PR_SUCCESS, PR_SetEnv(kMaxIterationCountLow));
+  EXPECT_EQ(SECSuccess, PK11_InitPin(slot.get(), nullptr, "password"));
+
+  // Store a persistent symmetric key with a known ID.
+  int aesKeySize = PK11_GetBestKeyLength(slot.get(), CKM_AES_CBC);
+  unsigned char keyIdData[] = {0x12, 0x34, 0x56, 0x78};
+  SECItem keyId = {siBuffer, keyIdData, sizeof(keyIdData)};
+  {
+    ScopedPK11SymKey key(PK11_TokenKeyGen(slot.get(), CKM_AES_CBC, nullptr,
+                                          aesKeySize, &keyId, PR_TRUE,
+                                          nullptr));
+    ASSERT_NE(nullptr, key.get());
+  }
+
+  std::string key_db = mNSSDBDir.GetPath() + "/key4.db";
+  EXPECT_EQ(10, ReadMetaDataIterationCount(key_db));
+
+  // Raise the minimum back to the default. The token is now logged in with an
+  // upgrade pending, which is the state a login-time upgrade leaves behind
+  // whenever it fails (it is best effort and does not report failure).
+  ASSERT_EQ(PR_SUCCESS, PR_SetEnv(kMaxIterationCountUnset));
+
+  // This must complete rather than deadlock on its own transaction.
+  EXPECT_EQ(SECSuccess, PK11_ChangePW(slot.get(), "password", "newpassword"));
+
+  // The password change re-encrypts at the current minimum either way.
+  EXPECT_EQ(10000, ReadMetaDataIterationCount(key_db));
+
+  // The stored key survived, and only the new password works.
+  ScopedPK11SymKey found(
+      PK11_FindFixedKey(slot.get(), CKM_AES_CBC, &keyId, nullptr));
+  EXPECT_NE(nullptr, found.get());
+
+  ASSERT_EQ(SECSuccess, PK11_Logout(slot.get()));
+  // PK11_CheckUserPassword reports a wrong password as SECWouldBlock.
+  EXPECT_EQ(SECWouldBlock, PK11_CheckUserPassword(slot.get(), "password"));
+  EXPECT_EQ(SECSuccess, PK11_CheckUserPassword(slot.get(), "newpassword"));
 }
 
 TEST_F(SoftokenTest, ResetSoftokenEmptyPassword) {
