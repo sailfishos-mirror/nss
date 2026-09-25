@@ -1281,6 +1281,22 @@ sec_asn1d_prepare_for_contents(sec_asn1d_state *state)
                  */
                 if (item->data == NULL) {
                     PORT_Assert(item->len == 0);
+                    /*
+                     * The allocation below comes from our_pool, which is freed
+                     * when decoding finishes.  Our destination is shared with
+                     * our parent and may be the caller's SECItem, which the
+                     * caller frees itself when decoding without an arena, so
+                     * give ourselves a private one to hold the substring.
+                     */
+                    if (state->parent != NULL && item == state->parent->dest) {
+                        item = (SECItem *)sec_asn1d_zalloc(state->top->our_pool,
+                                                           sizeof(*item));
+                        if (item == NULL) {
+                            state->top->status = decodeError;
+                            break;
+                        }
+                        state->dest = item;
+                    }
                     poolp = state->top->our_pool;
                 } else {
                     alloc_len = 0;
