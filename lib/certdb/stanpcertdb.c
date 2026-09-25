@@ -591,33 +591,6 @@ CERT_FindCertByName(CERTCertDBHandle *handle, SECItem *name)
 }
 
 CERTCertificate *
-CERT_FindCertByKeyID(CERTCertDBHandle *handle, SECItem *name, SECItem *keyID)
-{
-    CERTCertList *list;
-    CERTCertificate *cert = NULL;
-    CERTCertListNode *node;
-
-    list = CERT_CreateSubjectCertList(NULL, handle, name, 0, PR_FALSE);
-    if (list == NULL)
-        return NULL;
-
-    node = CERT_LIST_HEAD(list);
-    while (!CERT_LIST_END(node, list)) {
-        if (node->cert &&
-            SECITEM_ItemsAreEqual(&node->cert->subjectKeyID, keyID)) {
-            cert = CERT_DupCertificate(node->cert);
-            goto done;
-        }
-        node = CERT_LIST_NEXT(node);
-    }
-    PORT_SetError(SEC_ERROR_UNKNOWN_ISSUER);
-
-done:
-    CERT_DestroyCertList(list);
-    return cert;
-}
-
-CERTCertificate *
 CERT_FindCertByNickname(CERTCertDBHandle *handle, const char *nickname)
 {
     NSSCryptoContext *cc;
