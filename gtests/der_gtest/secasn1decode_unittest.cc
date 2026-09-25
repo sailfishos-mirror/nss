@@ -680,8 +680,9 @@ TEST_F(SECASN1DecodeTest, NoArenaNestedConstructedOctetString) {
                    const_cast<unsigned char*>(kNestedConstructedOctetString),
                    sizeof(kNestedConstructedOctetString)};
   SECItem output = {siBuffer, nullptr, 0};
-  ASSERT_EQ(SECSuccess, SEC_ASN1DecodeItem(nullptr, &output,
-                                           SEC_OctetStringTemplate, &input));
+  ASSERT_EQ(SECSuccess,
+            SEC_ASN1DecodeItem(nullptr, &output,
+                               SEC_ASN1_GET(SEC_OctetStringTemplate), &input));
   EXPECT_EQ(1U, output.len);
   ASSERT_NE(nullptr, output.data);
   EXPECT_EQ(0x41, output.data[0]);
@@ -693,8 +694,9 @@ TEST_F(SECASN1DecodeTest, NoArenaSplitConstructedOctetString) {
                    const_cast<unsigned char*>(kSplitConstructedOctetString),
                    sizeof(kSplitConstructedOctetString)};
   SECItem output = {siBuffer, nullptr, 0};
-  ASSERT_EQ(SECSuccess, SEC_ASN1DecodeItem(nullptr, &output,
-                                           SEC_OctetStringTemplate, &input));
+  ASSERT_EQ(SECSuccess,
+            SEC_ASN1DecodeItem(nullptr, &output,
+                               SEC_ASN1_GET(SEC_OctetStringTemplate), &input));
   ASSERT_EQ(2U, output.len);
   ASSERT_NE(nullptr, output.data);
   EXPECT_EQ(0x41, output.data[0]);
@@ -707,8 +709,9 @@ TEST_F(SECASN1DecodeTest, NoArenaNestedIndefiniteOctetString) {
                    const_cast<unsigned char*>(kNestedIndefiniteOctetString),
                    sizeof(kNestedIndefiniteOctetString)};
   SECItem output = {siBuffer, nullptr, 0};
-  ASSERT_EQ(SECSuccess, SEC_ASN1DecodeItem(nullptr, &output,
-                                           SEC_OctetStringTemplate, &input));
+  ASSERT_EQ(SECSuccess,
+            SEC_ASN1DecodeItem(nullptr, &output,
+                               SEC_ASN1_GET(SEC_OctetStringTemplate), &input));
   ASSERT_EQ(2U, output.len);
   ASSERT_NE(nullptr, output.data);
   EXPECT_EQ(0x41, output.data[0]);
@@ -722,8 +725,9 @@ TEST_F(SECASN1DecodeTest, NoArenaNestedIndefiniteOctetStringFailure) {
       const_cast<unsigned char*>(kNestedIndefiniteOctetStringWithBadSubstring),
       sizeof(kNestedIndefiniteOctetStringWithBadSubstring)};
   SECItem output = {siBuffer, nullptr, 0};
-  ASSERT_EQ(SECFailure, SEC_ASN1DecodeItem(nullptr, &output,
-                                           SEC_OctetStringTemplate, &input));
+  ASSERT_EQ(SECFailure,
+            SEC_ASN1DecodeItem(nullptr, &output,
+                               SEC_ASN1_GET(SEC_OctetStringTemplate), &input));
   EXPECT_EQ(nullptr, output.data);
   EXPECT_EQ(0U, output.len);
   SECITEM_FreeItem(&output, PR_FALSE);
@@ -735,8 +739,9 @@ TEST_F(SECASN1DecodeTest, NoArenaConstructedOctetStringFailure) {
       const_cast<unsigned char*>(kConstructedOctetStringWithBadSubstring),
       sizeof(kConstructedOctetStringWithBadSubstring)};
   SECItem output = {siBuffer, nullptr, 0};
-  ASSERT_EQ(SECFailure, SEC_ASN1DecodeItem(nullptr, &output,
-                                           SEC_OctetStringTemplate, &input));
+  ASSERT_EQ(SECFailure,
+            SEC_ASN1DecodeItem(nullptr, &output,
+                               SEC_ASN1_GET(SEC_OctetStringTemplate), &input));
   EXPECT_EQ(nullptr, output.data);
   EXPECT_EQ(0U, output.len);
   SECITEM_FreeItem(&output, PR_FALSE);
