@@ -2263,6 +2263,7 @@ sec_asn1d_concat_substrings(sec_asn1d_state *state)
         unsigned long alloc_len, item_len;
         unsigned char *where;
         SECItem *item;
+        PLArenaPool *poolp;
         PRBool is_bit_string;
 
         item_len = 0;
@@ -2305,11 +2306,26 @@ sec_asn1d_concat_substrings(sec_asn1d_state *state)
             return;
         }
 
+        poolp = state->top->their_pool;
+        if (state->substring) {
+            /*
+             * Our parent copies this into its own result, so allocate it from
+             * our_pool rather than leaking it when decoding without an arena.
+             * It lands above our mark, so drop the mark instead of releasing
+             * it when we pop; our parent's mark still covers everything.
+             */
+            if (state->child != NULL) {
+                PORT_ArenaUnmark(state->top->our_pool, state->our_mark);
+                state->child = NULL;
+                state->our_mark = NULL;
+            }
+            poolp = state->top->our_pool;
+        }
+
         item = (SECItem *)(state->dest);
         PORT_Assert(item != NULL);
         PORT_Assert(item->data == NULL);
-        item->data = (unsigned char *)sec_asn1d_zalloc(state->top->their_pool,
-                                                       alloc_len);
+        item->data = (unsigned char *)sec_asn1d_zalloc(poolp, alloc_len);
         if (item->data == NULL) {
             state->top->status = decodeError;
             return;

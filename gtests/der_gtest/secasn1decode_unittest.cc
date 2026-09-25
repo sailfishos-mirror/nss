@@ -645,6 +645,24 @@ const unsigned char kSplitConstructedOctetString[] = {
       0x00, 0x00,
 };
 
+const unsigned char kNestedIndefiniteOctetString[] = {
+    0x24, 0x80,             // indefinite-length constructed OCTET STRING
+      0x24, 0x80,           // indefinite-length constructed OCTET STRING
+        0x04, 0x01, 0x41,
+      0x00, 0x00,
+      0x04, 0x01, 0x42,
+      0x00, 0x00,
+};
+
+const unsigned char kNestedIndefiniteOctetStringWithBadSubstring[] = {
+    0x24, 0x80,             // indefinite-length constructed OCTET STRING
+      0x24, 0x80,           // indefinite-length constructed OCTET STRING
+        0x04, 0x01, 0x41,
+      0x00, 0x00,
+      0x02, 0x01, 0x00,     // INTEGER is not a valid substring
+      0x00, 0x00,
+};
+
 const unsigned char kConstructedOctetStringWithBadSubstring[] = {
     0x24, 0x80,             // indefinite-length constructed OCTET STRING
       0x24, 0x03,           // definite-length constructed OCTET STRING
@@ -681,6 +699,33 @@ TEST_F(SECASN1DecodeTest, NoArenaSplitConstructedOctetString) {
   ASSERT_NE(nullptr, output.data);
   EXPECT_EQ(0x41, output.data[0]);
   EXPECT_EQ(0x42, output.data[1]);
+  SECITEM_FreeItem(&output, PR_FALSE);
+}
+
+TEST_F(SECASN1DecodeTest, NoArenaNestedIndefiniteOctetString) {
+  SECItem input = {siBuffer,
+                   const_cast<unsigned char*>(kNestedIndefiniteOctetString),
+                   sizeof(kNestedIndefiniteOctetString)};
+  SECItem output = {siBuffer, nullptr, 0};
+  ASSERT_EQ(SECSuccess, SEC_ASN1DecodeItem(nullptr, &output,
+                                           SEC_OctetStringTemplate, &input));
+  ASSERT_EQ(2U, output.len);
+  ASSERT_NE(nullptr, output.data);
+  EXPECT_EQ(0x41, output.data[0]);
+  EXPECT_EQ(0x42, output.data[1]);
+  SECITEM_FreeItem(&output, PR_FALSE);
+}
+
+TEST_F(SECASN1DecodeTest, NoArenaNestedIndefiniteOctetStringFailure) {
+  SECItem input = {
+      siBuffer,
+      const_cast<unsigned char*>(kNestedIndefiniteOctetStringWithBadSubstring),
+      sizeof(kNestedIndefiniteOctetStringWithBadSubstring)};
+  SECItem output = {siBuffer, nullptr, 0};
+  ASSERT_EQ(SECFailure, SEC_ASN1DecodeItem(nullptr, &output,
+                                           SEC_OctetStringTemplate, &input));
+  EXPECT_EQ(nullptr, output.data);
+  EXPECT_EQ(0U, output.len);
   SECITEM_FreeItem(&output, PR_FALSE);
 }
 
