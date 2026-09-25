@@ -19,6 +19,13 @@
         '<(DEPTH)/gtests/google_test/google_test.gyp:gtest',
         '<(DEPTH)/lib/softoken/softoken.gyp:softokn_static',
       ],
+      'conditions': [
+        [ 'OS=="win"', {
+          'libraries': [
+            'advapi32.lib',
+          ],
+        }],
+      ],
     }
   ],
   'target_defaults': {
