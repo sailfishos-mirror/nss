@@ -30,7 +30,7 @@ TEST(SoftokenRC2PaddingTest, ZeroLengthCiphertextIsRejected) {
   unsigned char saltData[8] = {0};
   SECItem salt = {siBuffer, saltData, sizeof(saltData)};
 
-  NSSPKCS5PBEParameter *param = nsspkcs5_NewParam(
+  NSSPKCS5PBEParameter* param = nsspkcs5_NewParam(
       SEC_OID_PKCS12_PBE_WITH_SHA1_AND_40_BIT_RC2_CBC, HASH_AlgSHA1, &salt, 1);
   ASSERT_NE(nullptr, param);
   EXPECT_EQ(SEC_OID_RC2_CBC, param->encAlg);
@@ -41,7 +41,7 @@ TEST(SoftokenRC2PaddingTest, ZeroLengthCiphertextIsRejected) {
   unsigned char cipherData[1] = {0};
   SECItem emptyCipher = {siBuffer, cipherData, 0};
 
-  SECItem *plain =
+  SECItem* plain =
       nsspkcs5_CipherData(param, &pwitem, &emptyCipher, PR_FALSE, nullptr);
   EXPECT_EQ(nullptr, plain);
   EXPECT_EQ(SEC_ERROR_BAD_PASSWORD, PORT_GetError());
@@ -54,7 +54,7 @@ TEST(SoftokenRC2PaddingTest, ZeroLengthCiphertextIsRejected) {
 
 }  // namespace nss_test
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
