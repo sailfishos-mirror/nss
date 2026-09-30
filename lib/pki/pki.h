@@ -21,11 +21,6 @@
 
 PR_BEGIN_EXTERN_C
 
-NSS_EXTERN NSSCallback *
-nssTrustDomain_GetDefaultCallback(
-    NSSTrustDomain *td,
-    PRStatus *statusOpt);
-
 NSS_EXTERN NSSCertificate **
 nssTrustDomain_FindCertificatesBySubject(
     NSSTrustDomain *td,
