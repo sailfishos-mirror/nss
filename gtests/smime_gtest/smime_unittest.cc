@@ -825,4 +825,34 @@ TEST_F(SMimeTest, Pkcs12DecoderTruncatedPfxFailsClosed) {
   SEC_PKCS12DecoderFinish(dcx);
 }
 
+// Aborting a decode that has already consumed a complete message must not
+// hand the message back from Finish.
+TEST_F(SMimeTest, Pkcs7DecoderAbortThenFinishReturnsNull) {
+  Bytes der =
+      Seq(Cat({NssOid(SEC_OID_PKCS7_DATA), Ctx0(OctetStr(Bytes(16, 0xAA)))}));
+  SEC_PKCS7DecoderContext* dcx = SEC_PKCS7DecoderStart(
+      nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+  ASSERT_NE(nullptr, dcx);
+  EXPECT_EQ(SECSuccess,
+            SEC_PKCS7DecoderUpdate(
+                dcx, reinterpret_cast<const char*>(der.data()), der.size()));
+  SEC_PKCS7DecoderAbort(dcx, SEC_ERROR_BAD_DATA);
+  EXPECT_EQ(nullptr, SEC_PKCS7DecoderFinish(dcx));
+  EXPECT_EQ(SEC_ERROR_BAD_DATA, PORT_GetError());
+}
+
+TEST_F(SMimeTest, Pkcs7DecoderAbortAfterFailedUpdate) {
+  Bytes der =
+      Seq(Cat({NssOid(SEC_OID_PKCS7_DATA), Ctx0(OctetStr(Bytes(16, 0xAA)))}));
+  SEC_PKCS7DecoderContext* dcx = SEC_PKCS7DecoderStart(
+      nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+  ASSERT_NE(nullptr, dcx);
+  ASSERT_EQ(SECSuccess, SEC_PKCS7DecoderSetMaxInputSize(dcx, 8));
+  EXPECT_EQ(SECFailure,
+            SEC_PKCS7DecoderUpdate(
+                dcx, reinterpret_cast<const char*>(der.data()), der.size()));
+  SEC_PKCS7DecoderAbort(dcx, SEC_ERROR_BAD_DATA);
+  EXPECT_EQ(nullptr, SEC_PKCS7DecoderFinish(dcx));
+}
+
 }  // namespace nss_test
