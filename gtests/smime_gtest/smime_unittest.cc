@@ -855,4 +855,24 @@ TEST_F(SMimeTest, Pkcs7DecoderAbortAfterFailedUpdate) {
   EXPECT_EQ(nullptr, SEC_PKCS7DecoderFinish(dcx));
 }
 
+// Callers such as Thunderbird ignore Update failures and keep feeding data
+// before calling Finish; the decoder has to stay inert after the first error.
+TEST_F(SMimeTest, CmsDecoderUpdateAfterFailureIsInert) {
+  NSSCMSDecoderContext* dcx = NSS_CMSDecoder_Start(
+      nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+  ASSERT_NE(nullptr, dcx);
+  // A SEQUENCE whose first element is an INTEGER instead of the content type.
+  static const uint8_t kNotCms[] = {0x30, 0x03, 0x02, 0x01, 0x00};
+  EXPECT_EQ(SECFailure,
+            NSS_CMSDecoder_Update(dcx, reinterpret_cast<const char*>(kNotCms),
+                                  sizeof(kNotCms)));
+  for (int i = 0; i < 3; i++) {
+    EXPECT_EQ(SECFailure,
+              NSS_CMSDecoder_Update(
+                  dcx, reinterpret_cast<const char*>(kValidSignature),
+                  sizeof(kValidSignature)));
+  }
+  EXPECT_EQ(nullptr, NSS_CMSDecoder_Finish(dcx));
+}
+
 }  // namespace nss_test

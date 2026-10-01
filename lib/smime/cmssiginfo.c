@@ -123,11 +123,15 @@ loser:
 void
 NSS_CMSSignerInfo_Destroy(NSSCMSSignerInfo *si)
 {
-    if (si->cert != NULL)
+    if (si->cert != NULL) {
         CERT_DestroyCertificate(si->cert);
+        si->cert = NULL;
+    }
 
-    if (si->certList != NULL)
+    if (si->certList != NULL) {
         CERT_DestroyCertificateList(si->certList);
+        si->certList = NULL;
+    }
 
     /* XXX storage ??? */
 }

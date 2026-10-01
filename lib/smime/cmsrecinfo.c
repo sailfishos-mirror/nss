@@ -353,14 +353,18 @@ NSS_CMSRecipientInfo_Destroy(NSSCMSRecipientInfo *ri)
     }
     /* version was allocated on the pool, so no need to destroy it */
     /* issuerAndSN was allocated on the pool, so no need to destroy it */
-    if (ri->cert != NULL)
+    if (ri->cert != NULL) {
         CERT_DestroyCertificate(ri->cert);
+        ri->cert = NULL;
+    }
 
     if (nss_cmsrecipientinfo_usessubjectkeyid(ri)) {
         NSSCMSKeyTransRecipientInfoEx *extra;
         extra = &ri->ri.keyTransRecipientInfoEx;
-        if (extra->pubKey)
+        if (extra->pubKey) {
             SECKEY_DestroyPublicKey(extra->pubKey);
+            extra->pubKey = NULL;
+        }
     }
     if (ri->cmsg && ri->cmsg->contentInfo.contentTypeTag == &fakeContent) {
         NSS_CMSMessage_Destroy(ri->cmsg);

@@ -84,7 +84,12 @@ NSS_CMSSignedData_Destroy(NSSCMSSignedData *sigd)
             NSS_CMSSignerInfo_Destroy(si);
     }
 
-    /* everything's in a pool, so don't worry about the storage */
+    /* everything's in a pool, so don't worry about the storage, but make
+     * sure nothing points at the destroyed objects anymore */
+    sigd->certs = NULL;
+    sigd->tempCerts = NULL;
+    sigd->certLists = NULL;
+    sigd->signerInfos = NULL;
     NSS_CMSContentInfo_Destroy(&(sigd->contentInfo));
 }
 
