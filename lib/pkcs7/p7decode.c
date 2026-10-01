@@ -1514,6 +1514,9 @@ sec_pkcs7_verify_signature(SEC_PKCS7ContentInfo *cinfo,
         goto done;
     }
 
+    if (signerinfo->cert != NULL) {
+        CERT_DestroyCertificate(signerinfo->cert);
+    }
     signerinfo->cert = cert;
 
     /*
