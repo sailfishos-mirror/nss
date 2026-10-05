@@ -923,10 +923,9 @@ TEST_F(TlsConnectTest, DsaCertWithInheritedParameters) {
                                   nullptr,       nullptr, nullptr};
   ASSERT_TRUE(server_->ConfigServerCert(TlsAgent::kServerDsa, true, &extra));
 
-  // The client fails to import the end-entity certificate, as no public key
-  // can be extracted from it.
+  // The client cannot extract a public key from the end-entity certificate.
   ConnectExpectAlert(client_, kTlsAlertBadCertificate);
-  client_->CheckErrorCode(SEC_ERROR_INPUT_LEN);
+  client_->CheckErrorCode(SSL_ERROR_EXTRACT_PUBLIC_KEY_FAILURE);
   server_->CheckErrorCode(SSL_ERROR_BAD_CERT_ALERT);
 }
 #endif  // NSS_DISABLE_DSA
