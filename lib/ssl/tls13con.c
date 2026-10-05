@@ -4498,7 +4498,6 @@ tls13_HandleCertificate(sslSocket *ss, PRUint8 *b, PRUint32 length, PRBool alrea
 
         first = PR_FALSE;
     }
-    SECKEY_UpdateCertPQG(ss->sec.peerCert);
 
     return ssl3_AuthCertificate(ss); /* sets ss->ssl3.hs.ws */
 }

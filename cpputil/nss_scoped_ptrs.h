@@ -26,6 +26,10 @@ struct ScopedDelete {
   }
   void operator()(CERTDistNames* names) { CERT_FreeDistNames(names); }
   void operator()(CERTName* name) { CERT_DestroyName(name); }
+  void operator()(CERTValidity* validity) { CERT_DestroyValidity(validity); }
+  void operator()(CERTCertificateRequest* req) {
+    CERT_DestroyCertificateRequest(req);
+  }
   void operator()(CERTCertList* list) { CERT_DestroyCertList(list); }
   void operator()(CERTSubjectPublicKeyInfo* spki) {
     SECKEY_DestroySubjectPublicKeyInfo(spki);
@@ -86,9 +90,11 @@ struct ScopedMaybeDelete {
 SCOPED(CERTCertList);
 SCOPED(CERTCertificate);
 SCOPED(CERTCertificateList);
+SCOPED(CERTCertificateRequest);
 SCOPED(CERTDistNames);
 SCOPED(CERTName);
 SCOPED(CERTSubjectPublicKeyInfo);
+SCOPED(CERTValidity);
 SCOPED(HpkeContext);
 SCOPED(NSSInitContext);
 SCOPED(PK11Context);

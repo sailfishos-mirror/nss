@@ -493,11 +493,16 @@ seckey_DSADecodePQG(PLArenaPool *arena, SECKEYPublicKey *pubk,
     SECStatus rv;
     SECItem newparams;
 
-    if (params == NULL)
+    if (params == NULL) {
+        PORT_SetError(SEC_ERROR_INVALID_ARGS);
         return SECFailure;
+    }
 
-    if (params->data == NULL)
+    /* Absent parameters, e.g. inherited from the issuer (RFC 3279). */
+    if (params->data == NULL) {
+        PORT_SetError(SEC_ERROR_INPUT_LEN);
         return SECFailure;
+    }
 
     PORT_Assert(arena);
 
