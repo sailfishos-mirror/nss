@@ -33,12 +33,6 @@ NSS_CMSAuthEnvelopedData_Destroy(NSSCMSAuthEnvelopedData *authenvd)
     NSS_CMSContentInfo_Destroy(&(authenvd->contentInfo));
 }
 
-NSSCMSContentInfo *
-NSS_CMSAuthEnvelopedData_GetContentInfo(NSSCMSAuthEnvelopedData *authenvd)
-{
-    return &(authenvd->contentInfo);
-}
-
 SECStatus
 NSS_CMSAuthEnvelopedData_Decode_BeforeData(NSSCMSAuthEnvelopedData *authenvd)
 {

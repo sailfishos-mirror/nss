@@ -455,19 +455,6 @@ NSS_CMSSignedData_Decode_AfterEnd(NSSCMSSignedData *sigd)
     return SECSuccess;
 }
 
-/*
- * NSS_CMSSignedData_GetSignerInfos - retrieve the SignedData's signer list
- */
-NSSCMSSignerInfo **
-NSS_CMSSignedData_GetSignerInfos(NSSCMSSignedData *sigd)
-{
-    if (!sigd) {
-        PORT_SetError(SEC_ERROR_INVALID_ARGS);
-        return NULL;
-    }
-    return sigd->signerInfos;
-}
-
 int
 NSS_CMSSignedData_SignerInfoCount(NSSCMSSignedData *sigd)
 {
@@ -512,19 +499,6 @@ NSS_CMSSignedData_GetContentInfo(NSSCMSSignedData *sigd)
         return NULL;
     }
     return &(sigd->contentInfo);
-}
-
-/*
- * NSS_CMSSignedData_GetCertificateList - retrieve the SignedData's certificate list
- */
-SECItem **
-NSS_CMSSignedData_GetCertificateList(NSSCMSSignedData *sigd)
-{
-    if (!sigd) {
-        PORT_SetError(SEC_ERROR_INVALID_ARGS);
-        return NULL;
-    }
-    return sigd->rawCerts;
 }
 
 SECStatus

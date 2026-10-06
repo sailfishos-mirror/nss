@@ -404,46 +404,6 @@ NSS_CMSRecipientInfo_GetVersion(NSSCMSRecipientInfo *ri)
         return (int)version;
 }
 
-SECItem *
-NSS_CMSRecipientInfo_GetEncryptedKey(NSSCMSRecipientInfo *ri, int subIndex)
-{
-    SECItem *enckey = NULL;
-
-    switch (ri->recipientInfoType) {
-        case NSSCMSRecipientInfoID_KeyTrans:
-            /* ignore subIndex */
-            enckey = &(ri->ri.keyTransRecipientInfo.encKey);
-            break;
-        case NSSCMSRecipientInfoID_KEK:
-            /* ignore subIndex */
-            enckey = &(ri->ri.kekRecipientInfo.encKey);
-            break;
-        case NSSCMSRecipientInfoID_KeyAgree:
-            enckey = &(ri->ri.keyAgreeRecipientInfo.recipientEncryptedKeys[subIndex]->encKey);
-            break;
-    }
-    return enckey;
-}
-
-SECOidTag
-NSS_CMSRecipientInfo_GetKeyEncryptionAlgorithmTag(NSSCMSRecipientInfo *ri)
-{
-    SECOidTag encalgtag = SEC_OID_UNKNOWN; /* an invalid encryption alg */
-
-    switch (ri->recipientInfoType) {
-        case NSSCMSRecipientInfoID_KeyTrans:
-            encalgtag = SECOID_GetAlgorithmTag(&(ri->ri.keyTransRecipientInfo.keyEncAlg));
-            break;
-        case NSSCMSRecipientInfoID_KeyAgree:
-            encalgtag = SECOID_GetAlgorithmTag(&(ri->ri.keyAgreeRecipientInfo.keyEncAlg));
-            break;
-        case NSSCMSRecipientInfoID_KEK:
-            encalgtag = SECOID_GetAlgorithmTag(&(ri->ri.kekRecipientInfo.keyEncAlg));
-            break;
-    }
-    return encalgtag;
-}
-
 SECStatus
 NSS_CMSRecipientInfo_WrapBulkKey(NSSCMSRecipientInfo *ri, PK11SymKey *bulkkey,
                                  SECOidTag bulkalgtag)
