@@ -875,6 +875,51 @@ TEST_P(ModeParameterizedTest, ExportSenderContext) {
   EXPECT_EQ(SEC_ERROR_NOT_A_RECIPIENT, PORT_GetError());
 }
 
+// Lengths too large for PK11_AEADOp are rejected before the input is read, so
+// a small buffer with an oversized length is enough to exercise the check.
+TEST_P(ModeParameterizedTest, OversizedInput) {
+  std::vector<uint8_t> msg = {'s', 'e', 'c', 'r', 'e', 't'};
+  std::vector<uint8_t> aad = {'a', 'a', 'd'};
+  uint8_t buf[32] = {0};
+
+  ScopedHpkeContext sender;
+  ScopedHpkeContext receiver;
+  SetUpEphemeralContexts(sender, receiver, std::get<0>(GetParam()),
+                         std::get<1>(GetParam()), std::get<2>(GetParam()),
+                         std::get<3>(GetParam()));
+
+  const unsigned int kOversizedLens[] = {0xfffffff0, 0xffffffff, 0x80000000,
+                                         0x7ffffff0};
+  for (unsigned int len : kOversizedLens) {
+    SECItem big_item = {siBuffer, buf, len};
+    SECItem* tmp_out = nullptr;
+    EXPECT_EQ(SECFailure,
+              PK11_HPKE_Seal(sender.get(), nullptr, &big_item, &tmp_out));
+    EXPECT_EQ(SEC_ERROR_INPUT_LEN, PORT_GetError());
+    EXPECT_EQ(nullptr, tmp_out);
+    if (len > 0x7fffffff) {
+      EXPECT_EQ(SECFailure,
+                PK11_HPKE_Open(receiver.get(), nullptr, &big_item, &tmp_out));
+      EXPECT_EQ(SEC_ERROR_INPUT_LEN, PORT_GetError());
+      EXPECT_EQ(nullptr, tmp_out);
+
+      // Oversized AAD. The input is long enough to hold a tag.
+      SECItem small_item = {siBuffer, buf, sizeof(buf)};
+      EXPECT_EQ(SECFailure,
+                PK11_HPKE_Seal(sender.get(), &big_item, &small_item, &tmp_out));
+      EXPECT_EQ(SEC_ERROR_INPUT_LEN, PORT_GetError());
+      EXPECT_EQ(nullptr, tmp_out);
+      EXPECT_EQ(SECFailure, PK11_HPKE_Open(receiver.get(), &big_item,
+                                           &small_item, &tmp_out));
+      EXPECT_EQ(SEC_ERROR_INPUT_LEN, PORT_GetError());
+      EXPECT_EQ(nullptr, tmp_out);
+    }
+  }
+
+  // The contexts remain usable and in sync.
+  SealOpen(sender, receiver, msg, aad, nullptr);
+}
+
 TEST_P(ModeParameterizedTest, ContextUnwrapBadKey) {
   std::vector<uint8_t> msg = {'s', 'e', 'c', 'r', 'e', 't'};
   std::vector<uint8_t> aad = {'a', 'a', 'd'};
