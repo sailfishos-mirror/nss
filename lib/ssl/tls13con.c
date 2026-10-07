@@ -1162,7 +1162,10 @@ tls13_UpdateTrafficKeys(sslSocket *ss, SSLSecretDirection direction)
 
     if (epoch == PR_UINT16_MAX) {
         /* Good chance that this is an overflow from too many updates. */
-        FATAL_ERROR(ss, SSL_ERROR_TOO_MANY_KEY_UPDATES, internal_error);
+        SSL_TRC(3, ("%d: TLS13[%d]: %s epoch exhausted by too many key updates",
+                    SSL_GETPID(), ss->fd, SSL_ROLE(ss)));
+        (void)SSL3_SendAlert(ss, alert_fatal, internal_error);
+        PORT_SetError(SSL_ERROR_TOO_MANY_KEY_UPDATES);
         return SECFailure;
     }
     ++epoch;
