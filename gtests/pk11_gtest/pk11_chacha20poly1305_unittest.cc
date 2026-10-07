@@ -604,4 +604,44 @@ TEST_F(Pkcs11ChaCha20Poly1305Test,
   MessageInterfaceTest(CKM_CHACHA20_POLY1305, 16, PR_TRUE);
 }
 
+// PK11_AEADOp must reject ChaCha20-Poly1305 tags that are not 16 bytes long,
+// rather than reading or writing 16 bytes through the tag pointer.
+TEST_F(Pkcs11ChaCha20Poly1305Test, AEADOpInvalidTagLength) {
+  ScopedPK11SlotInfo slot(PK11_GetInternalSlot());
+  SECItem key_item = {siBuffer, toUcharPtr(kKeyData),
+                      static_cast<unsigned int>(sizeof(kKeyData))};
+  ScopedPK11SymKey key(PK11_ImportSymKey(slot.get(), kMech, PK11_OriginUnwrap,
+                                         CKA_ENCRYPT, &key_item, nullptr));
+  ASSERT_TRUE(!!key);
+  SECItem empty = {siBuffer, NULL, 0};
+
+  for (bool simulate : {false, true}) {
+    for (CK_ATTRIBUTE_TYPE op : {CKA_ENCRYPT, CKA_DECRYPT}) {
+      ScopedPK11Context context(PK11_CreateContextBySymKey(
+          kMech, CKA_NSS_MESSAGE | op, key.get(), &empty));
+      ASSERT_NE(nullptr, context);
+      if (simulate) {
+        ASSERT_EQ(SECSuccess, _PK11_ContextSetAEADSimulation(context.get()));
+      }
+
+      for (size_t tag_len : {0, 1, 15, 17}) {
+        std::vector<uint8_t> nonce(kNonce, kNonce + sizeof(kNonce));
+        std::vector<uint8_t> in(kData, kData + sizeof(kData));
+        std::vector<uint8_t> out(sizeof(kData));
+        std::vector<uint8_t> tag(tag_len);
+        int out_len = 0;
+        EXPECT_EQ(SECFailure,
+                  PK11_AEADOp(context.get(), CKG_NO_GENERATE, 0, nonce.data(),
+                              nonce.size(), nullptr, 0, out.data(), &out_len,
+                              out.size(), tag.data(), tag.size(), in.data(),
+                              in.size()))
+            << "simulate=" << simulate << " op=" << op
+            << " tag_len=" << tag_len;
+        EXPECT_EQ(SEC_ERROR_INVALID_ARGS, PORT_GetError());
+        EXPECT_EQ(0, out_len);
+      }
+    }
+  }
+}
+
 }  // namespace nss_test
