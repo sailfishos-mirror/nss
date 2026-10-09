@@ -389,6 +389,12 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
         PORT_Free(email);
 
         (void)NSS_CMSSignerInfo_GetSigningCertificate(signerInfo, NULL);
+
+        (void)NSS_CMSSignerInfo_VerifyCertificate(
+            signerInfo, CERT_GetDefaultCertDB(), certUsageEmailSigner);
+        (void)NSS_CMSSignerInfo_Verify(signerInfo, nullptr, nullptr);
+        (void)NSS_CMSSignedData_VerifySignerInfo(
+            signedData, si, CERT_GetDefaultCertDB(), certUsageEmailSigner);
       }
     } else if (tag == SEC_OID_PKCS7_ENVELOPED_DATA) {
       NSSCMSEnvelopedData* envData =
@@ -428,10 +434,6 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   ScopedNSSCMSMessage copy(NSS_CMSMessage_Copy(cmsg.get()));
 
   // TODO: Streaming decoder path (NSS_CMSDecoder_Start/Update/Finish)
-  // TODO: Re-encode via NSS_CMSDEREncode after decoding
-  // TODO: NSS_CMSSignerInfo_VerifyCertificate
-  // TODO: NSS_CMSSignerInfo_Verify
-  // TODO: NSS_CMSSignedData_VerifySignerInfo
   return 0;
 }
 
