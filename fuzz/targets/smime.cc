@@ -334,33 +334,36 @@ static void TryStreamingDecode(const uint8_t* data, size_t size) {
   }
 }
 
-static void InitNSSWithDB() {
-  char tmpl[] = "/tmp/smime_fuzzdb_XXXXXX";
-  char* dbdir = mkdtemp(tmpl);
-  assert(dbdir);
+// RAII wrapper so NSS_Shutdown runs at process exit. Without it, the global
+// trust domain allocated by NSS_InitReadWrite is reported as a leak.
+class SmimeFuzzerNSS {
+ public:
+  SmimeFuzzerNSS() {
+    char tmpl[] = "/tmp/smime_fuzzdb_XXXXXX";
+    char* dbdir = mkdtemp(tmpl);
+    assert(dbdir);
 
-  char configdir[256];
-  snprintf(configdir, sizeof(configdir), "sql:%s", dbdir);
-  assert(NSS_InitReadWrite(configdir) == SECSuccess);
+    char configdir[256];
+    snprintf(configdir, sizeof(configdir), "sql:%s", dbdir);
+    assert(NSS_InitReadWrite(configdir) == SECSuccess);
 
-  ScopedPK11SlotInfo slot(PK11_GetInternalKeySlot());
-  assert(slot);
+    ScopedPK11SlotInfo slot(PK11_GetInternalKeySlot());
+    assert(slot);
 
-  assert(PK11_NeedUserInit(slot.get()));
-  assert(PK11_InitPin(slot.get(), nullptr, "") == SECSuccess);
+    assert(PK11_NeedUserInit(slot.get()));
+    assert(PK11_InitPin(slot.get(), nullptr, "") == SECSuccess);
 
-  ImportCertAndKey(slot.get(), kSmimeFuzzCert, sizeof(kSmimeFuzzCert),
-                   kSmimeFuzzKey, sizeof(kSmimeFuzzKey), "SMIME Fuzz Test");
-  ImportCertAndKey(slot.get(), kSmimeFuzzEcCert, sizeof(kSmimeFuzzEcCert),
-                   kSmimeFuzzEcKey, sizeof(kSmimeFuzzEcKey), "SMIME Fuzz EC");
-}
+    ImportCertAndKey(slot.get(), kSmimeFuzzCert, sizeof(kSmimeFuzzCert),
+                     kSmimeFuzzKey, sizeof(kSmimeFuzzKey), "SMIME Fuzz Test");
+    ImportCertAndKey(slot.get(), kSmimeFuzzEcCert, sizeof(kSmimeFuzzEcCert),
+                     kSmimeFuzzEcKey, sizeof(kSmimeFuzzEcKey), "SMIME Fuzz EC");
+  }
+  ~SmimeFuzzerNSS() { (void)NSS_Shutdown(); }
+};
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
-  static bool initialized = [] {
-    InitNSSWithDB();
-    return true;
-  }();
-  (void)initialized;
+  static SmimeFuzzerNSS nss;
+  (void)nss;
 
   if (size == 0) {
     return 0;
