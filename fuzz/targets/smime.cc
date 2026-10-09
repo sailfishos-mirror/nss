@@ -301,6 +301,39 @@ static PK11SymKey* DecryptKeyCallback(void* arg, SECAlgorithmID* algid) {
   return key;
 }
 
+// Exercise the streaming decoder path (Decoder_Start / Update / Finish or
+// Cancel) in addition to NSS_CMSMessage_CreateFromDER. This adds coverage
+// for chunked Update and the Cancel cleanup path. Also fuzzes nss_cms_decoder
+// state machine transitions that don't fire in single-shot decode.
+static void TryStreamingDecode(const uint8_t* data, size_t size) {
+  NSSCMSDecoderContext* dcx = NSS_CMSDecoder_Start(
+      nullptr, nullptr, nullptr, nullptr, nullptr, DecryptKeyCallback, nullptr);
+  if (!dcx) {
+    return;
+  }
+
+  // Feed the input in 4 chunks to exercise the chunked Update path.
+  size_t chunk = (size / 4) + 1;
+  size_t off = 0;
+  bool failed = false;
+  while (off < size) {
+    size_t n = chunk < (size - off) ? chunk : (size - off);
+    if (NSS_CMSDecoder_Update(dcx, (const char*)data + off, n) != SECSuccess) {
+      failed = true;
+      break;
+    }
+    off += n;
+  }
+
+  // Use the first byte to choose between Cancel and Finish so both cleanup
+  // paths get exercised by the corpus.
+  if (failed || (data[0] & 1)) {
+    NSS_CMSDecoder_Cancel(dcx);
+  } else {
+    ScopedNSSCMSMessage cmsg(NSS_CMSDecoder_Finish(dcx));
+  }
+}
+
 static void InitNSSWithDB() {
   char tmpl[] = "/tmp/smime_fuzzdb_XXXXXX";
   char* dbdir = mkdtemp(tmpl);
@@ -332,6 +365,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   if (size == 0) {
     return 0;
   }
+
+  TryStreamingDecode(data, size);
 
   SECItem buffer = {siBuffer, (unsigned char*)data, (unsigned int)size};
 
@@ -433,7 +468,6 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
 
   ScopedNSSCMSMessage copy(NSS_CMSMessage_Copy(cmsg.get()));
 
-  // TODO: Streaming decoder path (NSS_CMSDecoder_Start/Update/Finish)
   return 0;
 }
 
