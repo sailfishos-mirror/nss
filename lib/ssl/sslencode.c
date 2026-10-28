@@ -214,6 +214,15 @@ sslBuffer_Clear(sslBuffer *b)
     b->len = 0;
 }
 
+void
+sslBuffer_ZeroClear(sslBuffer *b)
+{
+    if (b->buf) {
+        PORT_SafeZero(b->buf, b->space);
+    }
+    sslBuffer_Clear(b);
+}
+
 SECStatus
 sslRead_Read(sslReader *reader, unsigned int count, sslReadBuffer *out)
 {
