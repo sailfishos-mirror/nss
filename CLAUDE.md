@@ -1,6 +1,4 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to LLMs and agents when working with the code in this repository.
 
 ## Build
 
@@ -72,6 +70,14 @@ when running them by hand:
 ./mach clang-tidy                  # static analysis
 ./mach clang-tidy --fix            # auto-fix where possible
 ```
+
+## Code style
+
+Limit the amount of comments you put in the code to a strict minimum. You should almost never add comments, except sometimes on non-trivial code, function definitions if the arguments aren't self-explanatory, and class definitions and their members.
+
+When addressing a task list pertaining to the code (that might arise from a code review), don't add accompanying comments describing what changed or which item a change addresses.
+
+Do not remove existing comments unless they are directly related to what you are changing.
 
 ## Architecture
 
@@ -169,3 +175,14 @@ Never submit or update a Phabricator revision without explicit user approval.
 NSS depends on NSPR (Netscape Portable Runtime) for OS abstraction. By default the build looks for it at `../nspr/`. Alternatives:
 - `--system-nspr` — use the system-installed NSPR
 - `--with-nspr=<path>` — specify a path explicitly
+
+## Downstream users
+
+Firefox vendors NSS at `security/nss/`. Thunderbird also makes use of NSS. Before changing a public API or its behaviour, check callers in those repositories with `searchfox-cli`, filtering by path so the vendored copy doesn't show up. Thunderbird is the `comm-central` repository, which nests mozilla-central under `mozilla/`:
+
+```sh
+searchfox-cli -q SSL_OptionSet -p '^security/manager' --cpp
+searchfox-cli -R comm-central -q NSS_CMS -p '^mailnews' --cpp
+```
+
+`searchfox-cli --help` will show the other options.
